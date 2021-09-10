@@ -1,3 +1,6 @@
+## ThingSpeak
+### 03/09/21
+
 Sending and receiving the data via email is not suitable for this project. It would require too much effort from the user building the Crow Box e.g. they must create a new independent email account and refactor parts of the code. 
 
 It would be ideal if the user could receive their data and visualise it in realtime. To achieve this, numerous projects use APIs that collect and display data in realtime. One such API is [ThingSpeak](https://thingspeak.com/). Connecting to ThingSpeak is quite simple as well. One must create an account, create a new Channel and enter in the Fields of data they would like to collect (in this scenario, I just needed to collect Humidity Data in %). After this, a Read and Write API Key are generated. 
