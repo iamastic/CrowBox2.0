@@ -2,9 +2,9 @@
 
 This journal is an area where I will be documenting my experiences and thought processes for the duration of the project. The documents listed are dated and should be read in order. 
 
-[001 - The Initial Project Idea](https://github.com/iamastic/CrowBox2.0/blob/main/Journal/001%20-%20The%20Initial%20Project%20Idea.md#the-initial-project-idea)
+[001 - The Initial Project Idea](https://github.com/iamastic/CrowBox2.0/blob/main/Journal/Entries/001%20-%20The%20Initial%20Project%20Idea.md#the-initial-project-idea)
 
-[002 - Issues with the Scope and Testing](https://github.com/iamastic/CrowBox2.0/blob/main/Journal/002%20-%20Issues%20with%20the%20Scope%20and%20Testing.md#issues-with-the-scope-and-testing)
+[002 - Issues with the Scope and Testing](https://github.com/iamastic/CrowBox2.0/blob/main/Journal/Entries/002%20-%20Issues%20with%20the%20Scope%20and%20Testing.md#issues-with-the-scope-and-testing)
 
 [003 - The Project Reinvented](https://github.com/iamastic/CrowBox2.0/blob/main/Journal/003%20-%20The%20Project%20Reinvented.md#the-project-reinvented)
 
