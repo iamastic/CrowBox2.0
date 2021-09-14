@@ -16,4 +16,23 @@ I inclued the ```HttpClientModule``` in the ```app.module.ts``` file as well as 
 ```javascript
 import { HttpClient } from '@angular/common/http';
 ```
-within my component.ts file.
+within my component.ts file. I created an instance of the HttpClient within my ```constructor```: 
+```javascript
+constructor(private http: HttpClient) { }
+```
+
+Using this ```http``` instance, I was then able to submit ```POST``` requests as per the guidance of the tutorial. 
+```javascript
+  turnOn(){
+    this.http.post('https://humiditysensordata-default-rtdb.firebaseio.com/led_status.json', this.on).subscribe(responseData => {
+      console.log(responseData);
+    });
+  }
+```
+
+Where ```this.on``` is an array containing the String "ON", as shown here:
+```javascript
+on:{name: string} = {name : "ON"};
+```
+
+Upon submiting this requesting, I noticed a slight error on the firebase database. 
