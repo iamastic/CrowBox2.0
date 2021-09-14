@@ -10,3 +10,10 @@ I generated a new Angular app using the CLI command ```ng new ledFirebase``` and
     <button id = "turnOff" (click)="turnOff()">Turn Off</button>
 </div>
 ```
+I used the following [tutorial](https://medium.com/@monalisorathiya8/angular-sending-a-post-request-with-firebase-820f4046c89) to help guide me in linking Angular with my Firebase database. 
+
+I inclued the ```HttpClientModule``` in the ```app.module.ts``` file as well as in the ```imports``` section of the same file. I then imported the client using
+```javascript
+import { HttpClient } from '@angular/common/http';
+```
+within my component.ts file.
