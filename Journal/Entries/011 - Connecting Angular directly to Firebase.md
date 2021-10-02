@@ -38,3 +38,34 @@ I declared new imports:
 AngularFireModule.initializeApp(environment.firebase),
 AngularFirestoreModule
 ```
+
+In the ```component.ts``` file, I imported ``` import { AngularFirestore } from '@angular/fire/firestore';``` and injected it into the constructor:
+
+```js
+  constructor(private store: AngularFirestore) {}
+```
+
+I was now able to use receive and send data to my cloud database. 
+In order to do this, I created an interface for the todo list called ```Task```: 
+
+```js
+export interface Task {
+    id?: string;
+    title: string;
+    description: string;
+  }
+```
+
+I then connected objects in my ```component.ts``` file to specific collections (collections are similar to nodes or entities in SQL) in the database:
+
+```js
+  todo = this.store.collection('todo').valueChanges({ idField: 'id' }) as Observable<Task[]>;
+```
+
+Having the observable, named ```todo```, I was able to write and read data. For example, if a user clicks on "Add Task", the data they enter will be recorded and the following will be executed to send the data to the database: 
+
+```js
+this.store.collection('todo').add(result.task);
+```
+
+Where ```result.task``` is the data entered by the user in the form of the Task interface shown above. 
