@@ -5,7 +5,7 @@ I first downlaoded the geomtery files from the [Crowbox website](https://thecrow
 
 Error in printing: 
 
-![Misprinted part]()
+![Misprinted part](https://github.com/iamastic/CrowBox2.0/blob/main/Journal/Images/defective.jpg)
 
 The next step was to collect the equipment I needed to build the box. The [website](https://thecrowbox.com/wiki/doku.php?id=kit:CrowBox2_v20_bom) offered a Bill of Materials, where every equipment was specified. Given that this box was created in the United States and I am based in Portugal, I was not able to locate certain pieces of equipment. For example, an important adhesive used to hold the box together was the Acrylic Cement. I instead used a standard glue with a cauk gun, as shown below. 
 
@@ -43,7 +43,7 @@ The front basket to hold the food and accept coins:
 
 The original crowbox required a 0.5mm Styrene sheet to be used in the front basket. Styrene is a material that is hard to come by outside of the US. I, instead, printed the geometry onto a 1mm grey cardboard sheet. I expected it to work fine, however, it proved to be rigid and too thick. As a result, I broke a small piece of the coin sensor's rail, through which the sheet was supposed to slide through. As shown below, I had to apply an excessive amount of adhesive to ensure that the tiny piece would not fall out, and would hold the sheet in place.
 
-![broken coin slide]()
+![broken coin slide](https://github.com/iamastic/CrowBox2.0/blob/main/Journal/Images/broken%20coin%20slide.jpg)
 
 As shown in the image below, I replaced the grey cardboard with a piece of paper covered in aluminum foil. This, susprisingly, turned out to work quite well with the build. 
 
