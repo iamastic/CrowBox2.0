@@ -11,3 +11,65 @@ The next step was to collect the equipment I needed to build the box. The [websi
 
 ![glue and cauk gun]()
 
+The glue proved to be much more difficult to use, as the cauk gun's size made it impossible to reach in tight spaces (unlike a small tube of acrylic cement). Further more, the glue appears to be less powerful than the cement, and as a result, I had to apply 2-3 times the amount in order ensure the box is robust. As shown in the image below, this made the box look less appealing as the glue was visible from every angle. 
+
+![bad glue in between the sides]()
+
+Regardless, in the end, it did the job of holding the box together. However, if a decent amount of pressure was applied, many of the small parts did fall out and I had to reglue them back, using even more of the adhesive than the last time. 
+
+### Here are some more images of the box being built. 
+
+The rotor disc: 
+
+![rotor disc]()
+
+The sliding food lid as well as the side panels:
+
+![sliding food lid and side panels]()
+
+The coin dispensor:
+
+![coin dispensor]()
+
+The top lid cover:
+
+![top lid cover]()
+
+The coin dispensor installed in the top cover of the box: 
+![coin dispensor and top lid]()
+
+The front basket to hold the food and accept coins:
+![front basket]()
+
+The original crowbox required a 0.5mm Styrene sheet to be used in the front basket. Styrene is a material that is hard to come by outside of the US. I, instead, printed the geometry onto a 1mm grey cardboard sheet. I expected it to work fine, however, it proved to be rigid and too thick. As a result, I broke a small piece of the coin sensor's rail, through which the sheet was supposed to slide through. As shown below, I had to apply an excessive amount of adhesive to ensure that the tiny piece would not fall out, and would hold the sheet in place.
+
+![broken coin slide]()
+
+As shown in the image below, I replaced the grey cardboard with a piece of paper covered in aluminum foil. This, susprisingly, turned out to work quite well with the build. 
+
+![aluminum foil]()
+
+I used one piece of grey cardboard as the holder for the food. As this piece of the sheet did not need to fit through any narrow sections, I was able to bend it slowly into place.
+
+![food holder cardboard]()
+
+### Now that a majority of the box components had been built, I put together the electronics 
+
+I soldered the cables to the two switches that go on either side of the perch. These switches will be clicked when a bird lands on the top of the box. 
+
+![soldered wires]()
+
+Alligator clips were attached to the coin sensor, completing its circuit. 
+
+![alligator clips]()
+
+I installed the MG995 servo in the servo spine of the box. 
+
+![servo]()
+
+Connecting all the wires to the Arduino, the end circuit looked like the image below. 
+
+![final circuit]()
+
+Now that the components were installed, I placed the sliding lid as well as the perch rails into the box, and installed the rotor disc as well. Before closing the box, it was time to run a function test. 
+
