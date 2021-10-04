@@ -71,5 +71,10 @@ Connecting all the wires to the Arduino, the end circuit looked like the image b
 
 ![final circuit]()
 
-Now that the components were installed, I placed the sliding lid as well as the perch rails into the box, and installed the rotor disc as well. Before closing the box, it was time to run a function test. 
+Now that the components were installed, I placed the sliding lid as well as the perch rails into the box, and installed the rotor disc as well. Before closing the box, it was time to run a function test.
 
+### The Function Test 
+The function test involved 4 checks. First, was to see how the box responds upon booting up. After uploading the crowbox software (obtained from their website) on to the arduino, I plugged it into a power source (wall socket). The test was to ensure that the servo spun the lid closed (starting from a fully open positon) in increments. Then the servo would spin back and forth, and it would end up in a fully open position. This, however, did not ocurr for my box. 
+
+Here is what happened to my box: [Crowbox Stage 1 Failure](https://www.youtube.com/watch?v=lhO7J16TM84)
+This is the incorrect movement. Upon doing further research, I learnt that I purchased the wrong servo.
