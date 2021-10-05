@@ -25,3 +25,10 @@ The feedback was conducted on the [First Prototype - Paper Prototype](https://gi
 * Is there a notification system? It would be good if the "TROUBLESHOOT" panel was highlighted in red if there was something to report. 
 * The words used to report are confusing. What does "GOOD" or "LOW" mean? You have used so many different words, perhaps stick to a select few and make them standard. 
 * The "Report" section doesn't look good at the top. Maybe have a pop out window instead. It will make the page look cleaner.
+
+### Page 4
+
+* Quite simple and standard, this is good. 
+* Does the data section fit/make sense here? It will fit better if it is heavily personalised. A reward system would be good here, something like stickers or awards. 
+* Allow the user to select or cycle between the different boxes (if it is planned to allow them to have several boxes). 
+* Allow users to see a combined result set of all their boxes.
