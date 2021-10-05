@@ -13,3 +13,6 @@ Having explained to them the purpose of the Crowbox and the main objectives of t
 The user had now studied the page in question as well as read the brief explanation at the bottom of the page. Given the limited content, I decided against preparing any questions, so not to direct or influence the user's opinions e.g. if I ask the user about a certain element, it may lead to them ignoring other elements. As a result, I simply asked them to give me their thoughts, first impressions and reactions to the prototype. I noted these down on paper. The user was allowed to ask questions about what certain elements do if they were unclear in the prototype. 
 
 Step 3 was then repeated for each page.
+
+### Step 4
+Upon collecting the feedback from the 3 different users, I then crossed out any of the duplicated feedback and combined the remaining unique data. This was done to anonymise the data. The data was collected in accordance to the ethics outlined [here]().
