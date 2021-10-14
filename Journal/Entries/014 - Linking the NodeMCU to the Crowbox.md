@@ -46,4 +46,4 @@ Here is the wiring setup for the NodeMCU ESP32 and the servo:
 * The ESP32 GND is connected to the same GND as the Servo. 
 * The ESP32 is connected to power via the USB cable into my laptop. 
 
-[ESP32 and Servo](https://github.com/iamastic/CrowBox2.0/blob/main/Journal/Images/NodeMCU%20ESP32%20%2B%20Servo.jpg)
+![ESP32 and Servo](https://github.com/iamastic/CrowBox2.0/blob/main/Journal/Images/NodeMCU%20ESP32%20%2B%20Servo.jpg)
