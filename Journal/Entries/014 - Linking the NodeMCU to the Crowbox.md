@@ -34,3 +34,7 @@ Finally, after every write to the EEPROM/Flash Memory, the NodeMCU requires the 
 ```C
 EEPROM.commit();
 ```
+
+Now, when I uploaded the code, I did not receive any errors and the code was uplaoded successfully. After connecting the servo to power, nothing happend. The servo did not work. However, the NodeMCU was receiving information from the perch switches as well as the coin sensor. I realised there must be some issue related to the servo only. I disconnected everything but the servo and decided to test simple code, attempting to turn the servo 180 degrees clockwise and anti clockwise after every 4 seconds. When testing this, I learnt that the servo was only moving around 90 degrees. Roughly half of what I expected it to move. The servo worked perfectly when connected to the Arduino. I then decided to connect the NodeMCU to the same power supply as the servo (instead of the USB connection), but to no avail. 
+
+I did a bit of research and noted that a few other people were facing similar issues to me. There was no apparent solution online, however. I decided to test the same code on my NodeMCU ESP32. The ESP32 is a newer and more powerful version of the ESP8266. Furthermore, unlike the ESP8266 which uses the ```Servo.h``` library to control the servo, the ESP32 uses the ```ESP32Servo.h``` library. The tests were a success and the ESP32 was able to fully control the Servo. I then realised that this must be a library issue. As such, for the time being, I have switched to using the ESP32 instead of the ESP8266.
