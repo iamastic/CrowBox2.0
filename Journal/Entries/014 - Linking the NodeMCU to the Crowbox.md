@@ -86,4 +86,40 @@ attachInterrupt( digitalPinToInterrupt(INPUT_PIN_COIN), Interrupt_CoinDeposit, F
 
 Where ```INPUT_PIN_COIN``` is the GPIO 17, ```Interrupt_CoinDeposit``` is the function called when this interrupt occurs and `FALLING` is to indicate that the interrupt will ocurr when the voltage goes from HIGH to LOW.
 
+The `Interrupt_CoinDeposit` looks like: 
 
+```C++
+void Interrupt_CoinDeposit()
+{
+    g_crOSCore.EnqueueCoin();
+}
+```
+
+The [offical ESP32 documentation](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/memory-types.html) recommends placing this Interrupt Handler function within the IRAM (or Instruction RAM). This is to ensure that the code is executed faster and also seperate from the other ordinary functions of the code. To do this, I simply had to add `IRAM_ATTR` to the function header as so: 
+
+```C++
+void IRAM_ATTR Interrupt_CoinDeposit()
+{
+    g_crOSCore.EnqueueCoin();
+}
+```
+
+This, however, did not fix my problem. Something else was causing the Crowbox to reboot each time a coin collides with the two plates and an interrupt is fired off. I was getting the following errors each time I sent a coin down the chute: 
+
+`Guru Meditation Error: Core 1 panic'ed (Coprocessor exception)` and `Core 1 was running in ISR context`. I realised that the error must be coming from the functionc called by the ISR: `g_crOSCore.EnqueueCoin();`
+
+The original crowbox function looked like:
+
+```C++
+bool CCrowboxCore::EnqueueCoin()              
+{
+    if( GetUptimeSeconds() - m_uptimeLastCoinDetected < 1.0f )
+    {
+        return false;
+    }
+    
+    m_numEnqueuedDeposits++;    
+    m_uptimeLastCoinDetected = GetUptimeSeconds();
+    return true;
+}
+```
