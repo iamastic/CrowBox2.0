@@ -47,3 +47,27 @@ Here is the wiring setup for the NodeMCU ESP32 and the servo:
 * The ESP32 is connected to power via the USB cable into my laptop. 
 
 ![ESP32 and Servo](https://github.com/iamastic/CrowBox2.0/blob/main/Journal/Images/NodeMCU%20ESP32%20%2B%20Servo.jpg)
+
+After switching to the NodeMCU ESP32, I continued with adapting the Crowbox code to work with this microcontroller. I reconnected all of the wires to the GPIO pins, trying to keep it as closely similar to the original Crowbox set up. 
+
+Here are the original GPIO connections for the CrowBox and the Arduino
+
+```C++
+#define OUTPUT_PIN_LED          13
+#define OUTPUT_PIN_SERVO        9      
+#define INPUT_PIN_PERCH         2
+#define INPUT_PIN_COIN          3
+#define INPUT_PIN_PHASE_SELECT  4
+```
+
+The orientation of the GPIO pins on the NodeMCU are very different to that of the Arduino. As a result, I had to redesign the layout, and my focus now was to keep all the wires as close to each other on one side to avoid any unnecessary overlapping and tangling. Here are the GPIO pins set up for the NodeMCU ESP32:
+
+```C++
+#define OUTPUT_PIN_LED          2
+#define OUTPUT_PIN_SERVO        15      
+#define INPUT_PIN_PERCH         16
+#define INPUT_PIN_COIN          17
+#define INPUT_PIN_PHASE_SELECT  4
+```
+
+One very important difference is that of the ```OUTPUT_PIN_LED```, which is the LED placed on the Microcontroller that can be controlled by the designer. On the Arduino, this is controlled through pin 13, whereas on the NodeMCU, it is controlled via GPIO 2.
