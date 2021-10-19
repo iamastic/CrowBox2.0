@@ -71,3 +71,19 @@ The orientation of the GPIO pins on the NodeMCU are very different to that of th
 ```
 
 One very important difference is that of the ```OUTPUT_PIN_LED```, which is the LED placed on the Microcontroller that can be controlled by the designer. On the Arduino, this is controlled through pin 13, whereas on the NodeMCU, it is controlled via GPIO 2.
+
+After setting everything up, I ran the box and the microcontroller through a Function Test. This would involve testing each stage's functions at least 5 times. Stage 1 and 2 worked as intended. During Stage 3, whenever a coin was deposited, the sliding lid took a while to open. Once it did open, it spun a couple of times, and then immediately closed. I realised this must be an issue with either the servo or the code. However, the servo could not be at fault as I had tested it extensively with sample code as well as during Stage 2, in which it performed perfectly. I decided to turn on the debugging features of the crowbox (to turn on the debugging features which are enclosed with an ifdef, one must simply define the serial port). 
+
+The coin sensor is set up as so: 
+* A coin strikes the two copper covered plates 
+* A signal is sent by the voltage going from HIGH to LOW 
+* An interrupt is attached to the GPIO pin to catch this change in signal, resulting in the code to open the sliding lid to execute
+
+The interrupt is set up by first attaching it to the pin: 
+```C++
+attachInterrupt( digitalPinToInterrupt(INPUT_PIN_COIN), Interrupt_CoinDeposit, FALLING );
+```
+
+Where ```INPUT_PIN_COIN``` is the GPIO 17, ```Interrupt_CoinDeposit``` is the function called when this interrupt occurs and `FALLING` is 
+
+
