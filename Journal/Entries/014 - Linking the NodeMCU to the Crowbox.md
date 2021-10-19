@@ -84,6 +84,6 @@ The interrupt is set up by first attaching it to the pin:
 attachInterrupt( digitalPinToInterrupt(INPUT_PIN_COIN), Interrupt_CoinDeposit, FALLING );
 ```
 
-Where ```INPUT_PIN_COIN``` is the GPIO 17, ```Interrupt_CoinDeposit``` is the function called when this interrupt occurs and `FALLING` is 
+Where ```INPUT_PIN_COIN``` is the GPIO 17, ```Interrupt_CoinDeposit``` is the function called when this interrupt occurs and `FALLING` is to indicate that the interrupt will ocurr when the voltage goes from HIGH to LOW.
 
 
