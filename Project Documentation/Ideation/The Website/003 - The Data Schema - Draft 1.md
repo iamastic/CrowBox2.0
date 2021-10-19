@@ -4,7 +4,7 @@ This is the first draft of the structure of the Data. Since the data will be sto
 
 The Schema: 
 
-![scheme](https://github.com/iamastic/CrowBox2.0/blob/main/Project%20Documentation/Ideation/Images/Data%20Model%20Draft%201.PNG)
+![scheme](https://github.com/iamastic/CrowBox2.0/blob/main/Project%20Documentation/Ideation/Images/Data%20Model%20Draft%20(1).PNG)
 
 
 
