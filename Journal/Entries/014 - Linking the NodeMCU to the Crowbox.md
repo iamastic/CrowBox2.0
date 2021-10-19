@@ -123,3 +123,5 @@ bool CCrowboxCore::EnqueueCoin()
     return true;
 }
 ```
+
+The function `GetUptimeSeconds()` returns a float and `m_uptimeLastCoinDetected` is also a float. If the time is between the two is below 1 second, this means that some contact bounce has been recorded. In order to avoid counting the same coin more than once, a 1 second buffer was provided i.e. if the last time the sensor recorded a coin was less than 1 second ago, then it is the same coin, so do nothing. In the ESP32, it is not possible to work with floats. 
