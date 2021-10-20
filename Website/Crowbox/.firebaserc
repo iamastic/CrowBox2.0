@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "crowbox-37e57": {
+      "hosting": {
+        "Crowbox": [
+          "crowbox-37e57"
+        ]
+      }
+    }
+  }
+}
