@@ -1,7 +1,7 @@
 ## Setting up Angular and Firebase
 ### 13/10/21
 
-Here are the steps I followed to set up Firebase library within Angular. This is to work with the Real Time Database (rtdb).
+Here are the steps I followed to set up Firebase library within Angular. This is to work with the Real Time Database (rtdb). I used the following two guides: [Guide 1](https://developers.google.com/codelabs/building-a-web-app-with-angular-and-firebase#9) and [Guide 2](https://www.bezkoder.com/angular-11-firebase-crud/). 
 
 1) Add Firebase library to Angular: ```ng add @angular/fire```
 2) Select correct project
