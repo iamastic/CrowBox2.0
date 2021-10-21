@@ -12,6 +12,9 @@ After navigating to most pages, I then showed the User the remainder of the page
 * The user will enter the unique id or name of their Crowbox in order to link it to their account. 
 * Once everything has been verified and linked, the User will be able to navigate to the various tabs such as "Data" and Troubleshoot" and "Profile", which were previously locked away from the user. 
 
+In this step, I requested the user to provide me with general feedback on the process of setting up the box. I asked them to put themselves in the shoes of someone who is just about to jump on board of this Citizen Science project. They walked through the process and I attempted to see where the issues would arise. 
+
+
 ### Step 3
 I was seeking feedback not only on the process but also the design. As a result, I had prepared questions surrounding the User Experience and UI design of the website (instead of asking about the process, in order to not misguide the user's judgement). The questions were:
 * What is your initial response of the background color? 
@@ -22,5 +25,3 @@ I was seeking feedback not only on the process but also the design. As a result,
 * Is the Troubleshoot screen informative? Are you able to tell if something is in working order or not? 
 * How easy or difficult is it for you to navigate between the two boxes? Could you tell there was more than one crowbox for this account?
 
-### Step 4
-In this step, I requested the user to provide me with general feedback on the process of setting up the box. I asked them to put themselves in the shoes of someone who is just about to jump on board of this Citizen Science project. They walked through the process and I attempted to see where the issues would arise. 
