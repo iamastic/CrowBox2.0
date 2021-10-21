@@ -21,20 +21,6 @@ The remaining pages left unexplored by the user was the "log in" process as well
 
 ### Step 3 Feedback
 
-User reported that the background color is "bland". It appears slightly washed out rather than vibrant. 
-
-The fonts are basic and not unique. Can't go wrong with that. Simplicity may work best for a website whose goal is to provide and display data. 
-
-The washed out background defintely allows the font colors to pop out a lot more. The user noticed some inconsistencies where the headers were either dark blue or black. Dark blue appeared to be better in their opinion. The green and blue combinations worked well most of the time. In the "TROUBLESHOOT" section, they did not like how the "report for" text looked against the dark green background. Font sizes worked well too. Except for the "TROUBLESHOOT" section in which the actual status updates might be a bit too large. 
-
-As brought up earlier, the User would remove the "Halt!" message box.  
-
-As they did not notice you could switch between different charts, they feel like the organisation could have been more effective. Some kind of indicator, or perhaps positioning both charts together.
-
-The troubleshoot page was clear enough. The user could not provide too much feedback on the content in the message boxes of the issues as they had not faced any of the issues and as such, did not know if it was informative enough. The only issue was that in the data section, the user did not really notice that their was a message at the bottom providing the status update of the box. This is easy to miss. A notification or pop up system would be more effective if the status ever changes.
-
-It was clear and easy.
-
 | Questions                                                                                                                               | Response                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 |-----------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | What is your initial response of the background color?                                                                                  | User reported that the background color is "bland". It appears slightly washed out rather than vibrant.                                                                                                                                                                                                                                                                                                                                                                                                                                       |
