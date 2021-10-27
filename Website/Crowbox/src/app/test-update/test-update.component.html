@@ -1,0 +1,28 @@
+<p>test-update works!</p>
+
+
+<div>
+    <h1>Crowbox Training Phase</h1>
+
+</div>
+
+<button (click)="setOne()">1</button>
+
+<button (click)="setTwo()">2</button>
+
+<button (click)="updateSubscription()">Update</button>
+
+<h2>Coins Deposited:</h2>
+
+<ul>
+    <li *ngFor = "let i of displayCoins | async">
+        {{i.coins_deposited}}
+    </li>
+</ul>
+
+<h2>Crows on Perch:</h2>
+<ul>
+    <li *ngFor = "let i of displayCrows | async">
+        {{i.crows_landed_on_perch}}
+    </li>
+</ul>

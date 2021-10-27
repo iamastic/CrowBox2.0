@@ -8,10 +8,12 @@ import { AppComponent } from './app.component';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { environment } from '../environments/environment';
+import { TestUpdateComponent } from './test-update/test-update.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    TestUpdateComponent
   ],
   imports: [
     BrowserModule,

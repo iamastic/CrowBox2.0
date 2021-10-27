@@ -11,7 +11,25 @@ import CrowboxData from '../models/crowbox-data';
 })
 export class CrowboxdbService {
 
-  private crowboxDataPath!: '/Users/qureshiahamza/Crowbox';
+  crowboxDataPath = 'Users/';
 
-  constructor() { }
+  crowboxReference!: AngularFireList<CrowboxData>;
+
+  userReference!:AngularFireList<CrowboxData>;
+  userDbPath!: string;
+  userItem!:any;
+  
+  constructor(public db: AngularFireDatabase) { 
+    this.crowboxReference = db.list(this.crowboxDataPath);
+  }
+
+  getAll(): AngularFireList<CrowboxData>{
+    return this.crowboxReference;
+  }
+
+  update(key:string, value:any): Promise<void> {
+    return this.crowboxReference.update(key, value);
+  }
+
+
 }
