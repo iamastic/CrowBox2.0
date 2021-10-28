@@ -90,4 +90,25 @@ retrieveCrowboxData(): Observable<any> {
   }
 ```
 
-16) In order to use this function, as it returns an Observable, I need to subscribe to it. The issue I faced, however, is that a majority of my data is nested. As a result, there are more than 2 nodes, making it a deeper than ordinary data structure for a JSON tree. [The Firebase documentation](https://firebase.google.com/docs/database/web/structure-data) suggest a flat data structure and to avoid nested data. This is something I am looking to incorporate into the second draft of the data model I built. However, for now, I wanted to figure out a way to access the nested data. Accoridng to the AngularFire documentation as well as forum, the library was not built to handle nested data queries, as this is not the norm for firebase JSON structures. As a result, I had to attempt solving this problem. To solve the problem, I subscribed to the original Observable to retrieve the keys from the root object in the JSON database. As I am currently in the testing phase, I am able to hard code in some values. Since there is only one user, I simply grabbed the first key from the list of users. I then sent this key to another function that created a new `AngularFireList<CrowboxData>` reference, this time however with an extended database path name (including the key I had just obtained, which represents the user. 
+16) In order to use this function, as it returns an Observable, I need to subscribe to it. The issue I faced, however, is that a majority of my data is nested. As a result, there are more than 2 nodes, making it a deeper than ordinary data structure for a JSON tree. [The Firebase documentation](https://firebase.google.com/docs/database/web/structure-data) suggest a flat data structure and to avoid nested data. This is something I am looking to incorporate into the second draft of the data model I built. However, for now, I wanted to figure out a way to access the nested data. Accoridng to the AngularFire documentation as well as forum, the library was not built to handle nested data queries, as this is not the norm for firebase JSON structures. As a result, I had to attempt solving this problem. To solve the problem, I subscribed to the original Observable to retrieve the keys from the root object in the JSON database. As I am currently in the testing phase, I am able to hard code in some values. Since there is only one user, I simply grabbed the first key from the list of users. I then sent this key to another function that created a new `AngularFireList<CrowboxData>` reference, this time however with an extended database path name (including the key I had just obtained, which represents the user. I repeated the procedure of creating a snapshot observable, then subscribing to said observable and retrieving the data. Here is a sample of how I managed to update the Crowbox's training stage: 
+
+```js
+
+  updateSubscription() {
+    this.retrieveCrowboxData().subscribe(data => {
+      this.dataSample = data;
+      if (this.dataSample) {
+        this.key = this.dataSample[0].key;
+        this.UpdateCrowBoxTrainingStage(this.key);
+      }
+    })
+  }
+  
+  UpdateCrowBoxTrainingStage(userKey:any) {
+    this.cbservice.userDbPath = `Users/${userKey}`;
+    this.cbservice.userReference = this.cbservice.db.list(this.cbservice.userDbPath);
+    this.cbservice.updateUserRef('Crowbox', {current_training_stage:this.trainingStage});
+  } 
+```
+
+Through this method, I was able to access the nested data. This is, however, a rather long and tedious method to use. It would be easier to flatten the tree and simply access one level of the JSON data. 
