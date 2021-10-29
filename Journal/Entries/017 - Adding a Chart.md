@@ -65,9 +65,24 @@ The code works by grabbing the database list reference, creating an Observable i
         this.barChartData = [
           { data: this.coinsData, label: 'Coins Deposited' },
           { data: this.perchData, label: 'Crows Landed On Perch'}
-
         ];
-
       }
     )
+```
+
+Then, in the `component.html` view, I bind the data. 
+
+```html
+<div>
+    <div id = "chart">
+        <canvas baseChart
+                [datasets]="barChartData"
+                [labels]="barChartLabels"
+                [options]="barChartOptions"
+                [legend]="barChartLegend"
+                [chartType]="barChartType"
+                >
+        </canvas>
+    </div>
+</div>
 ```
