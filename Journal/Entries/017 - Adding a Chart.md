@@ -54,4 +54,20 @@ However, the data I plan on using will dynamically change. For example, one bar 
 ```
 In java script, arrays have inbuilt dynamic memory allocation and as such, I simply need to `push` data into the array. In this basic scenario, however, I am only working with 1 data value i.e. the number of coins deposited. As such, I did not need to make use of the dynamic memory allocation. 
 
-The code works by grabbing the database list reference, creating an Observable in the form of a snapshot of the data, and then subscribing to said Observable. During the subscription, I receive the data value of the coins deposited 
+The code works by grabbing the database list reference, creating an Observable in the form of a snapshot of the data, and then subscribing to said Observable. During the subscription, I receive the data value of the coins deposited and then set the 1st cell of the `coinsData` array to the value retrieved. I then reset the `barChartData` details and this automatically updates the chart. 
+
+```js
+    this.displayCoins.subscribe(data =>
+      {
+        this.chartCoinDeposited = data[0].coins_deposited;
+        this.coinsData[0] = this.chartCoinDeposited;
+
+        this.barChartData = [
+          { data: this.coinsData, label: 'Coins Deposited' },
+          { data: this.perchData, label: 'Crows Landed On Perch'}
+
+        ];
+
+      }
+    )
+```
