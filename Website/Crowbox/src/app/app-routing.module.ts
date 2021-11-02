@@ -1,9 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { TestUpdateComponent } from './test-update/test-update.component';
+
+
+
+import { DataComponent } from './data/data/data.component';
+import { AuthComponent } from './home/auth/auth.component';
 
 const routes: Routes = [
-  { path:'', component:TestUpdateComponent }
+  { path:'', redirectTo:'/auth', pathMatch:'full' },
+  { path:'data', component:DataComponent },
+  { path:'auth', component:AuthComponent }
 ];
 
 @NgModule({

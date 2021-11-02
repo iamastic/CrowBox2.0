@@ -27,9 +27,8 @@ export class CrowboxdbService {
     return this.crowboxReference;
   }
 
-  update(key:string, value:any): Promise<void> {
-    return this.crowboxReference.update(key, value);
+  updateUserRef(key:string, value:any): Promise<void> {
+    return this.userReference.update(key, value);
   }
-
 
 }
