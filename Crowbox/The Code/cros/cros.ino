@@ -12,6 +12,7 @@
 //   under a Creative Commons Attribution-ShareAlike 4.0 
 //   International License
 //==========================================================
+
 #include "cros_core.h"
 #include "cros_constants.h"
 #include "cros_types.h"
@@ -24,7 +25,7 @@
 // after a successful compile
 //======================================
 CCrowboxCore g_crOSCore;
-FirebaseData fireTrainingStage;
+//FirebaseData fireTrainingStage;
 
 //======================================
 // Called by the Arduino system one time,
@@ -53,7 +54,7 @@ void setup()
     Firebase.reconnectWiFi(true); 
     //Firebase.setString(fireTrainingStage, "crowbox/training_stage", "0"); 
     //END MY WORK
-    
+
     // Run-Once
     g_crOSCore.Setup(); 
 }

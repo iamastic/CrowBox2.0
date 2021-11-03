@@ -19,10 +19,25 @@
 #include <ESP32Servo.h>
 #include <WiFi.h> 
 #include <FirebaseESP32.h>
+
+#include <NTPClient.h>
+#include <WiFiUdp.h>
+
+
 #define WIFI_SSID "Vodafone-72DA74"                                          
 #define WIFI_PASSWORD "t6vaHAN6bpy5z4qb"     
 #define FIREBASE_HOST "crowbox-37e57-default-rtdb.firebaseio.com"              // the project name address from firebase id
 #define FIREBASE_AUTH "pgwTyjv4NBcA8xZ2k0IkTjvsMxKiG6cSXmRSldS6"       // the secret key generated from firebase
+
+// Define NTP Client to get time
+/* WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP);
+ */
+
+//the UID of the user
+/* #define USER_ID "n8hWiynNjVNLaKgQ2TSHUmc0ZSG2"
+ */
+
 /* END MY WORK */
 
 // #include <Arduino.h>
@@ -65,14 +80,21 @@ public:
     cros_time_t HowLongHasBirdBeenHere();
     cros_time_t HowLongHasBirdBeenGone();
 
+    /* MY WORK */
     int numberOfCrowsLanded;
     FirebaseData crowOnPerch;
     int numberOfCoinsDeposited;
     FirebaseData coinDeposit;
     FirebaseData trainingPhase;
-    String username;
+
+    // Variables to save date and time
+    String formattedDate;
+    String dayStamp;
+    //the UID of the user
+    String USER_ID; 
 
 
+    /* END MY WORK */
     
     bool  IsRewardBasketOpen() const    { return m_basketState == BASKET_STATE_OPEN; }
     

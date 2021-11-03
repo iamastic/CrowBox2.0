@@ -13,6 +13,10 @@
 #include <EEPROM.h>
 #include "cros_core.h"
 
+// Define NTP Client to get time
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP);
+
 //==========================================================
 // Interrupt function called when the coin sensor is struck
 // by a coin, bringing the coin pin to LOW (switched to ground).
@@ -119,8 +123,13 @@ void CCrowboxCore::Setup()
     //start with 0 coins deposited
     //numberOfCoinsDeposited = 0;
 
-    username = "qureshiahamza";
-    Serial.println("Username Set: " + username);
+    // Define NTP Client to get time
+/*     WiFiUDP ntpUDP;
+    NTPClient timeClient(ntpUDP); */
+
+    //username = "qureshiahamza";
+    USER_ID = "n8hWiynNjVNLaKgQ2TSHUmc0ZSG2";
+    Serial.println("Username Set: " + USER_ID);
 
     // Start with no enqueued deposits
     m_numEnqueuedDeposits = 0;
@@ -149,6 +158,12 @@ void CCrowboxCore::Setup()
       }
     } */
 
+      // Initialize a NTPClient to get time and date
+      timeClient.begin();
+      timeClient.setTimeOffset(3600);
+    
+
+
     // If we reach this point, we're sure the EEPROM data is good
     // so we'll retrieve the stored data there which tells use which
     // phase of the training protocol is currently in use.
@@ -156,8 +171,11 @@ void CCrowboxCore::Setup()
 
     //initiate the main variables from firebase
     LoadCurrentTrainingPhaseFromFirebase();
-    LoadNumberOfCoinsDepositedFromFirebase();
-    LoadNumberOfCrowsLandedOnPerchFromFirebase();
+
+    //don't need these functions in the setup anymore
+    //these functions will run everytime a coin or perch event occurs
+    //LoadNumberOfCoinsDepositedFromFirebase();
+    //LoadNumberOfCrowsLandedOnPerchFromFirebase();
 
 
 
@@ -231,6 +249,11 @@ void CCrowboxCore::Loop()
     // Take a quick sample of the uptime in milliseconds. We'll use this value
     // near the end of this function to determine how long this call to Loop()
     // will take.
+
+    //Ensure the date and time client updates
+    while(!timeClient.update()) {
+      timeClient.forceUpdate();
+    }
     unsigned long msWhenLoopBegan = millis();
 
     // If the basket is scheduled to close on a timer and it is time to close 
@@ -734,6 +757,17 @@ void CCrowboxCore::RunPhaseTwoProtocol()
       /* Firebase.setInt(crowOnPerch, "crowbox/crow_on_perch", 
       numberOfCrowsLanded); */
 
+      
+      //get the current date 
+      formattedDate = timeClient.getFormattedDate();
+      Serial.println(formattedDate);
+
+      int splitT = formattedDate.indexOf("T");
+      dayStamp = formattedDate.substring(0, splitT);
+      Serial.println("DATE: ");
+      Serial.println(dayStamp);
+
+      LoadNumberOfCrowsLandedOnPerchFromFirebase();
       WriteNumberOfCrowsOnPerchToFirebase(); 
 
       m_uptimeWhenBirdLanded = GetUptimeSeconds();
@@ -799,9 +833,28 @@ void CCrowboxCore::RunPhaseThreeProtocol()
     // Set it up to close.
     ScheduleBasketCloseWithDelay( BASKET_REMAIN_OPEN_DURATION );
 
-    numberOfCoinsDeposited++;
+    //numberOfCoinsDeposited++;
     /* Firebase.setInt(coinDeposit, "crowbox/coins_deposited", numberOfCoinsDeposited); */ 
+    //WriteNumberOfCoinsDepositedToFirebase();
+
+
+    //get the current date 
+    formattedDate = timeClient.getFormattedDate();
+    Serial.println(formattedDate);
+
+    int splitT = formattedDate.indexOf("T");
+    dayStamp = formattedDate.substring(0, splitT);
+    Serial.println("DATE: ");
+    Serial.println(dayStamp);
+
+    //now, we need to check if this date and its data exists
+    //in the firebase database. We need to load it and also 
+    //increment it within this function
+    LoadNumberOfCoinsDepositedFromFirebase();
+
+    //then, we need to write this data back to firebase
     WriteNumberOfCoinsDepositedToFirebase();
+
   }
 }
 
@@ -865,7 +918,7 @@ void CCrowboxCore::CheckTrainingPhaseSwitch()
 
   int newTrainingStage = 0;
 
-  if (Firebase.getInt(trainingPhase, "Users/"+username+"/Crowbox/current_training_stage")) {  
+  if (Firebase.getInt(trainingPhase, "Users/"+USER_ID+"/Crowbox/current_training_stage")) {  
     
     newTrainingStage = trainingPhase.to<int>();
   } else {
@@ -1030,13 +1083,13 @@ void CCrowboxCore::WriteCurrentTrainingPhaseToEEPROM()
 void CCrowboxCore::WriteCurrentTrainingPhaseToFirebase()
 {
   Serial.println("Writing Training Phase to Firebase");
-  Firebase.setInt(trainingPhase,"Users/"+username+"/Crowbox/current_training_stage", m_currentTrainingPhase);
+  Firebase.setInt(trainingPhase,"Users/"+USER_ID+"/Crowbox/current_training_stage", m_currentTrainingPhase);
 }
 
 
 void CCrowboxCore::LoadCurrentTrainingPhaseFromFirebase()
 {
-  if (Firebase.getInt(trainingPhase, "Users/"+username+"/Crowbox/current_training_stage")) {  
+  if (Firebase.getInt(trainingPhase, "Users/"+USER_ID+"/Crowbox/current_training_stage")) {  
     
     m_currentTrainingPhase = trainingPhase.to<int>();
     Serial.println("Successfully got training stage");
@@ -1050,16 +1103,38 @@ void CCrowboxCore::LoadCurrentTrainingPhaseFromFirebase()
 void CCrowboxCore::WriteNumberOfCoinsDepositedToFirebase()
 {
   Serial.println("Writing Number of Coins Deposited to Firebase");
-  Firebase.setInt(coinDeposit,"Users/"+username+"/Crowbox/coins_deposited", numberOfCoinsDeposited);
+  /* Firebase.setInt(coinDeposit,"Users/"+username+"/Crowbox/coins_deposited", numberOfCoinsDeposited); */
+  Firebase.setInt(coinDeposit,"Users/"+USER_ID+"/Crowbox/coins_desposited/"+dayStamp, numberOfCoinsDeposited);
 }
-
+ 
 void CCrowboxCore::LoadNumberOfCoinsDepositedFromFirebase(){
 
-  if (Firebase.getInt(coinDeposit, "Users/"+username+"/Crowbox/coins_deposited")) {  
-    
+  /* if (Firebase.getInt(coinDeposit, "Users/"+username+"/Crowbox/coins_deposited")) {  
     numberOfCoinsDeposited = coinDeposit.to<int>();
     Serial.println("Successfully got Number of Coins");
     Serial.println(numberOfCoinsDeposited);
+  } else {
+    Serial.println("Error retreiving data from Firebase");
+  } */
+  
+  Serial.println("Loading Number of Coins Deposited From Firebase");
+
+  if (Firebase.getInt(coinDeposit, "Users/"+USER_ID+"/Crowbox/coins_desposited/"+dayStamp)){
+    
+    //get the number of coins
+    numberOfCoinsDeposited = coinDeposit.to<int>();
+    Serial.println("Successfully got Number of Coins");
+
+    //check if it is a number? not sure if this will work
+    if (numberOfCoinsDeposited == NULL) {
+      //set it to 1 
+      Serial.println("Number of Coins Deposited is Null");
+      numberOfCoinsDeposited = 1;
+    } else {
+      Serial.println("Number of Coins deposited is not null, incrementing");
+      numberOfCoinsDeposited++;
+      Serial.println(numberOfCoinsDeposited);
+    }
   } else {
     Serial.println("Error retreiving data from Firebase");
   }
@@ -1068,18 +1143,38 @@ void CCrowboxCore::LoadNumberOfCoinsDepositedFromFirebase(){
 void CCrowboxCore::WriteNumberOfCrowsOnPerchToFirebase()
 {
   Serial.println("Writing Number of Crows landed on perch to Firebase");
-  Firebase.setInt(crowOnPerch,"Users/"+username+"/Crowbox/crows_landed_on_perch", numberOfCrowsLanded);
+ /*  Firebase.setInt(crowOnPerch,"Users/"+username+"/Crowbox/crows_landed_on_perch", numberOfCrowsLanded); */
+
+ Firebase.setInt(crowOnPerch, "Users/"+USER_ID+"/Crowbox/crows_landed_on_perch/"+dayStamp, numberOfCrowsLanded);
 }
 
 void CCrowboxCore::LoadNumberOfCrowsLandedOnPerchFromFirebase(){
 
-    if (Firebase.getInt(crowOnPerch, "Users/"+username+"/Crowbox/crows_landed_on_perch")) {  
+  /*   if (Firebase.getInt(crowOnPerch, "Users/"+username+"/Crowbox/crows_landed_on_perch")) {  
     
     numberOfCrowsLanded = crowOnPerch.to<int>();
     Serial.println("Successfully got Number of Crows landed on Perch");
     Serial.println(numberOfCrowsLanded);
   } else {
     Serial.println("Error retreiving data from Firebase");
+  } */
+
+  if(Firebase.getInt(crowOnPerch, "Users/"+USER_ID+"/Crowbox/crows_landed_on_perch/"+dayStamp)) {
+    numberOfCrowsLanded = crowOnPerch.to<int>();
+    Serial.println("Successfully got Number of Crows landed on perch");
+
+    //check if it is a number or null? 
+    if(numberOfCrowsLanded == NULL) {
+      //if it is null, then set it to 1
+      Serial.println("Number of crows landed on perch is null");
+      numberOfCrowsLanded = 1;
+    } else {
+      Serial.println("Number of crows landed on perch is not null, incrementing");
+      numberOfCrowsLanded++;
+      Serial.println(numberOfCrowsLanded);
+    }
+  } else {
+      Serial.println("Error retreiving data from Firebase");
   }
 
 }
