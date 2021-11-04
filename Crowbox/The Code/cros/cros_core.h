@@ -93,6 +93,8 @@ public:
     //the UID of the user
     String USER_ID; 
 
+    unsigned long currentTime;
+
 
     /* END MY WORK */
     
@@ -150,6 +152,9 @@ protected:
     void LoadNumberOfCrowsLandedOnPerchFromFirebase();
     void WriteNumberOfCoinsDepositedToFirebase();
     void WriteNumberOfCrowsOnPerchToFirebase();
+
+    //time methods
+    void GetCurrentDate();
 
     //--------------------------------------
     // Video

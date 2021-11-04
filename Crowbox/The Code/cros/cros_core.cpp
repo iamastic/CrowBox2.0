@@ -236,6 +236,9 @@ void CCrowboxCore::Setup()
     // Ensure video is not being recorded
     StopRecordingVideo();
 
+    //set the current time for training phase
+    currentTime = millis();
+    
     // Ensure everything has settled out before proceeding. 
     delay( 1000 );
 
@@ -311,7 +314,14 @@ void CCrowboxCore::Loop()
 
     // Poll to see if the human operator has pressed the switch which is
     // used to change the selected training phase.
-    CheckTrainingPhaseSwitch();
+    
+    //check the current training stage every 1 minute to avoid 
+    //too many requests to firebase database
+    if((millis() - currentTime) >= 60000) {
+      Serial.println("1 Minute is up, checking training phase");
+      currentTime = millis();
+      CheckTrainingPhaseSwitch();
+    }
 
     // Now we do some time arithmetic to figure out how long this loop took to
     // execute. If it's less than IDEAL_LOOP_MS, then we make the system 
@@ -758,15 +768,7 @@ void CCrowboxCore::RunPhaseTwoProtocol()
       numberOfCrowsLanded); */
 
       
-      //get the current date 
-      formattedDate = timeClient.getFormattedDate();
-      Serial.println(formattedDate);
-
-      int splitT = formattedDate.indexOf("T");
-      dayStamp = formattedDate.substring(0, splitT);
-      Serial.println("DATE: ");
-      Serial.println(dayStamp);
-
+      GetCurrentDate();
       LoadNumberOfCrowsLandedOnPerchFromFirebase();
       WriteNumberOfCrowsOnPerchToFirebase(); 
 
@@ -838,15 +840,7 @@ void CCrowboxCore::RunPhaseThreeProtocol()
     //WriteNumberOfCoinsDepositedToFirebase();
 
 
-    //get the current date 
-    formattedDate = timeClient.getFormattedDate();
-    Serial.println(formattedDate);
-
-    int splitT = formattedDate.indexOf("T");
-    dayStamp = formattedDate.substring(0, splitT);
-    Serial.println("DATE: ");
-    Serial.println(dayStamp);
-
+    GetCurrentDate();
     //now, we need to check if this date and its data exists
     //in the firebase database. We need to load it and also 
     //increment it within this function
@@ -922,17 +916,17 @@ void CCrowboxCore::CheckTrainingPhaseSwitch()
     
     newTrainingStage = trainingPhase.to<int>();
   } else {
-    Serial.println("Error retreiving data from Firebase");
+      Serial.println("Error retreiving data from Firebase");
   }
 
   
   if ((newTrainingStage >=1) && (newTrainingStage <=4)) {
     if (newTrainingStage != m_currentTrainingPhase) {
-    //restart esp32
-    ESP.restart();
-  }
+      //restart esp32
+      ESP.restart();
+    }
   } else {
-    Serial.println("New training stage is outside valid range");
+      Serial.println("New training stage is outside valid range");
   }
 }
 
@@ -1104,7 +1098,7 @@ void CCrowboxCore::WriteNumberOfCoinsDepositedToFirebase()
 {
   Serial.println("Writing Number of Coins Deposited to Firebase");
   /* Firebase.setInt(coinDeposit,"Users/"+username+"/Crowbox/coins_deposited", numberOfCoinsDeposited); */
-  Firebase.setInt(coinDeposit,"Users/"+USER_ID+"/Crowbox/coins_desposited/"+dayStamp, numberOfCoinsDeposited);
+  Firebase.setInt(coinDeposit,"Users/"+USER_ID+"/Crowbox/coins_deposited/"+dayStamp, numberOfCoinsDeposited);
 }
  
 void CCrowboxCore::LoadNumberOfCoinsDepositedFromFirebase(){
@@ -1119,7 +1113,7 @@ void CCrowboxCore::LoadNumberOfCoinsDepositedFromFirebase(){
   
   Serial.println("Loading Number of Coins Deposited From Firebase");
 
-  if (Firebase.getInt(coinDeposit, "Users/"+USER_ID+"/Crowbox/coins_desposited/"+dayStamp)){
+  if (Firebase.getInt(coinDeposit, "Users/"+USER_ID+"/Crowbox/coins_deposited/"+dayStamp)){
     
     //get the number of coins
     numberOfCoinsDeposited = coinDeposit.to<int>();
@@ -1177,6 +1171,17 @@ void CCrowboxCore::LoadNumberOfCrowsLandedOnPerchFromFirebase(){
       Serial.println("Error retreiving data from Firebase");
   }
 
+}
+
+void CCrowboxCore::GetCurrentDate(){
+  //get the current date 
+  formattedDate = timeClient.getFormattedDate();
+  Serial.println(formattedDate);
+
+  int splitT = formattedDate.indexOf("T");
+  dayStamp = formattedDate.substring(0, splitT);
+  Serial.println("DATE: ");
+  Serial.println(dayStamp);
 }
 
 //----------------------------------------------------------
