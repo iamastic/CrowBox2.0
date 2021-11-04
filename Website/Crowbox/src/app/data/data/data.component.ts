@@ -109,7 +109,6 @@ export class DataComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    //this.initialiseCrowOnPerchChartData();
     this.getCrowOnPerchDataChildren()
     this.getCoinDepositedDataChildren();
   }
@@ -130,7 +129,8 @@ export class DataComponent implements OnInit, AfterViewInit {
       } else {
         //create the user and their respective data slots here
         console.log("In data component, no such user found");
-        this.crowboxService.updateUserLocation("Portugal");
+        console.log("Creating user");
+        this.crowboxService.updateTrainingStage(1);
       }
     });
   }
@@ -198,40 +198,4 @@ export class DataComponent implements OnInit, AfterViewInit {
       ];
     });
   }
-
-
-  //don't think I need this function anymore!
-  initialiseCrowOnPerchChartData() {
-    //create the observable as a snapshot of the 
-    //data 
-    this.$initialCrowOnPerchSub = this.crowboxService
-    .getCrowOnPerchData()
-    .snapshotChanges()
-    .pipe( map (changes =>
-      changes.map(c => 
-        ({key: c.payload.key, ...c.payload.val()})
-        )
-      )
-    );
-
-    //Subscribe to this observable to extract the data.
-    //Set the data in the arrays, do this only once.
-    //End the subscription afterwards (hence the use of 
-    //first()).
-    this.$initialCrowOnPerchSub
-    .pipe(first())
-    .subscribe(data => {
-      //first, we store the last key/date 
-      this.currentCrowsOnPerchDate = data[data.length - 1].key;
-
-      //next, we store each value into the respective array
-      for(var i = 0; i<data.length; i++) {
-        //store keys in the date array
-        this.crowsOnPerchDate.push(data[i].key);
-        //store data in the values array
-        this.crownsOnPerchValues.push(data[i].value);
-      } 
-    });
-  }
-
 }

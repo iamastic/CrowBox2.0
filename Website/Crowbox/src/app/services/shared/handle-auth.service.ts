@@ -18,6 +18,7 @@ export class HandleAuthService {
   constructor(private fireAuth: AngularFireAuth) { 
     /* initialise the currentUserId to that of the local storage */
     this.currentUserId = localStorage.getItem('uid');
+    console.log("Got the user id from localstorage " + this.currentUserId);
   }
 
   login() {
@@ -33,6 +34,7 @@ export class HandleAuthService {
       //store the user id (uid) in the local storage
       if (this.currentUserData.uid) {
         this.currentUserId = this.currentUserData.uid;
+        console.log("Setting the uid in localstorage" + this.currentUserId);
         localStorage.setItem('uid', this.currentUserId);
       } else {
         console.log("Error in retrieving user data from Auth");

@@ -24,6 +24,10 @@ export class CrowboxdbService {
   coinsDepositedReference!:AngularFireList<any>;
   coinsDepositedDataPath!:any; 
 
+  //crowbox list 
+  crowboxReference!:AngularFireObject<any>;
+  crowboxDataPath!:any;
+
   //public list
   publicReference!: AngularFireList<any>;
   publicDataPath = 'Public/';
@@ -31,6 +35,7 @@ export class CrowboxdbService {
   //Site Data list
   siteReference!:AngularFireList<any>;
   siteDataPath = 'Site/';
+
 
   constructor(private db: AngularFireDatabase, private handleAuth: HandleAuthService) {
 
@@ -52,6 +57,10 @@ export class CrowboxdbService {
       this.coinsDepositedDataPath = `Users/${this.currentUserId}/Crowbox/coins_deposited`;
       this.coinsDepositedReference = db.list(this.coinsDepositedDataPath);
 
+      //setting up the reference for the main crowbox
+      this.crowboxDataPath = `Users/${this.currentUserId}/Crowbox`;
+      this.crowboxReference = db.object(this.crowboxDataPath);
+
     } else {
       console.log("Error in crowboxdb Service - Cannot retrieve user id");
     }
@@ -71,8 +80,12 @@ export class CrowboxdbService {
     return this.userReference;
   }
 
-  updateUserLocation(location:String):void {
+  updateUserLocation(location:string):void {
     this.userReference.update({ Location: location });
+  }
+
+  updateTrainingStage(trainingStage: number): void {
+    this.crowboxReference.update({current_training_stage: trainingStage});
   }
 
   getAllPublicData(): AngularFireList<any> {
