@@ -8,7 +8,6 @@ import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
 
 //import the crowbox service to handle firebase api requests
 import { CrowboxdbService } from 'src/app/services/crowbox/crowboxdb.service';
-import { Action } from 'rxjs/internal/scheduler/Action';
 
 
 @Component({
@@ -24,6 +23,39 @@ export class DataComponent implements OnInit {
   //Observable to handle the user related subscriptions
   userData$?:Observable<any>;
 
+  /* Crow On Perch Charts Related */
+  $crowsOnPerch?: Observable<any>;
+  //y axis data
+  crowsOnPerchDate?: string[] = ["null"];
+  //x axis data
+  crownsOnPerchValues?: number[] = [0];
+  //most recent date for crows landing on perch
+  currentCrowsOnPerchDate?:string = "null";
+  //crows on perch barchart options
+  public crowOnPerchChartOptions = {
+    responsive: true,
+    scales: { xAxes: [{}], yAxes: [{
+      display:true,
+      ticks: {
+        beginAtZero: true
+      }
+    }] },
+    plugins: {
+      datalabels: {
+        anchor: 'end',
+        align: 'end',
+      }
+    }
+  };
+
+  public crowOnPerchChartLabels = ['Number Of Crows That Landed on The Perch'];
+  public crowOnPerchChartType = 'bar';
+  public crowOnPerchChartLegend = true;
+
+  public crowOnPerchChartData = [
+    { data: this.crownsOnPerchValues, label: this.crowsOnPerchDate },
+  ];
+
   constructor(private authService: HandleAuthService, private crowboxService: CrowboxdbService) { }
 
   ngOnInit(): void {
@@ -31,6 +63,8 @@ export class DataComponent implements OnInit {
     this.currentUserId = this.authService.currentUserId;
 
     this.checkIfUserExists();
+
+    this.initialiseCrowOnPerchChartData();
   }
 
   /* Check if the user already has a profile in the 
@@ -38,7 +72,6 @@ export class DataComponent implements OnInit {
   and update the data: Name, Location, Total Data
   and Preferences */
   checkIfUserExists(): void {
-
     this.userData$ = this.crowboxService.getUser().snapshotChanges();
 
     this.userData$.subscribe(action => {
@@ -48,31 +81,36 @@ export class DataComponent implements OnInit {
         console.log(action.key);
         console.log(action.payload.val().Location);
       } else {
+        //create the user and their respective data slots here
         console.log("In data component, no such user found");
         this.crowboxService.updateUserLocation("Portugal");
-
       }
-    })
+    });
+  }
 
-
-
-
-   /*  this.userData$ = this.crowboxService.getUser().snapshotChanges().pipe(
-      map(changes => 
-        changes.map(c =>
-          ({key:c.payload.key, ...c.payload.val()})
+  initialiseCrowOnPerchChartData() {
+    //create the observable as a snapshot of the 
+    //data 
+    this.$crowsOnPerch = this.crowboxService
+    .getCrowOnPerchData()
+    .snapshotChanges()
+    .pipe( map (changes =>
+      changes.map(c => 
+        ({key: c.payload.key, ...c.payload.val()})
         )
       )
-    ); */
+    );
 
-    //subscribe to get the data
-   /*  this.userData$.subscribe(data => {
-      if(data.key === undefined) {
-        console.log("In data component, no such user found");
-      } else {
-        console.log("User is in the database");
-      }
-    }); */
+    //subscribe to this observable to extract the data
+    //set the data in the arrays
+    this.$crowsOnPerch.subscribe(data => {
+      /* for(var i = 0; i<data.length(); i++) {
+        console.log(data[i].key);
+      } */
+      console.log(data);
+    });
   }
+
+
 
 }

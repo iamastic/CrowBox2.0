@@ -1,2 +1,14 @@
-<p>data works!</p>
-{{currentUserId}}
+<h2>Crow Box Data</h2>
+
+<div>
+    <div id = "chart">
+        <canvas baseChart
+                [datasets]="crowOnPerchChartData"
+                [labels]="crowOnPerchChartLabels"
+                [options]="crowOnPerchChartOptions"
+                [legend]="crowOnPerchChartLegend"
+                [chartType]="crowOnPerchChartType"
+                >
+        </canvas>
+    </div>
+</div>

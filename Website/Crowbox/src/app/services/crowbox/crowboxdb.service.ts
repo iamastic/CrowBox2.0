@@ -11,10 +11,14 @@ import { HandleAuthService } from '../shared/handle-auth.service';
 })
 export class CrowboxdbService {
 
-  //user's list 
+  //user's object 
   userReference!:AngularFireObject<any>;
   usersDataPath = 'Users/';
   currentUserId?:any;
+
+  //crows on perch list 
+  crowsOnPerchReference!:AngularFireList<any>;
+  crowsOnPerchDataPath = `Users/${this.currentUserId}/Crowbox/crows_landed_on_perch`
 
   //public list
   publicReference!: AngularFireList<any>;
@@ -26,10 +30,14 @@ export class CrowboxdbService {
 
   constructor(private db: AngularFireDatabase, private handleAuth: HandleAuthService) {
 
-    //set up user list
+    //set up user object
+    //set up crows on perch list
+    //set up coins deposited list 
     this.currentUserId = this.handleAuth.currentUserId;
     if (this.currentUserId) {
       this.userReference = db.object(this.usersDataPath+`${this.currentUserId}`);
+
+      this.crowsOnPerchReference = db.list(this.crowsOnPerchDataPath);
     } else {
       console.log("Error in crowboxdb Service - Cannot retrieve user id");
     }
@@ -59,6 +67,10 @@ export class CrowboxdbService {
 
   getAllSiteData(): AngularFireList<any>{
     return this.siteReference;
+  }
+
+  getCrowOnPerchData(): AngularFireList<any> {
+    return this.crowsOnPerchReference;
   }
 
 
