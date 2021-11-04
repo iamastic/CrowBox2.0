@@ -1098,7 +1098,7 @@ void CCrowboxCore::WriteNumberOfCoinsDepositedToFirebase()
 {
   Serial.println("Writing Number of Coins Deposited to Firebase");
   /* Firebase.setInt(coinDeposit,"Users/"+username+"/Crowbox/coins_deposited", numberOfCoinsDeposited); */
-  Firebase.setInt(coinDeposit,"Users/"+USER_ID+"/Crowbox/coins_deposited/"+dayStamp, numberOfCoinsDeposited);
+  Firebase.setInt(coinDeposit,"Users/"+USER_ID+"/Crowbox/coins_deposited/"+dayStamp+"/value", numberOfCoinsDeposited);
 }
  
 void CCrowboxCore::LoadNumberOfCoinsDepositedFromFirebase(){
@@ -1113,7 +1113,7 @@ void CCrowboxCore::LoadNumberOfCoinsDepositedFromFirebase(){
   
   Serial.println("Loading Number of Coins Deposited From Firebase");
 
-  if (Firebase.getInt(coinDeposit, "Users/"+USER_ID+"/Crowbox/coins_deposited/"+dayStamp)){
+  if (Firebase.getInt(coinDeposit, "Users/"+USER_ID+"/Crowbox/coins_deposited/"+dayStamp+"/value")){
     
     //get the number of coins
     numberOfCoinsDeposited = coinDeposit.to<int>();
@@ -1139,7 +1139,7 @@ void CCrowboxCore::WriteNumberOfCrowsOnPerchToFirebase()
   Serial.println("Writing Number of Crows landed on perch to Firebase");
  /*  Firebase.setInt(crowOnPerch,"Users/"+username+"/Crowbox/crows_landed_on_perch", numberOfCrowsLanded); */
 
- Firebase.setInt(crowOnPerch, "Users/"+USER_ID+"/Crowbox/crows_landed_on_perch/"+dayStamp, numberOfCrowsLanded);
+ Firebase.setInt(crowOnPerch, "Users/"+USER_ID+"/Crowbox/crows_landed_on_perch/"+dayStamp+"/value", numberOfCrowsLanded);
 }
 
 void CCrowboxCore::LoadNumberOfCrowsLandedOnPerchFromFirebase(){
@@ -1153,7 +1153,7 @@ void CCrowboxCore::LoadNumberOfCrowsLandedOnPerchFromFirebase(){
     Serial.println("Error retreiving data from Firebase");
   } */
 
-  if(Firebase.getInt(crowOnPerch, "Users/"+USER_ID+"/Crowbox/crows_landed_on_perch/"+dayStamp)) {
+  if(Firebase.getInt(crowOnPerch, "Users/"+USER_ID+"/Crowbox/crows_landed_on_perch/"+dayStamp+"/value")) {
     numberOfCrowsLanded = crowOnPerch.to<int>();
     Serial.println("Successfully got Number of Crows landed on perch");
 
