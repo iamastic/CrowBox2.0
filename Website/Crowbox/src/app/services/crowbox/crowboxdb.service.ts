@@ -18,7 +18,11 @@ export class CrowboxdbService {
 
   //crows on perch list 
   crowsOnPerchReference!:AngularFireList<any>;
-  crowsOnPerchDataPath = `Users/${this.currentUserId}/Crowbox/crows_landed_on_perch`
+  crowsOnPerchDataPath!: any;
+
+  //coin deposied list
+  coinsDepositedReference!:AngularFireList<any>;
+  coinsDepositedDataPath!:any; 
 
   //public list
   publicReference!: AngularFireList<any>;
@@ -35,9 +39,19 @@ export class CrowboxdbService {
     //set up coins deposited list 
     this.currentUserId = this.handleAuth.currentUserId;
     if (this.currentUserId) {
+      //setting the reference for the user's object
+      //used to get data such as Location and name
       this.userReference = db.object(this.usersDataPath+`${this.currentUserId}`);
 
+      //setting the reference for the crows on the perch 
+      //data
+      this.crowsOnPerchDataPath = `Users/${this.currentUserId}/Crowbox/crows_landed_on_perch`;
       this.crowsOnPerchReference = db.list(this.crowsOnPerchDataPath);
+
+      //setting the reference for the coins deposited data
+      this.coinsDepositedDataPath = `Users/${this.currentUserId}/Crowbox/coins_deposited`;
+      this.coinsDepositedReference = db.list(this.coinsDepositedDataPath);
+
     } else {
       console.log("Error in crowboxdb Service - Cannot retrieve user id");
     }
@@ -71,6 +85,10 @@ export class CrowboxdbService {
 
   getCrowOnPerchData(): AngularFireList<any> {
     return this.crowsOnPerchReference;
+  }
+
+  getCoinDepositedData():AngularFireList<any> {
+    return this.coinsDepositedReference;
   }
 
 
