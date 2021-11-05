@@ -1,5 +1,5 @@
 ## Fixing the Coin Interrupt Issue
-### 
+### 22/10/21
 
 In one of the earlier journals, I outlined how the ESP32 did not accept the use of floats within the interrupt ISR function. The interrupt function is called every time the coin makes conact with the two copper plates. In order to avoid the same coin being counted several times (and as a result, firing off several interrupt functions), a calculation was made to ensure any further contact within the 1 second range was nullified and ignored. To do this, the system used a time calculation involving floats. This, of course, resulted in an error. 
 
