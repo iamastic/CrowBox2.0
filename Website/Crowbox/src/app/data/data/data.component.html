@@ -1,7 +1,13 @@
 <h2>Crow Box Data</h2>
 
+
+
+<ngb-carousel #carousel [interval] = "1000">
+</ngb-carousel>
+
+
 <div>
-    <div id = "chart">
+    <div id = "crowOnPerchChart">
         <canvas baseChart
                 [datasets]="crowOnPerchChartData"
                 [labels]="crowOnPerchChartLabels"
@@ -13,8 +19,9 @@
     </div>
 </div>
 
+
 <div>
-    <div id = "chart2">
+    <div id = "coinsDepositedChart">
         <canvas baseChart
                 [datasets]="coinsDepositedChartData"
                 [labels]="coinsDepositedChartLabels"

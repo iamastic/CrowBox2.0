@@ -9,6 +9,8 @@ import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
 //import the crowbox service to handle firebase api requests
 import { CrowboxdbService } from 'src/app/services/crowbox/crowboxdb.service';
 
+//import the carousel handling module
+import { NgbCarousel } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-data',

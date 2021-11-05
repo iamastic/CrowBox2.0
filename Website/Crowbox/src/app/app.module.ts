@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
@@ -22,6 +21,10 @@ import { AuthComponent } from './home/auth/auth.component';
 import { InfoboxComponent } from './home/infobox/infobox.component';
 import { HomeComponent } from './home/home/home.component';
 import { DataComponent } from './data/data/data.component';
+import { HandleAuthService } from './services/shared/handle-auth.service';
+
+//styling module
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -32,16 +35,18 @@ import { DataComponent } from './data/data/data.component';
     AuthComponent,
     InfoboxComponent,
     HomeComponent,
-    DataComponent
+    DataComponent,
+
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
-    ChartsModule
+    ChartsModule,
+    NgbModule
   ],
-  providers: [SharedService],
+  providers: [HandleAuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
