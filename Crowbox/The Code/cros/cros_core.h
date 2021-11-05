@@ -166,7 +166,8 @@ private:
     cros_time_t m_uptimeWhenBirdLanded;
     cros_time_t m_uptimeWhenBirdDeparted;
     cros_time_t m_uptimeScheduledBasketClose;
-    cros_time_t m_uptimeLastCoinDetected;
+    //cros_time_t m_uptimeLastCoinDetected;
+    unsigned long m_uptimeLastCoinDetected;
     
     //--------------------------------------
     // This semaphore is used to begin recording video

@@ -29,7 +29,7 @@ void IRAM_ATTR Interrupt_CoinDeposit()
 {
     //Serial.println("Entered interrupt");
     //detach the interrupt temporarily
-    detachInterrupt(digitalPinToInterrupt(17));
+    //detachInterrupt(digitalPinToInterrupt(17));
     //Serial.println("detached interrupt for coin sensor");
 
     g_crOSCore.EnqueueCoin();
@@ -231,7 +231,7 @@ void CCrowboxCore::Setup()
 
     // Set the sentinel that protects us from contact bounce on coin deposits.
     // Do this by setting it to the current time plus a little bit of slop.
-    m_uptimeLastCoinDetected = GetUptimeSeconds() + 0.1f;
+    m_uptimeLastCoinDetected = millis() + 100;
 
     // Ensure video is not being recorded
     StopRecordingVideo();
@@ -421,30 +421,8 @@ cros_time_t CCrowboxCore::HowLongHasBirdBeenGone()
 //----------------------------------------------------------
 bool CCrowboxCore::EnqueueCoin()              
 {
-    Serial.println("Entered Enqueue Coin");
+    //Serial.println("Entered Enqueue Coin");
 
-/*     Serial.println(GetUptimeSeconds());
-    Serial.println(m_uptimeLastCoinDetected);
-    Serial.println("Printed getuptime and lasttime"); */
-
-    /* cros_time_t n = GetUptimeSeconds();
-    Serial.println(n);
-    Serial.println("Printed n");
-
-    cros_time_t m = m_uptimeLastCoinDetected;
-    Serial.println(m);
-    Serial.println("Printed m");
-
-    cros_time_t x = n - m;
-    Serial.println(x);
-    Serial.println("Printed x");  */
-
-   /*  if (x < 1.0) {
-      Serial.println("Returning false");
-      
-      return false;
-    } */
-    //This function is causing the core dump to fail in the esp32
    /*  if( GetUptimeSeconds() - m_uptimeLastCoinDetected < 1.0f )
     {
         // We must only accept one coin deposit per second. Because of the
@@ -461,15 +439,19 @@ bool CCrowboxCore::EnqueueCoin()
 
         return false;
     } */
-    Serial.println("Increasing the coin deposit");
+
+    if ((millis() - m_uptimeLastCoinDetected) < 1000) {
+      return false;
+    }
+    //Serial.println("Increasing the coin deposit");
 
     m_numEnqueuedDeposits++;    
     
-    Serial.println("Done increasing coin deposit");
+    //Serial.println("Done increasing coin deposit");
 
-    m_uptimeLastCoinDetected = GetUptimeSeconds();
+    m_uptimeLastCoinDetected = millis();
 
-    Serial.println("Returning true from Enqueue Coin");
+    //Serial.println("Returning true from Enqueue Coin");
     return true;
 }
 
@@ -811,22 +793,22 @@ void CCrowboxCore::RunPhaseThreeProtocol()
     //EIFR = 0x01;
 
     //add delay to avoid coin contact bounce
-    delay(500);
+    //delay(500);
     //reattach interrupt to coin sensor but send to blank function to 
     //flush out the pending interrupts
-    attachInterrupt( digitalPinToInterrupt(INPUT_PIN_COIN), FlushOutInterrupts, FALLING );
+    //attachInterrupt( digitalPinToInterrupt(INPUT_PIN_COIN), FlushOutInterrupts, FALLING );
 
     //add another delay
-    delay(500);
+    //delay(500);
     //detach the interrupt again
-    detachInterrupt(digitalPinToInterrupt(17));
+    //detachInterrupt(digitalPinToInterrupt(17));
    
     //add another delay
-    delay(500);
+    //delay(500);
     //reattach the interrupt to the correct function
-    attachInterrupt( digitalPinToInterrupt(INPUT_PIN_COIN), Interrupt_CoinDeposit, FALLING );
+    //attachInterrupt( digitalPinToInterrupt(INPUT_PIN_COIN), Interrupt_CoinDeposit, FALLING );
 
-    Serial.println("Reattached interrupt for coin sensor");
+    //Serial.println("Reattached interrupt for coin sensor");
 
     RemoveEnqueuedCoin();// Un-count this deposit since we're paying it off now.
 
@@ -913,10 +895,14 @@ void CCrowboxCore::CheckTrainingPhaseSwitch()
   int newTrainingStage = 0;
 
   if (Firebase.getInt(trainingPhase, "Users/"+USER_ID+"/Crowbox/current_training_stage")) {  
-    
     newTrainingStage = trainingPhase.to<int>();
+    Serial.println("Got Training Stage");
+    
   } else {
-      Serial.println("Error retreiving data from Firebase");
+      Serial.println("FAILED to receive Training Phase from Firebase");
+      Serial.println("REASON: " + trainingPhase.errorReason());
+      Serial.println("------------------------------------");
+      Serial.println();
   }
 
   
@@ -1090,7 +1076,10 @@ void CCrowboxCore::LoadCurrentTrainingPhaseFromFirebase()
     Serial.println(m_currentTrainingPhase);
     
   } else {
-    Serial.println("Error retreiving data from Firebase");
+    Serial.println("FAILED to receive Training Phase from Firebase");
+    Serial.println("REASON: " + trainingPhase.errorReason());
+    Serial.println("------------------------------------");
+    Serial.println();
   }
 }
 
