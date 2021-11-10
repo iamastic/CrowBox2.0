@@ -1,7 +1,11 @@
-<div id = header>
+<div id = header *ngIf = "showHeader===false">
     <nav>
         <a routerLink = "/home">HOME</a>
     </nav>
+</div>
+
+<div id = header2 *ngIf = "showHeader === true">
+    <app-header></app-header>
 </div>
 
 <div id = "homeContent">
