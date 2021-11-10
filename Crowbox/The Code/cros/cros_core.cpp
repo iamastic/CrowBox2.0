@@ -128,7 +128,7 @@ void CCrowboxCore::Setup()
     NTPClient timeClient(ntpUDP); */
 
     //username = "qureshiahamza";
-    USER_ID = "ikiBi9FsljZPtOkQENjIJ1xc00w1";
+    USER_ID = "8Kiuz01fXcYMfDFpgsHnrckL2Kl1";
     Serial.println("Username Set: " + USER_ID);
 
     // Start with no enqueued deposits
@@ -749,11 +749,6 @@ void CCrowboxCore::RunPhaseTwoProtocol()
       /* Firebase.setInt(crowOnPerch, "crowbox/crow_on_perch", 
       numberOfCrowsLanded); */
 
-      
-      GetCurrentDate();
-      LoadNumberOfCrowsLandedOnPerchFromFirebase();
-      WriteNumberOfCrowsOnPerchToFirebase(); 
-
       m_uptimeWhenBirdLanded = GetUptimeSeconds();
 
       RecordVideo( VIDEO_RECORD_DURATION_ARRIVAL );    
@@ -766,6 +761,16 @@ void CCrowboxCore::RunPhaseTwoProtocol()
       // unlimited time to remove unlimited food from the basket and throw
       // it somewhere else for later retrieval.
       ScheduleBasketCloseWithDelay( BASKET_REMAIN_OPEN_DURATION );
+
+      //for private data
+      GetCurrentDate();
+      LoadNumberOfCrowsLandedOnPerchFromFirebase();
+      WriteNumberOfCrowsOnPerchToFirebase(); 
+
+      delay(1000);
+      //for public data
+      GetUserLocation();
+      WritePublicCrowOnPerchData();
     }
   }
 }      
@@ -830,6 +835,11 @@ void CCrowboxCore::RunPhaseThreeProtocol()
 
     //then, we need to write this data back to firebase
     WriteNumberOfCoinsDepositedToFirebase();
+
+    delay(1000);
+
+    GetUserLocation();
+    WritePublicCoinsDepositedData();
 
   }
 }
@@ -1126,21 +1136,11 @@ void CCrowboxCore::LoadNumberOfCoinsDepositedFromFirebase(){
 void CCrowboxCore::WriteNumberOfCrowsOnPerchToFirebase()
 {
   Serial.println("Writing Number of Crows landed on perch to Firebase");
- /*  Firebase.setInt(crowOnPerch,"Users/"+username+"/Crowbox/crows_landed_on_perch", numberOfCrowsLanded); */
 
  Firebase.setInt(crowOnPerch, "Users/"+USER_ID+"/Crowbox/crows_landed_on_perch/"+dayStamp+"/value", numberOfCrowsLanded);
 }
 
 void CCrowboxCore::LoadNumberOfCrowsLandedOnPerchFromFirebase(){
-
-  /*   if (Firebase.getInt(crowOnPerch, "Users/"+username+"/Crowbox/crows_landed_on_perch")) {  
-    
-    numberOfCrowsLanded = crowOnPerch.to<int>();
-    Serial.println("Successfully got Number of Crows landed on Perch");
-    Serial.println(numberOfCrowsLanded);
-  } else {
-    Serial.println("Error retreiving data from Firebase");
-  } */
 
   if(Firebase.getInt(crowOnPerch, "Users/"+USER_ID+"/Crowbox/crows_landed_on_perch/"+dayStamp+"/value")) {
     numberOfCrowsLanded = crowOnPerch.to<int>();
@@ -1159,7 +1159,74 @@ void CCrowboxCore::LoadNumberOfCrowsLandedOnPerchFromFirebase(){
   } else {
       Serial.println("Error retreiving data from Firebase");
   }
+}
 
+void CCrowboxCore::GetUserLocation() {
+  //get the sharing preferences first
+  if(Firebase.getString(sharingPreference,"Users/"+USER_ID+"/Crowbox/sharing_preference")) {
+    toShare = sharingPreference.stringData();
+    Serial.println("Successfully got Sharing Preference");
+
+    /* if sharing is turned on  */
+    if(toShare == "ALLOWED") {
+      /* then get the location of the user */
+      if(Firebase.getString(location, "Users/"+USER_ID+"/Crowbox/location")) {
+        userLocation = location.stringData();
+        Serial.println("Successfully got Location");
+        Serial.println(userLocation);
+      }
+    } else {
+      Serial.println("Error - Sharing Preferences is OFF");
+    }
+  } else {
+      Serial.println("Error in retrieving sharing preferences");
+      Serial.println("REASON: " + sharingPreference.errorReason());
+      Serial.println("------------------------------------");
+      Serial.println();
+  }
+}
+
+void CCrowboxCore::WritePublicCrowOnPerchData() {
+  /* if the user has indeed entered their current location */
+  if(userLocation != "null") {
+    Serial.println("User location is not null");
+    Serial.println(userLocation);
+    /* Then fetch its data from firebase rtdb */
+    if(Firebase.getInt(publicCrowOnPerch,"Public/Location/"+userLocation+"/crows_landed_on_perch")) {
+      int publicValue = publicCrowOnPerch.to<int>();
+      //increment this value
+      publicValue++;
+      Serial.println(publicValue);
+      //write this value back
+      Firebase.setInt(publicCrowOnPerch,"Public/Location/"+userLocation+"/crows_landed_on_perch", publicValue);
+    } else {
+      Serial.println("Error in writing public crow on perch data to firebase");
+      Serial.println("REASON: " + publicCrowOnPerch.errorReason());
+      Serial.println("------------------------------------");
+      Serial.println();
+    }
+  }
+}
+
+void CCrowboxCore::WritePublicCoinsDepositedData(){
+  
+  if(userLocation != "null") {
+    Serial.println("User location is not null");
+    Serial.println(userLocation);
+
+    if(Firebase.getInt(publicCoinsDeposited,"Public/Location/"+userLocation+"/coins_deposited")) {
+      int publicValue = publicCoinsDeposited.to<int>();
+      //increment value 
+      publicValue++;
+      Serial.println(publicValue);
+      Firebase.setInt(publicCoinsDeposited,"Public/Location/"+userLocation+"/coins_deposited", publicValue);
+    } else {
+        Serial.println("Error in writing public coins deposited data to firebase");
+        Serial.println("REASON: " + publicCoinsDeposited.errorReason());
+        Serial.println("------------------------------------");
+        Serial.println();
+    }
+  }
 }
 
 void CCrowboxCore::GetCurrentDate(){
@@ -1172,6 +1239,8 @@ void CCrowboxCore::GetCurrentDate(){
   Serial.println("DATE: ");
   Serial.println(dayStamp);
 }
+
+
 
 //----------------------------------------------------------
 // The report the training phase, the LED blinks one time to
@@ -1223,4 +1292,3 @@ void CCrowboxCore::StopRecordingVideo()
   // interface with your camera, through a relay or perhaps
   // a serial communication message.
 }
-

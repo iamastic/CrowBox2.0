@@ -95,6 +95,15 @@ public:
 
     unsigned long currentTime;
 
+    /* PUBLIC DATA MANAGING */
+    FirebaseData publicCrowOnPerch;
+    FirebaseData publicCoinsDeposited;
+    FirebaseData location;
+    FirebaseData sharingPreference;
+
+    String toShare;
+    String userLocation;
+
 
     /* END MY WORK */
     
@@ -152,6 +161,9 @@ protected:
     void LoadNumberOfCrowsLandedOnPerchFromFirebase();
     void WriteNumberOfCoinsDepositedToFirebase();
     void WriteNumberOfCrowsOnPerchToFirebase();
+    void GetUserLocation();
+    void WritePublicCrowOnPerchData();
+    void WritePublicCoinsDepositedData();
 
     //time methods
     void GetCurrentDate();

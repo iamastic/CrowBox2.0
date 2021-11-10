@@ -6,7 +6,7 @@
 // 
 // Version 0.99c - October 2018
 //
-// http://www.thecrowbox.commM
+// http://www.thecrowbox.com
 //==========================================================
 //   Except where otherwise noted, this work is licensed 
 //   under a Creative Commons Attribution-ShareAlike 4.0 
