@@ -29,6 +29,8 @@ import { HeaderComponent } from './header/header.component';
 import { TroubleshootComponent } from './TroubleShoot/troubleshoot/troubleshoot.component';
 import { ProfileComponent } from './Profile/profile/profile.component';
 import { InformationComponent } from './data/information/information.component';
+import { EditInfoComponent } from './Profile/edit-info/edit-info.component';
+import { ProfileboxComponent } from './Profile/profilebox/profilebox.component'
 
 
 @NgModule({
@@ -44,6 +46,8 @@ import { InformationComponent } from './data/information/information.component';
     TroubleshootComponent,
     ProfileComponent,
     InformationComponent,
+    EditInfoComponent,
+    ProfileboxComponent,
 
   ],
   imports: [

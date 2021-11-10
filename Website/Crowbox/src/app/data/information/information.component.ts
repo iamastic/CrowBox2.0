@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, OnInit } from '@angular/core';
+import { AfterContentInit, Component, OnInit, Input, OnChanges } from '@angular/core';
 import { CrowboxdbService } from 'src/app/services/crowbox/crowboxdb.service';
 
 @Component({
@@ -6,7 +6,14 @@ import { CrowboxdbService } from 'src/app/services/crowbox/crowboxdb.service';
   templateUrl: './information.component.html',
   styleUrls: ['./information.component.css']
 })
-export class InformationComponent implements OnInit, AfterContentInit {
+export class InformationComponent implements OnInit, AfterContentInit, OnChanges {
+
+  //receive the values array for both: Crows on perch and Coins Deposited
+  @Input() crowsOnPerch!:number[];
+  @Input() coinsDeposited!:number[]; 
+
+  totalCrowsLandedOnPerch:number = 0;
+  totalCoinsDeposited?:number = 0;
 
   //display and manipulate the training stage for the crowbox
   currentTrainingStage?:number;
@@ -30,6 +37,28 @@ export class InformationComponent implements OnInit, AfterContentInit {
   ngAfterContentInit() {
     this.getTrainingStage();
     this.getAllInformationData();
+  }
+
+  ngOnChanges() {
+    this.addCrowsOnPerchValues();
+    this.addCoinsDepositedValues();
+  }
+
+  /* ADD UP ALL VALUES IN CROW ON PERCH ARRAY */
+  addCrowsOnPerchValues() {
+    if(this.crowsOnPerch.length != 0) {
+      const reducer = (accumulator:any, curr:any) => accumulator + curr;
+      console.log(this.crowsOnPerch.reduce(reducer));
+      this.totalCrowsLandedOnPerch = this.crowsOnPerch.reduce(reducer);
+    }
+  }
+
+  /* ADD UP ALL THE VALUES IN THE COINS DEPOSITED ARRAY */
+  addCoinsDepositedValues() {
+    if(this.coinsDeposited.length !=0) {
+      const reducer = (accumulator:any, curr:any) => accumulator + curr;
+      this.totalCoinsDeposited = this.coinsDeposited.reduce(reducer);
+    }
   }
   
   /* ---------------------------------------------------- */

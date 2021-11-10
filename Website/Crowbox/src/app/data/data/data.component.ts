@@ -277,12 +277,16 @@ export class DataComponent implements OnInit, AfterContentInit {
       //array
       if (indexOfKey == -1) {
         this.crowsOnPerchDate.push(action.key);
-        this.crownsOnPerchValues.push(action.payload.val().value);
+        //this.crownsOnPerchValues.push(action.payload.val().value);
+        this.crownsOnPerchValues = [
+          ...this.crownsOnPerchValues, action.payload.val().value
+        ];
       } else {
         //if it does exist, then we don't need to add the new date
         //simply replace the existing data value with the new data value
         //for the same date 
         this.crownsOnPerchValues[indexOfKey] = action.payload.val().value;
+        this.crownsOnPerchValues = [...this.crownsOnPerchValues];
       }
 
       //reset the bar charts data as well as labels
@@ -311,12 +315,18 @@ export class DataComponent implements OnInit, AfterContentInit {
       //array
       if (indexOfKey == -1) {
         this.coinsDepositedDate.push(action.key);
-        this.coinsDepositedValues.push(action.payload.val().value);
+        //this.coinsDepositedValues.push(action.payload.val().value);
+        this.coinsDepositedValues = [
+          ...this.coinsDepositedValues, action.payload.val().value
+        ];
+
       } else {
         //if it does exist, then we don't need to add the new date
         //simply replace the existing data value with the new data value
         //for the same date 
         this.coinsDepositedValues[indexOfKey] = action.payload.val().value;
+
+        this.coinsDepositedValues = [...this.coinsDepositedValues];
       }
 
       //reset the bar charts data as well as labels
