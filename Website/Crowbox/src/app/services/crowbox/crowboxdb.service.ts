@@ -95,30 +95,6 @@ export class CrowboxdbService {
     return this.userReference;
   }
 
-  getUserCrowbox() : AngularFireObject<any> {
-    return this.crowboxReference;
-  }
-
-  updateUserLocation(location:string):void {
-    this.userReference.update({ Location: location });
-  }
-
-  updateTrainingStage(trainingStage: number): void {
-    this.crowboxReference.update({current_training_stage: trainingStage});
-  }
-
-  getAllPublicData(): AngularFireList<any> {
-    return this.publicReference;
-  }
-
-  getAllLocationData(): AngularFireList<any> {
-    return this.locationReference;
-  }
-
-  getAllSiteData(): AngularFireList<any>{
-    return this.siteReference;
-  }
-
   getCrowOnPerchData(): AngularFireList<any> {
     return this.crowsOnPerchReference;
   }
@@ -127,5 +103,62 @@ export class CrowboxdbService {
     return this.coinsDepositedReference;
   }
 
+  /* CROWBOX OBJECT RELATED */
+  getUserCrowbox() : AngularFireObject<any> {
+    return this.crowboxReference;
+  }
+
+  updateUserLocation(location:string):void {
+    this.userReference.update({ location: location });
+  }
+
+  updateTrainingStage(trainingStage: number): void {
+    this.crowboxReference.update({current_training_stage: trainingStage});
+  }
+
+  updateUserDateJoined(dateJoined:string): void {
+    this.crowboxReference.update({date_joined:dateJoined});
+  }
+
+  updateUserName(name:string) {
+    this.crowboxReference.update({name:name});
+  }
+
+  updateTotalCoinsDeposited(numCoins:number) {
+    this.crowboxReference.update({total_coins_deposited:numCoins});
+  }
+
+  updateTotalCrowsLandedOnPerch(crowsOnPerch:number) {
+    this.crowboxReference.update({total_crows_landed_on_perch:crowsOnPerch});
+  }
+
+  updateSharingPreferences(sharing:string) {
+    this.crowboxReference.update({sharing_preference:sharing});
+  }
+
+  updateNotifcationSettings(notifcation:string) {
+    this.crowboxReference.update({notification_settings:notifcation});
+  }
+
+
+  updateCrowboxNickname(nickname:string) {
+    this.crowboxReference.update({nickanme:nickname});
+  }
+
+
+  /* PUBLIC RELATED */
+  getAllPublicData(): AngularFireList<any> {
+    return this.publicReference;
+  }
+
+  getAllLocationData(): AngularFireList<any> {
+    return this.locationReference;
+  }
+
+  /* SITE RELATED */
+
+  getAllSiteData(): AngularFireList<any>{
+    return this.siteReference;
+  }
 
 }

@@ -67,45 +67,8 @@
     </ngb-carousel>
 </div>
 
-
-
-<div id = "dataInformation">  
-    <h1>CrowBox Information</h1>
-
-    <div id = "Nickname">
-        <h3>NICKNAME</h3>
-    </div>
-
-    <div id = "startDate">
-        <h3>START DATE</h3>
-    </div>
-    
-    <div id = "totalCoinsDeposited">
-        <h3>TOTAL COINS DEPOSITED</h3>
-    </div>
-    
-    <div id = "numBirdsOnPerch">
-        <h3>NUMBER OF BIRDS ON PERCH</h3>
-    </div>
-
-    <div id = "status">
-        <h3>STATUS</h3>
-    </div>
-
-    <!-- DROP DOWN TO SELECT TRAINING STAGE -->
-<div class="row">
-    <div class="col">
-      <div ngbDropdown class="d-inline-block">
-        <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Current Training Stage: {{currentTrainingStage}}</button>
-        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-          <button ngbDropdownItem (click)="phaseOne()">Training Phase 1</button>
-          <button ngbDropdownItem (click)="phaseTwo()">Training Phase 2</button>
-          <button ngbDropdownItem (click)="phaseThree()">Training Phase 3</button>
-          <button ngbDropdownItem (click)="phaseFour()">Training Phase 4</button>
-
-        </div>
-      </div>
-    </div>
+<div>
+    <app-information></app-information>
 </div>
 
 

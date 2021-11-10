@@ -212,7 +212,6 @@ export class DataComponent implements OnInit, AfterContentInit {
   }
 
   ngAfterContentInit() {
-    this.getTrainingStage();
     this.getCrowOnPerchDataChildren()
     this.getCoinDepositedDataChildren();
     this.getPublicCrowOnPerchData();
@@ -242,45 +241,19 @@ export class DataComponent implements OnInit, AfterContentInit {
         console.log(action.key);
         //console.log(action.payload.val().Location);
       } else {
-        //create the user and their respective data slots here
+        //create the user and initialise their respective data slots here
         console.log("In data component, no such user found");
         console.log("Creating user");
         this.currentTrainingStage = 1;
         this.crowboxService.updateTrainingStage(this.currentTrainingStage);
+        this.crowboxService.updateNotifcationSettings("null");
+        this.crowboxService.updateSharingPreferences("null");
+        this.crowboxService.updateTotalCoinsDeposited(0);
+        this.crowboxService.updateTotalCrowsLandedOnPerch(0);
+        this.crowboxService.updateUserName("null");
+        this.crowboxService.updateCrowboxNickname("null");
       }
     });
-  }
-
-  /* ---------------------------------------------------- */
-  /* GET TRAINING STAGE */
-  getTrainingStage() {
-    this.crowboxService
-    .getUserCrowbox()
-    .snapshotChanges()
-    .subscribe(result => {
-      this.currentTrainingStage = result.payload.val().current_training_stage;
-    });
-  }
-
-  /* CHANGE TRAINING STAGES */
-  phaseOne() {
-    this.currentTrainingStage = 1;
-    this.crowboxService.updateTrainingStage(this.currentTrainingStage);
-  }
-
-  phaseTwo() {
-    this.currentTrainingStage = 2;
-    this.crowboxService.updateTrainingStage(this.currentTrainingStage);
-  }
-
-  phaseThree() {
-    this.currentTrainingStage = 3;
-    this.crowboxService.updateTrainingStage(this.currentTrainingStage);
-  }
-
-  phaseFour() {
-    this.currentTrainingStage = 4;
-    this.crowboxService.updateTrainingStage(this.currentTrainingStage);
   }
 
   /* ---------------------------------------------------- */

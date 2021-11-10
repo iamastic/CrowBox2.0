@@ -28,6 +28,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HeaderComponent } from './header/header.component';
 import { TroubleshootComponent } from './TroubleShoot/troubleshoot/troubleshoot.component';
 import { ProfileComponent } from './Profile/profile/profile.component';
+import { InformationComponent } from './data/information/information.component';
 
 
 @NgModule({
@@ -42,6 +43,7 @@ import { ProfileComponent } from './Profile/profile/profile.component';
     HeaderComponent,
     TroubleshootComponent,
     ProfileComponent,
+    InformationComponent,
 
   ],
   imports: [

@@ -1,0 +1,143 @@
+
+/* INFO BOX RELATED */
+#dataInformation {
+    color : #25356a;
+
+    text-align: center;
+    border-style: inset;
+    border-width: 5px;
+    border-radius: 5%;
+    border-color: 0x00ff00;
+    background-color: rgb(255, 255, 255);
+    opacity: 58%;   
+    font-size: 9pt;
+    font-style: normal;
+
+    position: absolute;
+    margin: auto; 
+    top: 15vh;
+    right: 20vh;
+    width: 30%;
+    height: 75%;
+}
+
+#Nickname {
+
+    color : #ffffff;
+
+    text-align: center;
+    border-style: inset;
+    border-width: 5px;
+    border-radius: 5%;
+    border-color: 0x00ff00;
+    background-color: #066025;
+    opacity: 58%;   
+    font-size: 9pt;
+    font-style: normal;
+
+    position: absolute;
+    margin: auto; 
+    right: 0vh;
+    left: 0vh;
+    top: 14vh;
+    width: 75%;
+    height: 12%;
+}
+
+
+#startDate {
+    color : #ffffff;
+
+    text-align: center;
+    border-style: inset;
+    border-width: 5px;
+    border-radius: 5%;
+    border-color: 0x00ff00;
+    background-color: #066025;
+    opacity: 58%;   
+    font-size: 9pt;
+    font-style: normal;
+
+    position: absolute;
+    margin: auto; 
+    right: 0vh;
+    left: 0vh;
+    top: 26vh;
+    width: 75%;
+    height: 12%;
+}
+
+h5 {
+    color : #86b8fd;
+
+}
+
+#totalCoinsDeposited {
+
+    color : #ffffff;
+
+    text-align: center;
+    border-style: inset;
+    border-width: 5px;
+    border-radius: 5%;
+    border-color: 0x00ff00;
+    background-color: #066025;
+    opacity: 58%;   
+    font-size: 9pt;
+    font-style: normal;
+
+    position: absolute;
+    margin: auto; 
+    right: 0vh;
+    left: 0vh;
+    top: 38vh;
+    width: 75%;
+    height: 12%;
+}
+
+#numBirdsOnPerch {
+
+    color : #ffffff;
+
+    text-align: center;
+    border-style: inset;
+    border-width: 5px;
+    border-radius: 5%;
+    border-color: 0x00ff00;
+    background-color: #066025;
+    opacity: 58%;   
+    font-size: 9pt;
+    font-style: normal;
+
+    position: absolute;
+    margin: auto; 
+    right: 0vh;
+    left: 0vh;
+    top: 50vh;
+    width: 75%;
+    height: 12%;
+}
+
+
+#status {
+
+    color : #ffffff;
+
+    text-align: center;
+    border-style: inset;
+    border-width: 5px;
+    border-radius: 5%;
+    border-color: 0x00ff00;
+    background-color: #066025;
+    opacity: 58%;   
+    font-size: 9pt;
+    font-style: normal;
+
+    position: absolute;
+    margin: auto; 
+    right: 0vh;
+    left: 0vh;
+    top: 62vh;
+    width: 75%;
+    height: 12%;
+}
