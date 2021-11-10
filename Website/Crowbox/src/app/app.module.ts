@@ -25,6 +25,9 @@ import { HandleAuthService } from './services/shared/handle-auth.service';
 
 //styling module
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { HeaderComponent } from './header/header.component';
+import { TroubleshootComponent } from './TroubleShoot/troubleshoot/troubleshoot.component';
+import { ProfileComponent } from './Profile/profile/profile.component';
 
 
 @NgModule({
@@ -36,6 +39,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     InfoboxComponent,
     HomeComponent,
     DataComponent,
+    HeaderComponent,
+    TroubleshootComponent,
+    ProfileComponent,
 
   ],
   imports: [

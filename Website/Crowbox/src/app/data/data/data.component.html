@@ -1,34 +1,115 @@
-<h2>Crow Box Data</h2>
+<app-header></app-header>
+
+<div id = "publicButton">
+    <button (click)="showPersonal()">YOUR DATA</button>
+    <button (click)="showPublic()">PUBLIC DATA</button>
+</div>
+
+<!-- PERSONAL DATA SECTION -->
+<div *ngIf="showPublicData === false">
+    <ngb-carousel #carousel id = "chartsCarousel" [interval] = "false">
+        <ng-template ngbSlide>
+            <div id = "crowOnPerchChart">
+                <canvas baseChart
+                    [datasets]="crowOnPerchChartData"
+                    [labels]="crowOnPerchChartLabels"
+                    [options]="crowOnPerchChartOptions"
+                    [legend]="crowOnPerchChartLegend"
+                    [chartType]="crowOnPerchChartType"
+                    >
+                </canvas>
+            </div>
+        </ng-template>
+    
+        <ng-template ngbSlide>
+            <div id = "coinsDepositedChart">
+                <canvas baseChart
+                        [datasets]="coinsDepositedChartData"
+                        [labels]="coinsDepositedChartLabels"
+                        [options]="coinsDepositedChartOptions"
+                        [legend]="coinsDepositedChartLegend"
+                        [chartType]="coinsDepositedChartType"
+                        >
+                </canvas>
+            </div>
+        </ng-template>
+    </ngb-carousel>
+</div>
+
+<!-- PUBLIC DATA SECTION -->
+<div *ngIf="showPublicData === true">
+    <ngb-carousel #carousel id = "chartsCarousel" [interval] = "false">
+        <ng-template ngbSlide>
+            <div id = "publicCrowOnPerchChart">
+                <canvas baseChart
+                    [datasets]="publicCrowOnPerchChartData"
+                    [labels]="publicCrowOnPerchChartLabels"
+                    [options]="publicCrowOnPerchChartOptions"
+                    [legend]="publicCrowOnPerchChartLegend"
+                    [chartType]="publicCrowOnPerchChartType"
+                    >
+                </canvas>
+            </div>
+        </ng-template>
+    
+        <ng-template ngbSlide>
+            <div id = "publicCoinsDeposited">
+                <canvas baseChart
+                    [datasets]="publicCoinsDepositedChartData"
+                    [labels]="publicCoinsDepositedChartLabels"
+                    [options]="publicCoinsDepositedChartOptions"
+                    [legend]="publicCoinsDepositedChartLegend"
+                    [chartType]="publicCoinsDepositedChartType"
+                    >
+                </canvas>
+            </div>
+        </ng-template>
+    </ngb-carousel>
+</div>
 
 
 
-<ngb-carousel #carousel [interval] = "1000">
-</ngb-carousel>
+<div id = "dataInformation">  
+    <h1>CrowBox Information</h1>
 
+    <div id = "Nickname">
+        <h3>NICKNAME</h3>
+    </div>
 
-<div>
-    <div id = "crowOnPerchChart">
-        <canvas baseChart
-                [datasets]="crowOnPerchChartData"
-                [labels]="crowOnPerchChartLabels"
-                [options]="crowOnPerchChartOptions"
-                [legend]="crowOnPerchChartLegend"
-                [chartType]="crowOnPerchChartType"
-                >
-        </canvas>
+    <div id = "startDate">
+        <h3>START DATE</h3>
+    </div>
+    
+    <div id = "totalCoinsDeposited">
+        <h3>TOTAL COINS DEPOSITED</h3>
+    </div>
+    
+    <div id = "numBirdsOnPerch">
+        <h3>NUMBER OF BIRDS ON PERCH</h3>
+    </div>
+
+    <div id = "status">
+        <h3>STATUS</h3>
+    </div>
+
+    <!-- DROP DOWN TO SELECT TRAINING STAGE -->
+<div class="row">
+    <div class="col">
+      <div ngbDropdown class="d-inline-block">
+        <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Current Training Stage: {{currentTrainingStage}}</button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+          <button ngbDropdownItem (click)="phaseOne()">Training Phase 1</button>
+          <button ngbDropdownItem (click)="phaseTwo()">Training Phase 2</button>
+          <button ngbDropdownItem (click)="phaseThree()">Training Phase 3</button>
+          <button ngbDropdownItem (click)="phaseFour()">Training Phase 4</button>
+
+        </div>
+      </div>
     </div>
 </div>
 
 
-<div>
-    <div id = "coinsDepositedChart">
-        <canvas baseChart
-                [datasets]="coinsDepositedChartData"
-                [labels]="coinsDepositedChartLabels"
-                [options]="coinsDepositedChartOptions"
-                [legend]="coinsDepositedChartLegend"
-                [chartType]="coinsDepositedChartType"
-                >
-        </canvas>
-    </div>
+<div id="userId" *ngIf=(showUserId)>
+    You currently do not have a crowbox set up. Please upload the code to your crowbox with your User Id:
+    {{currentUserId}}.
 </div>

@@ -14,16 +14,35 @@ import { Router } from '@angular/router';
 })
 export class AuthComponent implements OnInit {  
 
-  constructor(private handleAuth: HandleAuthService, private router:Router) { }
+  showSignUp!: boolean;
+
+  constructor(private handleAuth: HandleAuthService, private router:Router) {
+
+  }
+
+  isLoggedIn() {
+    return this.handleAuth.isLoggedIn;
+  }
 
   ngOnInit(): void {
+    if(this.isLoggedIn()){
+      this.showSignUp = false;
+    } else {
+      this.showSignUp = true;
+    }
+
+    console.log(this.showSignUp);
   }
 
   login() {
     //user the auth service to login or signup the user
     this.handleAuth.login();
-    //after logging in or signing up, redirect to the data section
-    this.router.navigate(['data']);
+  }
+
+  logout() {
+    this.showSignUp = true;
+    this.handleAuth.logout();
+
   }
 
 }

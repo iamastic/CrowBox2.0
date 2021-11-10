@@ -1,6 +1,5 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterContentInit } from '@angular/core';
 
-import { first, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 //import the auth service
@@ -10,24 +9,30 @@ import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
 import { CrowboxdbService } from 'src/app/services/crowbox/crowboxdb.service';
 
 //import the carousel handling module
-import { NgbCarousel } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-data',
   templateUrl: './data.component.html',
   styleUrls: ['./data.component.css']
 })
-export class DataComponent implements OnInit, AfterViewInit {
+export class DataComponent implements OnInit, AfterContentInit {
 
   /* USER RELATED */
   //the user id taken from HandleAuthService
   currentUserId: any;
   //Observable to handle the user related subscriptions
   userData$?:Observable<any>;
+  //show the User Id
+  showUserId?:boolean;
+
+  /* ---------------------------------------------------- */
+  /* TRAINING STAGE RELATED */
+  currentTrainingStage?: number;
 
   /* ---------------------------------------------------- */
 
-  /* CROW ON PERCH RELATED */
+  /* PERSONAL CROW ON PERCH RELATED */
   //observable to initialise the data set
   $initialCrowOnPerchSub?: Observable<any>;
   //observable to get the new child of the data set
@@ -41,11 +46,16 @@ export class DataComponent implements OnInit, AfterViewInit {
   //crows on perch barchart options
   public crowOnPerchChartOptions = {
     responsive: true,
-    scales: { xAxes: [{}], yAxes: [{
+    scales: { xAxes: [{
+
+    }], yAxes: [{
       display:true,
       ticks: {
-        beginAtZero: true
-      }
+        beginAtZero: true, 
+        stepSize: 1,
+      },
+      maintainAspectRatio: false,
+      labelString:'Date'
     }] },
     plugins: {
       datalabels: {
@@ -65,7 +75,7 @@ export class DataComponent implements OnInit, AfterViewInit {
 
   /* ---------------------------------------------------- */
 
-  /* COINS DEPOSITED RELATED */
+  /* PERSONAL COINS DEPOSITED RELATED */
   //observable to initialise and get child values of data set
   $childCoinsDepositedSub?: Observable<any>;
   //y axis data
@@ -80,8 +90,11 @@ export class DataComponent implements OnInit, AfterViewInit {
     scales: { xAxes: [{}], yAxes: [{
       display:true,
       ticks: {
-        beginAtZero: true
-      }
+        beginAtZero: true,
+        stepSize: 1,
+      },
+      maintainAspectRatio: false
+
     }] },
     plugins: {
       datalabels: {
@@ -101,18 +114,118 @@ export class DataComponent implements OnInit, AfterViewInit {
 
   /* ---------------------------------------------------- */
 
-  constructor(private authService: HandleAuthService, private crowboxService: CrowboxdbService) { }
+  /* PUBLIC CROWS ON PERCH DATA */
+  //observable to initialise data set
+  $initialPublicCrowOnPerchSub?:Observable<any>;
+  //observable to get the new child 
+  $childPublicCrowOnPerchSub?:Observable<any>;
+  //y axis data
+  publicCrowsOnPerchLocation:string[] = [];
+  //x axis data
+  publicCrowsOnPerchValues: number[] = [];
+
+  //public crows on perch barchart options
+  public publicCrowOnPerchChartOptions = {
+    responsive: true,
+    scales: { xAxes: [{
+
+    }], yAxes: [{
+      display:true,
+      ticks: {
+        beginAtZero: true, 
+        stepSize: 1,
+      },
+      maintainAspectRatio: false,
+      labelString:'Location'
+    }] },
+    plugins: {
+      datalabels: {
+        anchor: 'end',
+        align: 'end',
+      }
+    }
+  };
+
+  public publicCrowOnPerchChartLabels = this.publicCrowsOnPerchLocation;
+  public publicCrowOnPerchChartType = 'bar';
+  public publicCrowOnPerchChartLegend = true;
+
+  public publicCrowOnPerchChartData = [
+    { data: this.publicCrowsOnPerchValues, label: "Number Of Crows That Landed On The Perch" }
+  ];
+  /* ---------------------------------------------------- */
+
+  /* PUBLIC CROWS ON PERCH DATA */
+
+  $initialPublicCoinsDepositedSub?:Observable<any>;
+  $childPublicCoinsDepositedSub?:Observable<any>;
+  publicCoinsDepositedLocation: string[] = [];
+  publicCoinsDepositedValues: string[] = [];
+
+  //public crows on perch barchart options
+  public publicCoinsDepositedChartOptions = {
+    responsive: true,
+    scales: { xAxes: [{
+
+    }], yAxes: [{
+      display:true,
+      ticks: {
+        beginAtZero: true, 
+        stepSize: 1,
+      },
+      maintainAspectRatio: false,
+      labelString:'Location'
+    }] },
+    plugins: {
+      datalabels: {
+        anchor: 'end',
+        align: 'end',
+      }
+    }
+  };
+
+  public publicCoinsDepositedChartLabels = this.publicCoinsDepositedLocation;
+  public publicCoinsDepositedChartType = 'bar';
+  public publicCoinsDepositedChartLegend = true;
+
+  public publicCoinsDepositedChartData = [
+    { data: this.publicCoinsDepositedValues, label: "Number Of Coins Deposited" }
+  ];
+
+  /* ---------------------------------------------------- */
+
+  /* PERSONAL OR PUBLIC DATA */
+  showPublicData?:boolean;
+
+  /* ---------------------------------------------------- */
+  constructor(private authService: HandleAuthService, private crowboxService: CrowboxdbService, config: NgbCarouselConfig) {
+    config.showNavigationIndicators = true;
+    config.showNavigationArrows = true;
+   }
 
   ngOnInit(): void {
     //upon the view rendering, get the User Id 
-    this.currentUserId = this.authService.currentUserId;
+    this.currentUserId = this.crowboxService.currentUserId;
+    console.log("Current User Id is " + this.currentUserId);
 
     this.checkIfUserExists();
   }
 
-  ngAfterViewInit() {
+  ngAfterContentInit() {
+    this.getTrainingStage();
     this.getCrowOnPerchDataChildren()
     this.getCoinDepositedDataChildren();
+    this.getPublicCrowOnPerchData();
+    this.getPublicCoinsDepositedData();
+
+    //if the array is empty, let the user know that they need to setup a crowbox
+    if((this.coinsDepositedDate.length == 0) && (this.crowsOnPerchDate.length == 0)) {
+      console.log("Empty coins and crows array");
+      this.showUserId = true;
+    } 
+
+    //set the charts to be YOUR DATA instead of PUBLIC DATA
+    this.showPublicData = false;
   }
 
   /* Check if the user already has a profile in the 
@@ -127,16 +240,52 @@ export class DataComponent implements OnInit, AfterViewInit {
       if(action.key){
         console.log("User is in the database");
         console.log(action.key);
-        console.log(action.payload.val().Location);
+        //console.log(action.payload.val().Location);
       } else {
         //create the user and their respective data slots here
         console.log("In data component, no such user found");
         console.log("Creating user");
-        this.crowboxService.updateTrainingStage(1);
+        this.currentTrainingStage = 1;
+        this.crowboxService.updateTrainingStage(this.currentTrainingStage);
       }
     });
   }
 
+  /* ---------------------------------------------------- */
+  /* GET TRAINING STAGE */
+  getTrainingStage() {
+    this.crowboxService
+    .getUserCrowbox()
+    .snapshotChanges()
+    .subscribe(result => {
+      this.currentTrainingStage = result.payload.val().current_training_stage;
+    });
+  }
+
+  /* CHANGE TRAINING STAGES */
+  phaseOne() {
+    this.currentTrainingStage = 1;
+    this.crowboxService.updateTrainingStage(this.currentTrainingStage);
+  }
+
+  phaseTwo() {
+    this.currentTrainingStage = 2;
+    this.crowboxService.updateTrainingStage(this.currentTrainingStage);
+  }
+
+  phaseThree() {
+    this.currentTrainingStage = 3;
+    this.crowboxService.updateTrainingStage(this.currentTrainingStage);
+  }
+
+  phaseFour() {
+    this.currentTrainingStage = 4;
+    this.crowboxService.updateTrainingStage(this.currentTrainingStage);
+  }
+
+  /* ---------------------------------------------------- */
+
+  /* PERSONAL DATA */
   getCrowOnPerchDataChildren() {
     //get a snapshot of the child added
     this.$childCrowOnPerchSub = this.crowboxService
@@ -145,6 +294,8 @@ export class DataComponent implements OnInit, AfterViewInit {
 
     this.$childCrowOnPerchSub
     .subscribe(action => {
+      //set the showUserId to false as the user has already set up the crowbox
+      this.showUserId = false;
       //get the index of the key from the date array
       let indexOfKey = this.crowsOnPerchDate.indexOf(action.key);
       //if the index is -1, then the date does not currently exist
@@ -177,6 +328,8 @@ export class DataComponent implements OnInit, AfterViewInit {
 
     this.$childCoinsDepositedSub
     .subscribe(action => {
+      //set the showUserId to false as the user has already set up the crowbox
+      this.showUserId = false;
       //get index of the key from the date array
       let indexOfKey = this.coinsDepositedDate.indexOf(action.key);
       //if the index is -1, then the date does not currently exist
@@ -199,5 +352,62 @@ export class DataComponent implements OnInit, AfterViewInit {
         { data: this.coinsDepositedValues, label: "Number of Coins Deposited" }
       ];
     });
+  }
+  /* ---------------------------------------------------- */
+
+  /* PUBLIC DATA */
+  getPublicCrowOnPerchData() {
+    this.$childPublicCrowOnPerchSub = this.crowboxService
+    .getAllLocationData()
+    .stateChanges();
+
+    this.$childPublicCrowOnPerchSub
+    .subscribe(action => {
+      let indexOfKey = this.publicCrowsOnPerchLocation.indexOf(action.key);
+
+      if(indexOfKey == -1) {
+        this.publicCrowsOnPerchLocation.push(action.key);
+        this.publicCrowsOnPerchValues.push(action.payload.val().crows_landed_on_perch);
+      } else {
+        this.publicCrowsOnPerchValues[indexOfKey] = action.payload.val().crows_landed_on_perch;
+      }
+    });
+
+    this.publicCrowOnPerchChartLabels = this.publicCrowsOnPerchLocation;
+    this.publicCrowOnPerchChartData = [
+      { data: this.publicCrowsOnPerchValues, label: "Number Of Crows That Landed On The Perch" }
+    ];
+  }
+
+  getPublicCoinsDepositedData() {
+    this.$childPublicCoinsDepositedSub = this.crowboxService
+    .getAllLocationData()
+    .stateChanges();
+
+    this.$childPublicCoinsDepositedSub
+    .subscribe(action => {
+      let indexOfKey = this.publicCoinsDepositedLocation.indexOf(action.key);
+
+      if (indexOfKey == -1) {
+        this.publicCoinsDepositedLocation.push(action.key);
+        this.publicCoinsDepositedValues.push(action.payload.val().coins_deposited);
+      } else {
+        this.publicCoinsDepositedValues[indexOfKey] = action.payload.val().coins_deposited;
+      }
+    });
+
+    this.publicCoinsDepositedChartLabels = this.publicCoinsDepositedLocation;
+
+    this.publicCoinsDepositedChartData = [
+      { data: this.publicCoinsDepositedValues, label: "Number Of Coins Deposited" }
+    ];
+  }
+  /* ---------------------------------------------------- */
+
+  showPersonal() {
+    this.showPublicData = false;
+  }
+  showPublic() {
+    this.showPublicData = true;
   }
 }
