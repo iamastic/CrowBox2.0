@@ -15,6 +15,8 @@ export class CrowboxdbService {
   userReference!:AngularFireObject<any>;
   usersDataPath = 'Users/';
   currentUserId?:any;
+  userName?:any;
+  userEmail?:any;
 
   //crows on perch list 
   crowsOnPerchReference!:AngularFireList<any>;
@@ -45,6 +47,11 @@ export class CrowboxdbService {
     
     //try to get the user id from handleAuth (if this is the first time loggin in)
     this.currentUserId = this.handleAuth.currentUserState?.uid;
+    //get the user's name
+    this.userName = this.handleAuth.currentUserState?.displayName;
+    //get the user's email
+    this.userEmail = this.handleAuth.currentUserState?.email;
+
     //if you cannot get the user id from handleAuth, then get it from the localStorage
     if(!this.currentUserId) {
       console.log("Error in crowboxdb Service - Cannot retrieve user id from handleAuth");
@@ -117,32 +124,52 @@ export class CrowboxdbService {
   }
 
   updateUserDateJoined(dateJoined:string): void {
-    this.crowboxReference.update({date_joined:dateJoined});
+    this.userReference.update({date_joined:dateJoined});
   }
 
   updateUserName(name:string) {
-    this.crowboxReference.update({name:name});
+    this.userReference.update({name:name});
+  }
+
+  setUserName() {
+    this.userReference.update({name:this.userName});
   }
 
   updateTotalCoinsDeposited(numCoins:number) {
-    this.crowboxReference.update({total_coins_deposited:numCoins});
+    this.userReference.update({total_coins_deposited:numCoins});
   }
 
   updateTotalCrowsLandedOnPerch(crowsOnPerch:number) {
-    this.crowboxReference.update({total_crows_landed_on_perch:crowsOnPerch});
+    this.userReference.update({total_crows_landed_on_perch:crowsOnPerch});
   }
 
   updateSharingPreferences(sharing:string) {
-    this.crowboxReference.update({sharing_preference:sharing});
+    this.userReference.update({sharing_preference:sharing});
   }
 
   updateNotifcationSettings(notifcation:string) {
-    this.crowboxReference.update({notification_settings:notifcation});
+    this.userReference.update({notification_settings:notifcation});
   }
 
 
   updateCrowboxNickname(nickname:string) {
     this.crowboxReference.update({nickanme:nickname});
+  }
+
+  setUserEmail() {
+    this.userReference.update({email:this.userEmail});
+  }
+
+  updateUserEmail(email:string) {
+    this.userReference.update({email:email});
+  }
+
+  updateNumCrowBoxes(num:number) {
+    this.userReference.update({num_crowboxes:num});
+  }
+  
+  updateDateJoined(date:string) {
+    this.userReference.update({date_joined:date});
   }
 
 

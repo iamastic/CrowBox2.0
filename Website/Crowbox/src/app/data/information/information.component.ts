@@ -99,8 +99,10 @@ export class InformationComponent implements OnInit, AfterContentInit, OnChanges
   /* ---------------------------------------------------- */
 
   /* DISPLAY INFORMATION IN BOX */
+  /* THERE IS AN ISSUE HERE 
+  NICKNAME IS NOT WITHIN GETUSER()*/
   getAllInformationData() {
-    this.crowboxService.getUserCrowbox()
+    this.crowboxService.getUser()
     .snapshotChanges()
     .subscribe(result => {
       console.log("Information data: " + result.payload.val().date_joined);
