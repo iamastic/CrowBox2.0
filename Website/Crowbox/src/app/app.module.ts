@@ -22,15 +22,26 @@ import { InfoboxComponent } from './home/infobox/infobox.component';
 import { HomeComponent } from './home/home/home.component';
 import { DataComponent } from './data/data/data.component';
 import { HandleAuthService } from './services/shared/handle-auth.service';
-
-//styling module
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HeaderComponent } from './header/header.component';
 import { TroubleshootComponent } from './TroubleShoot/troubleshoot/troubleshoot.component';
 import { ProfileComponent } from './Profile/profile/profile.component';
 import { InformationComponent } from './data/information/information.component';
-import { EditInfoComponent } from './Profile/edit-info/edit-info.component';
-import { ProfileboxComponent } from './Profile/profilebox/profilebox.component'
+import { EditInfoComponent, EditLocationComponent } from './Profile/edit-info/edit-info.component';
+import { ProfileboxComponent } from './Profile/profilebox/profilebox.component';
+
+//styling module
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+
+//Angular materials and forms
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import {MatDialogModule} from '@angular/material/dialog';
+import { MatButtonModule} from '@angular/material/button'
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+
+import { FormsModule } from '@angular/forms';
+
 
 
 @NgModule({
@@ -48,6 +59,7 @@ import { ProfileboxComponent } from './Profile/profilebox/profilebox.component'
     InformationComponent,
     EditInfoComponent,
     ProfileboxComponent,
+    EditLocationComponent,
 
   ],
   imports: [
@@ -56,7 +68,14 @@ import { ProfileboxComponent } from './Profile/profilebox/profilebox.component'
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     ChartsModule,
-    NgbModule
+    NgbModule,
+    BrowserAnimationsModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    FormsModule,
+    MatInputModule,
+
   ],
   providers: [HandleAuthService],
   bootstrap: [AppComponent]

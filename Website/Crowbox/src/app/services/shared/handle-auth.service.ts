@@ -114,7 +114,7 @@ export class HandleAuthService {
     .signOut()
     .then(()=> {
       localStorage.removeItem('user');
-      //this.router.navigate(['home']);
+      this.router.navigate(['home']);
     });
   }
 }

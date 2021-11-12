@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CrowboxdbService } from 'src/app/services/crowbox/crowboxdb.service';
+import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
 
 @Component({
   selector: 'app-profilebox',
@@ -20,7 +21,7 @@ export class ProfileboxComponent implements OnInit {
     totalCrowsLanded:0
   };
 
-  constructor(private crowboxService:CrowboxdbService) { }
+  constructor(private crowboxService:CrowboxdbService, private handleAuth: HandleAuthService) { }
 
   ngOnInit(): void {
     this.getUserInformation();

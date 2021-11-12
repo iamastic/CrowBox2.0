@@ -1,0 +1,16 @@
+
+#editContainer {
+    border-style: inset;
+    border-width: 5px;
+    border-radius: 5%;
+    border-color: 0x00ff00;
+
+    width: 15%;
+    height: 30%;
+    position: absolute;
+    margin: auto;
+
+    bottom: 15vh;
+    left: 50vh;
+
+}
