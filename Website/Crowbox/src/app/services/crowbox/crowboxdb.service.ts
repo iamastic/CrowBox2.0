@@ -46,11 +46,19 @@ export class CrowboxdbService {
   constructor(private db: AngularFireDatabase, private handleAuth: HandleAuthService) {
     
     //try to get the user id from handleAuth (if this is the first time loggin in)
-    this.currentUserId = this.handleAuth.currentUserState?.uid;
-    //get the user's name
+    this.handleAuth.currentUser$
+    .subscribe(user => {
+      this.currentUserId = user.uid;
+      this.userName = user.name;
+      this.userEmail = user.email;
+
+      console.log("WITHIN currentUser$, the ID is: ");
+      console.log(this.currentUserId);
+    });
+/*     //get the user's name
     this.userName = this.handleAuth.currentUserState?.displayName;
     //get the user's email
-    this.userEmail = this.handleAuth.currentUserState?.email;
+    this.userEmail = this.handleAuth.currentUserState?.email; */
 
     //if you cannot get the user id from handleAuth, then get it from the localStorage
     if(!this.currentUserId) {
@@ -61,6 +69,8 @@ export class CrowboxdbService {
         const currentUser = JSON.parse(item);
         this.currentUserId = currentUser.uid!;
       }
+    } else {
+      console.log("GOT UID from HandleAuthService");
     }
 
     //set up user object

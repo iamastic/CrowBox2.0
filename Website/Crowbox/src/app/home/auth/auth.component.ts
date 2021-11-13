@@ -20,10 +20,6 @@ export class AuthComponent implements OnInit {
 
   }
 
-  isLoggedIn() {
-    return this.handleAuth.isLoggedIn;
-  }
-
   ngOnInit(): void {
     if(this.isLoggedIn()){
       this.showSignUp = false;
@@ -31,7 +27,11 @@ export class AuthComponent implements OnInit {
       this.showSignUp = true;
     }
 
-    console.log(this.showSignUp);
+    console.log("To SHOW Sign up Sign: "+this.showSignUp);
+  }
+
+  isLoggedIn() {
+    return this.handleAuth.isLoggedIn;
   }
 
   login() {

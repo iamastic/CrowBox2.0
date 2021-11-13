@@ -12,3 +12,22 @@ body {
  }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* 
+.mat-divider {
+    border-top-color: red;
+    border-width: 50px;
+    position: absolute;
+    margin: auto;
+
+    top:50vh;
+
+    width:100%; 
+} */
+/* 
+.mat-divider.mat-divider-vertical {
+    border-top-color: red;
+    border-right-width: 4px;
+
+    left:10vh;
+    height: 100%;
+} */

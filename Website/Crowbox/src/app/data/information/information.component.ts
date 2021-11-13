@@ -48,7 +48,6 @@ export class InformationComponent implements OnInit, AfterContentInit, OnChanges
   addCrowsOnPerchValues() {
     if(this.crowsOnPerch.length != 0) {
       const reducer = (accumulator:any, curr:any) => accumulator + curr;
-      console.log(this.crowsOnPerch.reduce(reducer));
       this.totalCrowsLandedOnPerch = this.crowsOnPerch.reduce(reducer);
     }
   }
@@ -105,7 +104,6 @@ export class InformationComponent implements OnInit, AfterContentInit, OnChanges
     this.crowboxService.getUser()
     .snapshotChanges()
     .subscribe(result => {
-      console.log("Information data: " + result.payload.val().date_joined);
       this.informationBox = {
         date_joined : result.payload.val().date_joined,
         nickname: result.payload.val().nickname,

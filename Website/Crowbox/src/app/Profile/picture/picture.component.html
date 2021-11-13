@@ -1,0 +1,13 @@
+
+
+
+<div id="imageContainer">
+    IMAGE GOES HERE
+    <img alt="Profile Picture" [src]="profileUrl | async" />     
+    <div>
+        <input type="file" (change)="uploadFile($event)">
+    </div>
+</div>
+
+
+<mat-divider vertical="true"> </mat-divider>

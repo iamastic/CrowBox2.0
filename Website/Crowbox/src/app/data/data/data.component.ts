@@ -198,15 +198,21 @@ export class DataComponent implements OnInit, AfterContentInit {
   showPublicData?:boolean;
 
   /* ---------------------------------------------------- */
-  constructor(private authService: HandleAuthService, private crowboxService: CrowboxdbService, config: NgbCarouselConfig) {
-    config.showNavigationIndicators = true;
-    config.showNavigationArrows = true;
-   }
+  constructor(private authService: HandleAuthService, private crowboxService: CrowboxdbService) {
+
+  }
 
   ngOnInit(): void {
     //upon the view rendering, get the User Id 
-    this.currentUserId = this.crowboxService.currentUserId;
-    console.log("Current User Id is " + this.currentUserId);
+    this.currentUserId = this.authService.currentUserState?.uid;
+
+    this.authService.currentUser$
+    .subscribe(user => {
+      this.currentUserId = user.uid;
+    });
+    
+    console.log("Current User Id is " );
+    console.log(this.currentUserId);
 
     this.checkIfUserExists();
   }
@@ -219,9 +225,11 @@ export class DataComponent implements OnInit, AfterContentInit {
 
     //if the array is empty, let the user know that they need to setup a crowbox
     if((this.coinsDepositedDate.length == 0) && (this.crowsOnPerchDate.length == 0)) {
-      console.log("Empty coins and crows array");
+      console.log("COINS and CROWS array are currently empty");
       this.showUserId = true;
-    } 
+    } else {
+      console.log("COINS and CROWS array have now been filled");
+    }
 
     //set the charts to be YOUR DATA instead of PUBLIC DATA
     this.showPublicData = false;
@@ -232,6 +240,7 @@ export class DataComponent implements OnInit, AfterContentInit {
   and update the data: Name, Location, Total Data
   and Preferences */
   checkIfUserExists(): void {
+    console.log("checkIfUserExists() called");
     this.userData$ = this.crowboxService.getUser().snapshotChanges();
 
     this.userData$.subscribe(action => {
@@ -239,7 +248,6 @@ export class DataComponent implements OnInit, AfterContentInit {
       if(action.key){
         console.log("User is in the database");
         console.log(action.key);
-        //console.log(action.payload.val().Location);
       } else {
         //create the user and initialise their respective data slots here
         console.log("In data component, no such user found");
@@ -250,11 +258,12 @@ export class DataComponent implements OnInit, AfterContentInit {
         this.crowboxService.updateSharingPreferences("null");
         this.crowboxService.updateTotalCoinsDeposited(0);
         this.crowboxService.updateTotalCrowsLandedOnPerch(0);
-        this.crowboxService.setUserName();
         this.crowboxService.setUserEmail();
         this.crowboxService.updateCrowboxNickname("null");
         this.crowboxService.updateUserLocation("null");
-        this.crowboxService.updateDateJoined("null");
+        this.crowboxService.updateDateJoined("null");        
+        this.crowboxService.setUserName();
+
       }
     });
   }

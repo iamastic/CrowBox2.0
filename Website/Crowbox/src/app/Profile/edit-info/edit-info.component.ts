@@ -24,7 +24,7 @@ export class EditInfoComponent implements OnInit {
 
   changeLocation() {
     const dialogRef = this.dialog.open(EditLocationComponent, {
-      width: '500px',
+      width: '270px',
       data: { text:"Location",property: this.newLocation }
     });
 

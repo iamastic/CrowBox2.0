@@ -7,6 +7,8 @@ import { AppComponent } from './app.component';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { environment } from '../environments/environment';
+import { AngularFireStorageModule } from '@angular/fire/storage';
+
 
 //to be deleted
 import { TestUpdateComponent } from './test-update/test-update.component';
@@ -28,6 +30,7 @@ import { ProfileComponent } from './Profile/profile/profile.component';
 import { InformationComponent } from './data/information/information.component';
 import { EditInfoComponent, EditLocationComponent } from './Profile/edit-info/edit-info.component';
 import { ProfileboxComponent } from './Profile/profilebox/profilebox.component';
+import { PictureComponent } from './Profile/picture/picture.component';
 
 //styling module
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -39,8 +42,11 @@ import {MatDialogModule} from '@angular/material/dialog';
 import { MatButtonModule} from '@angular/material/button'
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatCardModule } from '@angular/material/card';
 
 import { FormsModule } from '@angular/forms';
+
 
 
 
@@ -60,6 +66,7 @@ import { FormsModule } from '@angular/forms';
     EditInfoComponent,
     ProfileboxComponent,
     EditLocationComponent,
+    PictureComponent,
 
   ],
   imports: [
@@ -75,6 +82,9 @@ import { FormsModule } from '@angular/forms';
     MatFormFieldModule,
     FormsModule,
     MatInputModule,
+    AngularFireStorageModule,
+    MatDividerModule,
+    MatCardModule,
 
   ],
   providers: [HandleAuthService],

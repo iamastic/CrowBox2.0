@@ -4,6 +4,8 @@ import { Injectable, NgZone } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import firebase from 'firebase/app';
+import { Observable } from 'rxjs';
+import { map, take } from 'rxjs/operators';
 
 export interface User {
   uid: string;
@@ -21,57 +23,51 @@ export class HandleAuthService {
   currentUserData: any = null;
 
   currentUserId: any;
+  currentUser$:Observable<any>;
 
   currentUserState?: User;
 
   constructor(private fireAuth: AngularFireAuth, private ngZone: NgZone, private router: Router) { 
     /* initialise the currentUserId to that of the local storage */
-    //this.currentUserId = localStorage.getItem('uid');
-    //console.log("Got the user id from localstorage " + this.currentUserId);
-
+/* 
     this.fireAuth.authState.subscribe(user => {
       if (user) {
-        console.log("user is already logged in");
+        console.log("User is LOGGED IN");
         this.currentUserState = {
           uid: user.uid!,
           email: user.email!,
           displayName: user.displayName!
         };
 
+        console.log("Current User State is:");
         console.log(this.currentUserState);
+
         localStorage.setItem('user', JSON.stringify(this.currentUserState));
-        //JSON.parse(localStorage.getItem('user' || "{}"));
       } else {
         console.log("User is not logged in?");
         localStorage.setItem('user', "null");
-        //JSON.parse(localStorage.getItem('user')!);
       }
-    })
+    }) */
+
+    
+    this.currentUser$ = this.fireAuth.authState.pipe(
+      take(1),
+      map(user => {
+        if (user) {
+          return {uid: user.uid, email:user.email, displayName:user.displayName}
+        } else {
+          return null;
+        }
+      })
+    );
   }
+
 
   login() {
     /* Sign in or Sign Up with google's pop up.
     This essentially kills two birds with one stone. */
 
     return this.googleLogin( new firebase.auth.GoogleAuthProvider());
-
-
-/*     this.fireAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
- */
-    /* Once the user has signed up or in, store their data in
-    the local storage. */
-/*     this.fireAuth.authState.subscribe( authState => {
- *//*       //grab the user data from the auth state
- *//*       this.currentUserData = authState;
- */      //store the user id (uid) in the local storage
-/*       if (this.currentUserData.uid) {
-        this.currentUserId = this.currentUserData.uid;
-        console.log("Setting the uid in localstorage" + this.currentUserId);
-        localStorage.setItem('uid', this.currentUserId);
-      } else {
-        console.log("Error in retrieving user data from Auth");
-      }
-    }); */
   }
 
   get isLoggedIn():boolean {

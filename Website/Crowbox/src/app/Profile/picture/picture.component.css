@@ -1,0 +1,33 @@
+#imageContainer{
+    border-style: inset;
+    border-width: 5px;
+    border-radius: 5%;
+    border-color: 0x00ff00;
+
+    width:9%;
+    height:17%;
+
+    position: absolute;
+    margin: auto;
+    top: 20vh;
+    left: 63vh;
+}
+
+.mat-divider.mat-divider-vertical {
+    border-right-color: rgb(0, 0, 0);
+    border-right-width: 4px;
+  
+    position: absolute;
+    right:113vh;
+    
+    top:13vh;
+    height: 730px;
+
+} 
+/* 
+.mat-divider-vertical{
+    height: 100%;
+    width: 0px !important;
+    position: inherit !important;
+    border-right-color: red;
+  } */
