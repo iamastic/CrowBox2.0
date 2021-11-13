@@ -54,8 +54,14 @@ export class HandleAuthService {
       take(1),
       map(user => {
         if (user) {
+          console.log("User is LOGGED IN - handleAuth Constructor");
+          //set the local storage here to "loggedIn"
+          localStorage.setItem('userStatus', "loggedIn");
           return {uid: user.uid, email:user.email, displayName:user.displayName}
+
         } else {
+          console.log("User is NOT logged in - handleAuth Constructor");
+          localStorage.setItem('userStatus', "loggedOut");
           return null;
         }
       })
@@ -71,13 +77,50 @@ export class HandleAuthService {
   }
 
   get isLoggedIn():boolean {
+
+    console.log("INSIDE isLoggedIn()");
+/* 
     const item = localStorage.getItem('user');
     if (item !=='undefined' && item!==null) {
       const currentUser = JSON.parse(item);
       return (currentUser !== null)? true: false;
     } else {
+      console.log("USER IS NOT LOGGED IN");
+      return false;
+    }   
+ */
+    const userStatus = localStorage.getItem('userStatus');
+    if(userStatus === "loggedIn") {
+      console.log("USER IS LOGGED IN - isLoggedIn()");
+      return true;
+    } else if (userStatus === "loggedOut") {
+      console.log("USER is NOT LOGGED IN - isLoggedIn()");
+      return false;
+    } else {
+      console.log("USER is NOT LOGGED IN - isLoggedIn()");
       return false;
     }
+    
+/*     console.log("INSIDE isLoggedIn()");
+    this.fireAuth.user
+    .subscribe(result => {
+      if(result) {
+        console.log(result.displayName);
+        return true;
+      } else {
+        console.log("USER IS NOT LOGGED IN");
+        return false;
+      }
+    }); */
+
+    }
+
+  getAuthUser$(): Observable<any> {
+    return this.fireAuth.user;
+  }
+
+  printAuthState() {
+    console.log(this.fireAuth.authState);
   }
 
   googleLogin(provider:any) {
@@ -109,7 +152,7 @@ export class HandleAuthService {
     return this.fireAuth
     .signOut()
     .then(()=> {
-      localStorage.removeItem('user');
+      localStorage.removeItem('userStatus');
       this.router.navigate(['home']);
     });
   }

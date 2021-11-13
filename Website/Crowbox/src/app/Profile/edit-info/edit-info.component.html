@@ -1,38 +1,55 @@
 
 <div id = "editContainer">
-    <div id="changeLocation">
-        <button mat-raised-button (click)="changeLocation()">
+    <div class="editData">
+        <button mat-flat-button (click)="changeName()">
+            Change Name
+            <mat-icon>person</mat-icon>
+        </button>
+
+    </div>
+
+    <div class="editData">
+        <button mat-flat-button (click)="changeLocation()">
             Change Location
+            <mat-icon style="left: 17.2vh;">home</mat-icon>
         </button>
     </div>
 
-    <div id="changeEmail">
-        <button id="btn" mat-raised-button (click)="changeEmail()">
+    <div class="editData">
+        <button id="btn" mat-flat-button (click)="changeEmail()">
             Change Email
+
+            <mat-icon style="left:14.5vh;">email</mat-icon>
+
         </button>
     </div>
 
-    <div id="changeNotification">
-        <button id="btn" mat-raised-button (click)="changeNotification()">
+    <div class="editData">
+        <button id="btn" mat-flat-button (click)="changeNotification()">
             Change Notification Preferences
+            <mat-icon style="left:30.8vh;">notifications</mat-icon>
         </button>
     </div>
 
-    <div id="changeSharing">
-        <button id="btn" mat-raised-button (click)="changeSharing()">
+    <div class="editData">
+        <button id="btn" mat-flat-button (click)="changeSharing()">
             Change Sharing Preferences
+            <mat-icon style="left:27.2vh;">people</mat-icon>
         </button>
     </div>
 
-    <div id="addBox">
-        <button id="btn" mat-raised-button (click)="addABox()">
+    <div class="editData">
+        <button id="btn" mat-flat-button (click)="addABox()">
             Add a Box
+            <mat-icon style="left:11.7vh;">add</mat-icon>
+
         </button>
     </div>
 
-    <div id="logout">
-        <button id="btn" mat-raised-button (click)="logout()">
+    <div class="editData">
+        <button id="btn" mat-flat-button (click)="logout()">
             Logout
+            <mat-icon style="left:9vh;">exit_to_app</mat-icon>
         </button>
     </div>
 </div>

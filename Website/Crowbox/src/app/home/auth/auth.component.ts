@@ -16,9 +16,7 @@ export class AuthComponent implements OnInit {
 
   showSignUp!: boolean;
 
-  constructor(private handleAuth: HandleAuthService, private router:Router) {
-
-  }
+  constructor(private handleAuth: HandleAuthService, private router:Router) {}
 
   ngOnInit(): void {
     if(this.isLoggedIn()){
@@ -42,7 +40,6 @@ export class AuthComponent implements OnInit {
   logout() {
     this.showSignUp = true;
     this.handleAuth.logout();
-
   }
 
 }

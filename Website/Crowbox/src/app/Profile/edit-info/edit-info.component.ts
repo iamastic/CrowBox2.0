@@ -14,12 +14,28 @@ export class EditInfoComponent implements OnInit {
 
   constructor(private handleAuth:HandleAuthService, public dialog:MatDialog, private crowboxService:CrowboxdbService ) { }
 
+  newName?:string;
   newLocation?:string;
   newEmail?:string;
   newNotification?:string;
   newSharing?:string;
 
   ngOnInit(): void {
+  }
+
+  changeName() {
+    const dialogRef = this.dialog.open(EditLocationComponent, {
+      width: '270px',
+      data: { text:"Name",property: this.newName }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+      if(result) {
+        console.log("New Name is: " + result);
+        this.crowboxService.updateUserName(result);
+      }
+    });
   }
 
   changeLocation() {
@@ -34,7 +50,6 @@ export class EditInfoComponent implements OnInit {
         console.log("New Location is: " + result);
         this.crowboxService.updateUserLocation(result);
       }
-
     });
   }
 

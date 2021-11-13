@@ -46,17 +46,29 @@ export class DataComponent implements OnInit, AfterContentInit {
   //crows on perch barchart options
   public crowOnPerchChartOptions = {
     responsive: true,
-    scales: { xAxes: [{
+    scales: { 
+      yAxes: [{
+        scaleLabel: {
+          display:true,
+          labelString:'Amount'
+        }
 
-    }], yAxes: [{
-      display:true,
-      ticks: {
-        beginAtZero: true, 
-        stepSize: 1,
-      },
-      maintainAspectRatio: false,
-      labelString:'Date'
-    }] },
+      }], 
+      xAxes: [{
+        display:true,
+        ticks: {
+          beginAtZero: true, 
+          stepSize: 1,
+        },
+        maintainAspectRatio: false,
+
+        scaleLabel: {
+          display:true,
+          labelString:'Date'
+        }
+      }]
+    },
+
     plugins: {
       datalabels: {
         anchor: 'end',
@@ -64,6 +76,12 @@ export class DataComponent implements OnInit, AfterContentInit {
       }
     }
   };
+
+  public crowOnPerchChartColor = [
+    {
+      backgroundColor: ["#FF7360",  "#6FC8CE", "#FAFFF2"]
+    }
+  ]
 
   public crowOnPerchChartLabels = this.crowsOnPerchDate;
   public crowOnPerchChartType = 'bar';
@@ -198,26 +216,35 @@ export class DataComponent implements OnInit, AfterContentInit {
   showPublicData?:boolean;
 
   /* ---------------------------------------------------- */
-  constructor(private authService: HandleAuthService, private crowboxService: CrowboxdbService) {
+  constructor(private handleAuth: HandleAuthService, private crowboxService: CrowboxdbService) {
 
   }
 
   ngOnInit(): void {
-    //upon the view rendering, get the User Id 
-    this.currentUserId = this.authService.currentUserState?.uid;
+    //upon the view rendering, get the User Id - don't need to do this anymore
+    //this.currentUserId = this.authService.currentUserState?.uid;
 
-    this.authService.currentUser$
+    //Subscribe to the user auth state observable and wait 
+    //to get the UID to proceed
+    this.handleAuth.currentUser$
     .subscribe(user => {
       this.currentUserId = user.uid;
-    });
-    
-    console.log("Current User Id is " );
-    console.log(this.currentUserId);
+      this.handleAuth.isLoggedIn;
 
-    this.checkIfUserExists();
+      console.log("Current User Id is " );
+      console.log(this.currentUserId);
+  
+      this.checkIfUserExists();
+      this.initialiseCharts();
+    });
   }
 
   ngAfterContentInit() {
+    //set the charts to be YOUR DATA instead of PUBLIC DATA
+    this.showPersonal();
+  }
+
+  initialiseCharts() {
     this.getCrowOnPerchDataChildren()
     this.getCoinDepositedDataChildren();
     this.getPublicCrowOnPerchData();
@@ -231,8 +258,6 @@ export class DataComponent implements OnInit, AfterContentInit {
       console.log("COINS and CROWS array have now been filled");
     }
 
-    //set the charts to be YOUR DATA instead of PUBLIC DATA
-    this.showPublicData = false;
   }
 
   /* Check if the user already has a profile in the 

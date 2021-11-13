@@ -24,7 +24,12 @@ export class ProfileboxComponent implements OnInit {
   constructor(private crowboxService:CrowboxdbService, private handleAuth: HandleAuthService) { }
 
   ngOnInit(): void {
-    this.getUserInformation();
+    //Subscribe to the user auth state observable and wait 
+    //to get the UID to proceed
+    this.handleAuth.currentUser$
+    .subscribe(user => {
+      this.getUserInformation();
+    });
   }
 
   /* fill the profile data object with data from 

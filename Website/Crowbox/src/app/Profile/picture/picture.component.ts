@@ -1,6 +1,7 @@
 import { Component, OnChanges, OnInit } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { CrowboxdbService } from 'src/app/services/crowbox/crowboxdb.service';
+import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
 
 
 
@@ -11,14 +12,33 @@ import { CrowboxdbService } from 'src/app/services/crowbox/crowboxdb.service';
 })
 export class PictureComponent implements OnInit, OnChanges {
 
+  userName?:string;
   userId?:string;
   profileUrl?:any;
   filePath?:string;
 
-  constructor(private storage: AngularFireStorage, private crowboxService:CrowboxdbService) { }
+  constructor(private handleAuth:HandleAuthService, private storage: AngularFireStorage, private crowboxService:CrowboxdbService) { }
 
   ngOnInit(): void {
-    this.userId = this.crowboxService.currentUserId;
+    
+    this.handleAuth.getAuthUser$()
+    .subscribe(result => {
+      if (result) {
+        this.userId = result.uid;
+        this.getProfilePicture();
+      }
+    })
+    
+    //Subscribe to the user auth state observable and wait 
+    //to get the UID to proceed
+    this.handleAuth.currentUser$
+    .subscribe(user => {
+      this.userName = user.displayName;
+      this.userId = user.uid;
+      console.log("AUTH STATE is: ")
+      console.log(this.handleAuth.printAuthState());
+    });
+    
     
   }
 
@@ -27,14 +47,15 @@ export class PictureComponent implements OnInit, OnChanges {
 
   uploadFile(event:any) {
     const file = event.target.files[0];
-    this.filePath = `${this.userId}/displayPicture`;
+/*     this.filePath = `${this.userId}/displayPicture`; */
+    this.filePath = "/image1";
     const task = this.storage.upload(this.filePath, file);
-
-    this.getProfilePicture();
   }
 
   getProfilePicture() {
-    const ref = this.storage.ref(`${this.userId}/displayPicture.jpg`);
+/*     const ref = this.storage.ref(`${this.userId}/displayPicture.jpg`); */
+
+    const ref = this.storage.ref("image1.jpg");
     this.profileUrl = ref.getDownloadURL();
   }
 

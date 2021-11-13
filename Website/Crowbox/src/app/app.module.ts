@@ -44,6 +44,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
+import {MatIconModule} from '@angular/material/icon'
+
 
 import { FormsModule } from '@angular/forms';
 
@@ -85,6 +87,7 @@ import { FormsModule } from '@angular/forms';
     AngularFireStorageModule,
     MatDividerModule,
     MatCardModule,
+    MatIconModule,
 
   ],
   providers: [HandleAuthService],

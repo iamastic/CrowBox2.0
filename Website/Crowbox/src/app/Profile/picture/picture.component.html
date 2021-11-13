@@ -1,12 +1,15 @@
+<div id="userName">
+    {{userName}}
+</div>
 
-
-
-<div id="imageContainer">
-    IMAGE GOES HERE
-    <img alt="Profile Picture" [src]="profileUrl | async" />     
+<div id = "changeImage">
     <div>
         <input type="file" (change)="uploadFile($event)">
     </div>
+</div>
+
+<div id="imageContainer">
+    <img alt="Profile Picture" [src]="profileUrl | async" />     
 </div>
 
 

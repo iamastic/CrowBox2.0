@@ -1,3 +1,7 @@
+.fontStyle {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 /* TOP HALF */
 #food {
     position: absolute;
@@ -5,6 +9,9 @@
     height:20%;
     top: 30vh;
     left: 15vh;
+
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
 }
 
 #coin {

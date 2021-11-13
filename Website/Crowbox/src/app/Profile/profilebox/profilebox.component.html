@@ -1,83 +1,111 @@
 <div id="mainContainer">
 
     <div id = "name">
-        <div id = "left">
-            Name
-        </div>
 
-        <div id="right">
-            {{profileData.name}}
-        </div>
+        <mat-card>
+            <div id = "left">
+                Name
+            </div>
+    
+            <div id="right">
+                {{profileData.name}}
+            </div>            
+        </mat-card>
+
     </div>
 
     <div id = "location">
-        <div id="left">
+
+        <mat-card>
+                   <div id="left">
             <p>Location</p>    
         </div>
 
         <div id="right">
             <p>{{profileData.location}}</p>
-        </div>
+        </div> 
+        </mat-card>
+
     </div>
 
     <div id = "email">
-        <div id="left">
-            <p>E-mail Address</p>    
-        </div>
 
-        <div id="right">
-            <p>{{profileData.email}}</p>
-        </div>
+        <mat-card>
+            <div id="left">
+                <p>E-mail Address</p>    
+            </div>
+    
+            <div id="right">
+                <p>{{profileData.email}}</p>
+            </div>
+        </mat-card>
+
     </div>
 
     <div id = "notification">
-        <div id="left">
-            <p>Notifications</p>    
-        </div>
 
-        <div id="right">
-            <p>{{profileData.notification}}</p>
-        </div>
+        <mat-card>
+            <div id="left">
+                <p>Notifications</p>    
+            </div>
+    
+            <div id="right">
+                <p>{{profileData.notification}}</p>
+            </div>
+        </mat-card>
+
     </div>
 
     <div id = "sharing">
-        <div id="left">
-            <p>Sharing</p>    
-        </div>
+        <mat-card>
+            <div id="left">
+                <p>Sharing</p>    
+            </div>
+    
+            <div id="right">
+                <p>{{profileData.sharing}}</p>
+            </div>
+        </mat-card>
 
-        <div id="right">
-            <p>{{profileData.sharing}}</p>
-        </div>
     </div>
 
     <div id = "numBoxes">
-        <div id="left">
-            <p>Number of Crow Boxes</p>    
-        </div>
+        <mat-card>
+            <div id="left">
+                <p>Number of Crow Boxes</p>    
+            </div>
+    
+            <div id="right">
+                <p>{{profileData.numCrowBoxes}}</p>
+            </div>
+        </mat-card>
 
-        <div id="right">
-            <p>{{profileData.numCrowBoxes}}</p>
-        </div>
     </div>
 
     <div id = "numCoins">
-        <div id="left">
-            <p>Total Number Of Coins</p>    
-        </div>
+        <mat-card>
+            <div id="left">
+                <p>Total Number Of Coins</p>    
+            </div>
+    
+            <div id="right">
+                <p>{{profileData.totalCoins}}</p>
+            </div>
+        </mat-card>
 
-        <div id="right">
-            <p>{{profileData.totalCoins}}</p>
-        </div>
     </div>
 
     
     <div id = "numCrows">
-        <div id="left">
-            <p>Total Number Of Crows Landed On Perch</p>    
-        </div>
+        <mat-card >
+            <div id="left">
+                <p>Total Number Of Crows Landed On Perch</p>    
+            </div>
+    
+            <div id="right">
+                <p>{{profileData.totalCrowsLanded}}</p>
+            </div>
+        </mat-card>
 
-        <div id="right">
-            <p>{{profileData.totalCrowsLanded}}</p>
-        </div>
     </div>
 </div>

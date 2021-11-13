@@ -1,16 +1,28 @@
 #mainContainer {
-    border-style: inset;
+/*     border-style: inset;
     border-width: 5px;
     border-radius: 5%;
-    border-color: 0x00ff00;
+    border-color: 0x00ff00; */
 
-    width: 30%;
+    width: 38%;
     height: 70%;
     position: absolute;
     margin: auto;
 
-    top: 15vh;
-    right: 40vh;
+    top: 19.5vh;
+    right: 30vh;
+}
+
+.mat-card {
+    position: absolute;
+    height: 80%;
+    width: 100%;
+    margin: auto;
+
+    border-radius: 17px;
+    background-color: #ededed;
+
+
 }
 
 #left {
@@ -25,6 +37,12 @@
     top:2vh;
 
     text-align: left;
+
+    color: #25356a;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: large;
+    font-weight: bolder;
+
 }
 
 #right {
@@ -38,13 +56,19 @@
     right:3vh;
     top:2vh;
     text-align:right;
+
+    color: #5972c5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: large;
+    font-weight: bold;
+
 }
 
 #name {
-    border-style:solid;
+/*     border-style:solid;
     border-width: 5px;
     border-radius: 5%;
-    border-color: 0xffffff;
+    border-color: 0xffffff; */
 
     position: absolute;
     margin: auto;
@@ -52,13 +76,14 @@
     height:12%;
 
     top: 0vh;
+
 }
 
 #location {
-    border-style:solid;
+ /*    border-style:solid;
     border-width: 5px;
     border-radius: 5%;
-    border-color: 0xffffff;
+    border-color: 0xffffff; */
 
     position: absolute;
     margin: auto;
@@ -68,10 +93,10 @@
 }
 
 #email {
-    border-style:solid;
+/*     border-style:solid;
     border-width: 5px;
     border-radius: 5%;
-    border-color: 0xffffff;
+    border-color: 0xffffff; */
 
     position: absolute;
     margin: auto;
@@ -81,10 +106,10 @@
 }
 
 #notification {
-    border-style:solid;
+/*     border-style:solid;
     border-width: 5px;
     border-radius: 5%;
-    border-color: 0xffffff;
+    border-color: 0xffffff; */
 
     position: absolute;
     margin: auto;
@@ -94,10 +119,10 @@
 }
 
 #sharing {
-    border-style:solid;
+/*     border-style:solid;
     border-width: 5px;
     border-radius: 5%;
-    border-color: 0xffffff;
+    border-color: 0xffffff; */
 
     position: absolute;
     margin: auto;
@@ -107,10 +132,10 @@
 }
 
 #numBoxes {
-    border-style:solid;
+/*     border-style:solid;
     border-width: 5px;
     border-radius: 5%;
-    border-color: 0xffffff;
+    border-color: 0xffffff; */
 
     position: absolute;
     margin: auto;
@@ -120,11 +145,11 @@
 }
 
 #numCoins {
-    border-style:solid;
+/*     border-style:solid;
     border-width: 5px;
     border-radius: 5%;
     border-color: 0xffffff;
-
+ */
     position: absolute;
     margin: auto;
     width:100%;
@@ -133,10 +158,10 @@
 }
 
 #numCrows {
-    border-style:solid;
+/*     border-style:solid;
     border-width: 5px;
     border-radius: 5%;
-    border-color: 0xffffff;
+    border-color: 0xffffff; */
 
     position: absolute;
     margin: auto;

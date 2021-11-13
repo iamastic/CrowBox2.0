@@ -46,6 +46,9 @@ export class CrowboxdbService {
   constructor(private db: AngularFireDatabase, private handleAuth: HandleAuthService) {
     
     //try to get the user id from handleAuth (if this is the first time loggin in)
+    //previously, I resorted to using the local storage to retrieve 
+    //any user details before the subscription was received. 
+    //now, I am going to do everything within the subscription
     this.handleAuth.currentUser$
     .subscribe(user => {
       this.currentUserId = user.uid;
@@ -54,14 +57,18 @@ export class CrowboxdbService {
 
       console.log("WITHIN currentUser$, the ID is: ");
       console.log(this.currentUserId);
+
+      this.setupReferences();
     });
+
 /*     //get the user's name
     this.userName = this.handleAuth.currentUserState?.displayName;
     //get the user's email
     this.userEmail = this.handleAuth.currentUserState?.email; */
 
     //if you cannot get the user id from handleAuth, then get it from the localStorage
-    if(!this.currentUserId) {
+    //there is no need for this anymore! we shall wait for the subscription
+/*     if(!this.currentUserId) {
       console.log("Error in crowboxdb Service - Cannot retrieve user id from handleAuth");
       //get the user information from the local storage
       const item = localStorage.getItem('user');
@@ -71,37 +78,39 @@ export class CrowboxdbService {
       }
     } else {
       console.log("GOT UID from HandleAuthService");
-    }
+    } */
+  }
 
+  setupReferences() {
     //set up user object
     //set up crows on perch list
     //set up coins deposited list 
 
     //setting the reference for the user's object
     //used to get data such as Location and nam
-    this.userReference = db.object(this.usersDataPath+`${this.currentUserId}`);
+    this.userReference = this.db.object(this.usersDataPath+`${this.currentUserId}`);
 
     //setting the reference for the crows on the perch
     //data
     this.crowsOnPerchDataPath = `Users/${this.currentUserId}/Crowbox/crows_landed_on_perch`;
-    this.crowsOnPerchReference = db.list(this.crowsOnPerchDataPath);
+    this.crowsOnPerchReference = this.db.list(this.crowsOnPerchDataPath);
 
     //setting the reference for the coins deposited data
     this.coinsDepositedDataPath = `Users/${this.currentUserId}/Crowbox/coins_deposited`;
-    this.coinsDepositedReference = db.list(this.coinsDepositedDataPath);
+    this.coinsDepositedReference = this.db.list(this.coinsDepositedDataPath);
 
     //setting up the reference for the main crowbox
     this.crowboxDataPath = `Users/${this.currentUserId}/Crowbox`;
-    this.crowboxReference = db.object(this.crowboxDataPath);
+    this.crowboxReference = this.db.object(this.crowboxDataPath);
     
     //set up public list
-    this.publicReference = db.list(this.publicDataPath);
+    this.publicReference = this.db.list(this.publicDataPath);
 
     //set up the Location list 
-    this.locationReference = db.list(this.locationDataPath);
+    this.locationReference = this.db.list(this.locationDataPath);
 
     //set up site list
-    this.siteReference = db.list(this.siteDataPath);
+    this.siteReference = this.db.list(this.siteDataPath);
   }
 
 
@@ -182,6 +191,13 @@ export class CrowboxdbService {
     this.userReference.update({date_joined:date});
   }
 
+  updateCrowboxTotalCoinsDeposited(coins:number) {
+    this.crowboxReference.update({total_coins_deposited:coins});
+  }
+
+  updateCrowboxCrowsOnPerch(crows:number) {
+    this.crowboxReference.update({total_crows_landed_on_perch:crows});
+  }
 
   /* PUBLIC RELATED */
   getAllPublicData(): AngularFireList<any> {

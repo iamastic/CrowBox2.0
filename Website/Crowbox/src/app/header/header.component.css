@@ -1,78 +1,100 @@
-#navContainer {
 
+#navContainer {
+    
+ /*    border-style: solid;
+    border-width: 5px;
+    border-radius: 5%;
+    border-color: black;  */
+     
     position: absolute;
     margin: auto; 
     right: 0vh;
     left: 0vh;
-    top:-45vh;
-    height:max-content;
+    top:2vh;
+    height:5%;
 }
 
-#home {
-    color : #25356a;
+a {
+    color: #25356a;
+    text-decoration: none;
+    font-weight: bold;
+    letter-spacing: 7px;
+}
+
+.fontStyle{
+    color : #d44e4e;
     text-align: center;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; 
-    font-size: 30pt;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    font-size: 25pt;
     font-style: normal;
+    
+}
 
+
+.mat-divider.mat-divider-vertical {
+    border-right-color: rgb(0, 0, 0);
+    border-right-width: 2px;
+  
     position: absolute;
-    margin: auto; 
-    left: 0vh;
-    right: 100vh;
-    top: 48vh;
-    width: 10%;
-    height: 12%;
+    height: 100%;
 
+} 
+
+
+#home {
+
+/*     border-style: solid;
+    border-width: 5px;
+    border-radius: 5%;
+    border-color: black; 
+ */
+
+    margin-left: 20%;
+    position: absolute;
+/*     margin: auto; */    
+    width: 20%;
+    height: 100%;
 }
 
 #data {
-    color : #25356a;
-    text-align: center;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; 
-    font-size: 30pt;
-    font-style: normal;
+/*  border-style: solid;
+    border-width: 5px;
+    border-radius: 5%;
+    border-color: black;   */
 
     position: absolute;
-    margin: auto; 
-    left: 0vh;
-    right: 50vh;
-    top: 48vh;
-    width: 10%;
-    height: 12%;
+    margin-left: 35.7%;
+
+    width: 8%;
+    height: 100%;
 
 }
 
 #troubleshoot {
-    color : #25356a;
-    text-align: center;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; 
-    font-size: 30pt;
-    font-style: normal;
+
+    
+/*     border-style: solid;
+    border-width: 5px;
+    border-radius: 5%;
+    border-color: black;  */
 
     position: absolute;
-    margin: auto; 
-    left: 0vh;
-    right: 0vh;
-    top: 48vh;
-    width: 10%;
-    height: 12%;
+    margin-left: 45%;
+    width: 20%;
+    height: 100%;
 
 }
 
 #profile {
-
-    color : #25356a;
-    text-align: center;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; 
-    font-size: 30pt;
-    font-style: normal;
-
+    
+/*     border-style: solid;
+    border-width: 5px;
+    border-radius: 5%;
+    border-color: black; 
+     */
     position: absolute;
-    margin: auto; 
-    left: 0vh;
-    left: 130vh;
-    top: 48vh;
-    width: 10%;
-    height: 12%;
+    margin-left: 62%;
+    width: 20%;
+    height: 100%;
 
 }

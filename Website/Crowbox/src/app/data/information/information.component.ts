@@ -1,19 +1,20 @@
 import { AfterContentInit, Component, OnInit, Input, OnChanges } from '@angular/core';
 import { CrowboxdbService } from 'src/app/services/crowbox/crowboxdb.service';
+import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
 
 @Component({
   selector: 'app-information',
   templateUrl: './information.component.html',
   styleUrls: ['./information.component.css']
 })
-export class InformationComponent implements OnInit, AfterContentInit, OnChanges {
+export class InformationComponent implements OnInit, OnChanges {
 
   //receive the values array for both: Crows on perch and Coins Deposited
   @Input() crowsOnPerch!:number[];
   @Input() coinsDeposited!:number[]; 
 
   totalCrowsLandedOnPerch:number = 0;
-  totalCoinsDeposited?:number = 0;
+  totalCoinsDeposited:number = 0;
 
   //display and manipulate the training stage for the crowbox
   currentTrainingStage?:number;
@@ -29,14 +30,16 @@ export class InformationComponent implements OnInit, AfterContentInit, OnChanges
   //boolean to check if the user needs to fill out profile details
   pendingProfileDetails!:boolean;
 
-  constructor(private crowboxService:CrowboxdbService) { }
+  constructor(private handleAuth:HandleAuthService, private crowboxService:CrowboxdbService) { }
 
   ngOnInit(): void {
-  }
-
-  ngAfterContentInit() {
-    this.getTrainingStage();
-    this.getAllInformationData();
+    //Subscribe to the user auth state observable and wait 
+    //to get the UID to proceed
+    this.handleAuth.currentUser$
+    .subscribe(user => {
+      this.getTrainingStage();
+      this.getAllInformationData();
+    });
   }
 
   ngOnChanges() {
@@ -50,6 +53,8 @@ export class InformationComponent implements OnInit, AfterContentInit, OnChanges
       const reducer = (accumulator:any, curr:any) => accumulator + curr;
       this.totalCrowsLandedOnPerch = this.crowsOnPerch.reduce(reducer);
     }
+
+    this.crowboxService.updateCrowboxCrowsOnPerch(this.totalCrowsLandedOnPerch);
   }
 
   /* ADD UP ALL THE VALUES IN THE COINS DEPOSITED ARRAY */
@@ -58,6 +63,8 @@ export class InformationComponent implements OnInit, AfterContentInit, OnChanges
       const reducer = (accumulator:any, curr:any) => accumulator + curr;
       this.totalCoinsDeposited = this.coinsDeposited.reduce(reducer);
     }
+
+    this.crowboxService.updateCrowboxTotalCoinsDeposited(this.totalCoinsDeposited);
   }
   
   /* ---------------------------------------------------- */
