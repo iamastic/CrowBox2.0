@@ -44,11 +44,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
-import {MatIconModule} from '@angular/material/icon'
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+
 
 
 import { FormsModule } from '@angular/forms';
-
+import { DatePipe } from '@angular/common';
 
 
 
@@ -88,9 +90,10 @@ import { FormsModule } from '@angular/forms';
     MatDividerModule,
     MatCardModule,
     MatIconModule,
+    MatButtonToggleModule,
 
   ],
-  providers: [HandleAuthService],
+  providers: [HandleAuthService,DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

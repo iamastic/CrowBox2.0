@@ -1,35 +1,48 @@
+<mat-divider vertical="true"> </mat-divider>
 
 <div id = "dataInformation">  
     <h1>CrowBox Information</h1>
 
-    <div id="pendingProfile" *ngIf="pendingProfileDetails === true">
+<!--     <div id="pendingProfile" *ngIf="pendingProfileDetails === true">
         PLEASE FILL OUT YOUR PROFILE 
-    </div>
+    </div> -->
     
 
     <div id = "Nickname">
-        <h5>NICKNAME</h5>
-
-        <h2>{{ informationBox.nickname }}</h2>
+        <mat-card>
+            <h5>NICKNAME</h5>
+            <h2>{{ crowboxNickname }}</h2>
+        </mat-card>
     </div>
 
     <div id = "startDate">
-        <h5>START DATE</h5>
-        <h2>{{ informationBox.date_joined }}</h2>
+
+        <mat-card>
+            <h5>START DATE</h5>
+            <h2>{{ informationBox.date_joined }}</h2>
+        </mat-card>
+
     </div>
     
     <div id = "totalCoinsDeposited">
-        <h5>TOTAL COINS DEPOSITED</h5>
-        <h2>{{ totalCoinsDeposited }}</h2>
+        <mat-card>
+            <h5>TOTAL COINS DEPOSITED</h5>
+            <h2>{{ totalCoinsDeposited }}</h2>
+        </mat-card>
+
     </div>
     
     <div id = "numBirdsOnPerch">
-        <h5>NUMBER OF BIRDS ON PERCH</h5>
-        <h2>{{ totalCrowsLandedOnPerch }}</h2>
+        <mat-card>
+            <h5>NUMBER OF BIRDS ON PERCH</h5>
+            <h2>{{ totalCrowsLandedOnPerch }}</h2>
+        </mat-card>
     </div>
 
     <div id = "status">
-        <h5>STATUS</h5>
+        <mat-card>
+            <h5>STATUS</h5>
+        </mat-card>
     </div>
 
     <!-- DROP DOWN TO SELECT TRAINING STAGE -->

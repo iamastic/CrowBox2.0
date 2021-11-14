@@ -1,8 +1,16 @@
 <app-header></app-header>
 
 <div id = "publicButton">
-    <button (click)="showPersonal()">YOUR DATA</button>
-    <button (click)="showPublic()">PUBLIC DATA</button>
+    <mat-button-toggle-group>
+        <mat-button-toggle (click)="showPersonal()">
+            YOUR DATA
+        </mat-button-toggle>
+
+        <mat-button-toggle (click)="showPublic()">
+            PUBLIC DATA
+        </mat-button-toggle>
+    </mat-button-toggle-group>
+
 </div>
 
 <!-- PERSONAL DATA SECTION -->
@@ -30,6 +38,7 @@
                         [options]="coinsDepositedChartOptions"
                         [legend]="coinsDepositedChartLegend"
                         [chartType]="coinsDepositedChartType"
+                        [colors]="coinChartColor"
                         >
                 </canvas>
             </div>
@@ -48,6 +57,7 @@
                     [options]="publicCrowOnPerchChartOptions"
                     [legend]="publicCrowOnPerchChartLegend"
                     [chartType]="publicCrowOnPerchChartType"
+                    [colors]="publicCrowsOnPerchColor"
                     >
                 </canvas>
             </div>
@@ -61,6 +71,7 @@
                     [options]="publicCoinsDepositedChartOptions"
                     [legend]="publicCoinsDepositedChartLegend"
                     [chartType]="publicCoinsDepositedChartType"
+                    [colors]="publicCoinsColor"
                     >
                 </canvas>
             </div>
@@ -74,6 +85,11 @@
 
 
 <div id="userId" *ngIf=(showUserId)>
-    You currently do not have a crowbox set up. Please upload the code to your crowbox with your User Id:
-    {{currentUserId}}.
+    <mat-card>
+        <p>
+            You currently do not have a crowbox set up. Please upload the code to your crowbox with your User Id:
+            <br> <b> {{currentUserId}}</b>
+        </p>
+    </mat-card>
+ 
 </div>

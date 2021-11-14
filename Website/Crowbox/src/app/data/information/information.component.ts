@@ -13,6 +13,8 @@ export class InformationComponent implements OnInit, OnChanges {
   @Input() crowsOnPerch!:number[];
   @Input() coinsDeposited!:number[]; 
 
+  userSet:boolean = false;
+
   totalCrowsLandedOnPerch:number = 0;
   totalCoinsDeposited:number = 0;
 
@@ -21,11 +23,13 @@ export class InformationComponent implements OnInit, OnChanges {
 
   //object holding all the information to be displayed on the data page 
   informationBox = {
-    nickname:"null",
     date_joined:"null",
     total_coins_deposited:0,
     total_crows_landed_on_perch:0
   }
+
+  //the currently selected crowbox's name
+  crowboxNickname?:any;
 
   //boolean to check if the user needs to fill out profile details
   pendingProfileDetails!:boolean;
@@ -37,14 +41,17 @@ export class InformationComponent implements OnInit, OnChanges {
     //to get the UID to proceed
     this.handleAuth.currentUser$
     .subscribe(user => {
+      this.userSet = true;
       this.getTrainingStage();
       this.getAllInformationData();
     });
   }
 
   ngOnChanges() {
-    this.addCrowsOnPerchValues();
-    this.addCoinsDepositedValues();
+    if (this.userSet) {
+      this.addCrowsOnPerchValues();
+      this.addCoinsDepositedValues();
+    }
   }
 
   /* ADD UP ALL VALUES IN CROW ON PERCH ARRAY */
@@ -113,15 +120,20 @@ export class InformationComponent implements OnInit, OnChanges {
     .subscribe(result => {
       this.informationBox = {
         date_joined : result.payload.val().date_joined,
-        nickname: result.payload.val().nickname,
         total_coins_deposited: result.payload.val().total_coins_deposited,
         total_crows_landed_on_perch: result.payload.val().total_crows_landed_on_perch
       };
 
-      this.checkIfPendingProfile();
+    this.crowboxService.getUserCrowbox()
+    .snapshotChanges()
+    .subscribe(result => {
+      this.crowboxNickname= result.payload.val().nickname;
+    });
+
+      /* this.checkIfPendingProfile(); */
     });
   }
-
+/* 
   checkIfPendingProfile() {
     if(this.informationBox.date_joined !== "null") {
       if(this.informationBox.nickname !== "null") {
@@ -132,6 +144,6 @@ export class InformationComponent implements OnInit, OnChanges {
     } else {
         this.pendingProfileDetails = true;
     }
-  }
+  } */
 
 }

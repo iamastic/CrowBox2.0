@@ -1,8 +1,19 @@
     <div *ngIf = "showSignUp===true">
-        <button (click)="login()">Login with Google</button>
-    </div>
-    
-    <div *ngIf = "showSignUp === false">
-        <button (click)=logout()> Logout </button>
+      <!--   <mat-raised-button 
+        style="font-size:larger; z-index: 120;"
+        (click)="login()">Login with Google</mat-raised-button> -->
+
+        <button  (click)="login()">
+            <!-- Sign Up / Login with Google -->
+            <img src="../../../assets/images/googleSignIn2.png" alt="google sign in">
+        </button>
+        
     </div>
 
+
+    <!-- 
+    <div *ngIf = "showSignUp === false">
+        <button (click)=logout()> Sign Out </button>
+    </div>
+
+ -->

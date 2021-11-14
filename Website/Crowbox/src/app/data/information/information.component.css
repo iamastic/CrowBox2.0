@@ -1,17 +1,60 @@
+.mat-card {
+    height:100%;
+    background-color: #066025;
+}
+
+.mat-divider.mat-divider-vertical {
+    border-right-color: rgb(0, 0, 0);
+    border-right-width: 2px;
+  
+    position: absolute;
+    right:80vh;
+    
+    top:13vh;
+    height: 715px;
+
+} 
+
+h5 {
+    position: absolute;
+    top:1vh;
+    left: 0vh;
+    right: 0vh;
+    margin: auto;
+
+    color : #86b8fd;
+    font-size: medium;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+}
+
+h2 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: xx-large;
+    color: white;
+
+    position: absolute;
+    top:3.5vh;
+    left: 0vh;
+    right: 0vh;
+    margin: auto;
+}
+
+h1 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    font-size: xx-large;
+    color: #25356a;
+    font-weight: bolder;
+}
 
 /* INFO BOX RELATED */
 #dataInformation {
-    color : #25356a;
-
     text-align: center;
-    border-style: inset;
+    /* border-style: inset;
     border-width: 5px;
     border-radius: 5%;
-    border-color: 0x00ff00;
-    background-color: rgb(255, 255, 255);
-    opacity: 58%;   
-    font-size: 9pt;
-    font-style: normal;
+    border-color: 0x00ff00; */
 
     position: absolute;
     margin: auto; 
@@ -22,18 +65,10 @@
 }
 
 #Nickname {
-
-    color : #ffffff;
-
-    text-align: center;
-    border-style: inset;
+/*     border-style: inset;
     border-width: 5px;
     border-radius: 5%;
-    border-color: 0x00ff00;
-    background-color: #066025;
-    opacity: 58%;   
-    font-size: 9pt;
-    font-style: normal;
+    border-color: 0x00ff00; */
 
     position: absolute;
     margin: auto; 
@@ -46,18 +81,11 @@
 
 
 #startDate {
-    color : #ffffff;
-
-    text-align: center;
-    border-style: inset;
+/*     border-style: inset;
     border-width: 5px;
     border-radius: 5%;
     border-color: 0x00ff00;
-    background-color: #066025;
-    opacity: 58%;   
-    font-size: 9pt;
-    font-style: normal;
-
+ */
     position: absolute;
     margin: auto; 
     right: 0vh;
@@ -67,24 +95,12 @@
     height: 12%;
 }
 
-h5 {
-    color : #86b8fd;
-
-}
 
 #totalCoinsDeposited {
-
-    color : #ffffff;
-
-    text-align: center;
-    border-style: inset;
+/*     border-style: inset;
     border-width: 5px;
     border-radius: 5%;
-    border-color: 0x00ff00;
-    background-color: #066025;
-    opacity: 58%;   
-    font-size: 9pt;
-    font-style: normal;
+    border-color: 0x00ff00; */
 
     position: absolute;
     margin: auto; 
@@ -96,18 +112,10 @@ h5 {
 }
 
 #numBirdsOnPerch {
-
-    color : #ffffff;
-
-    text-align: center;
-    border-style: inset;
+/*     border-style: inset;
     border-width: 5px;
     border-radius: 5%;
-    border-color: 0x00ff00;
-    background-color: #066025;
-    opacity: 58%;   
-    font-size: 9pt;
-    font-style: normal;
+    border-color: 0x00ff00; */
 
     position: absolute;
     margin: auto; 
@@ -120,19 +128,11 @@ h5 {
 
 
 #status {
-
-    color : #ffffff;
-
-    text-align: center;
-    border-style: inset;
+/*     border-style: inset;
     border-width: 5px;
     border-radius: 5%;
-    border-color: 0x00ff00;
-    background-color: #066025;
-    opacity: 58%;   
-    font-size: 9pt;
-    font-style: normal;
-
+    border-color: 0x00ff00; */
+    
     position: absolute;
     margin: auto; 
     right: 0vh;

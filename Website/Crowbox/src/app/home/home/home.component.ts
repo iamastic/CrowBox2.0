@@ -18,7 +18,6 @@ export class HomeComponent implements OnInit {
     } else {
       this.showHeader = false;
     }
-
   }
 
   isLoggedIn() {

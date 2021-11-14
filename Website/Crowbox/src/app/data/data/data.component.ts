@@ -10,6 +10,10 @@ import { CrowboxdbService } from 'src/app/services/crowbox/crowboxdb.service';
 
 //import the carousel handling module
 import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
+import { first } from 'rxjs/operators';
+
+//to get the current date when user first makes an account
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-data',
@@ -25,6 +29,8 @@ export class DataComponent implements OnInit, AfterContentInit {
   userData$?:Observable<any>;
   //show the User Id
   showUserId?:boolean;
+  //date joined
+  currentDate?:any;
 
   /* ---------------------------------------------------- */
   /* TRAINING STAGE RELATED */
@@ -43,11 +49,24 @@ export class DataComponent implements OnInit, AfterContentInit {
   crownsOnPerchValues: number[] = [];
   //most recent date for crows landing on perch
   currentCrowsOnPerchDate?:string = "null";
-  //crows on perch barchart options
+
+  //crows on perch bar color options
+  crowColor1 = "#FF7360";
+  crowColor2 = "#F51D00";
+  currentCrowColor:string = this.crowColor1;
+  crowBarChartColors:string[] = [];
+
+  //crows on perch barchart options  
   public crowOnPerchChartOptions = {
     responsive: true,
     scales: { 
       yAxes: [{
+        display:true,
+        ticks: {
+          beginAtZero: true, 
+          stepSize: 1,
+        },
+        maintainAspectRatio: false,
         scaleLabel: {
           display:true,
           labelString:'Amount'
@@ -55,13 +74,6 @@ export class DataComponent implements OnInit, AfterContentInit {
 
       }], 
       xAxes: [{
-        display:true,
-        ticks: {
-          beginAtZero: true, 
-          stepSize: 1,
-        },
-        maintainAspectRatio: false,
-
         scaleLabel: {
           display:true,
           labelString:'Date'
@@ -79,7 +91,7 @@ export class DataComponent implements OnInit, AfterContentInit {
 
   public crowOnPerchChartColor = [
     {
-      backgroundColor: ["#FF7360",  "#6FC8CE", "#FAFFF2"]
+      backgroundColor: this.crowBarChartColors
     }
   ]
 
@@ -102,16 +114,35 @@ export class DataComponent implements OnInit, AfterContentInit {
   coinsDepositedValues: number[] = [];
   //most recent date for coin deposited
   currentCoinDepositedDate?: string = "null";
+
+  //coins deposited bar color options
+  coinColor1 = "#453E51";
+  coinColor2 = "#958CA6";
+  currentCoinColor:string = this.coinColor1;
+  coinBarChartColors:string[] = [];
+
+
   //coins deposited bar chart options
   public coinsDepositedChartOptions = {
     responsive: true,
-    scales: { xAxes: [{}], yAxes: [{
+    scales: { 
+      xAxes: [{
+        scaleLabel: {
+          display:true,
+          labelString:'Date'
+        }
+      }], 
+    yAxes: [{
       display:true,
       ticks: {
         beginAtZero: true,
         stepSize: 1,
       },
-      maintainAspectRatio: false
+      maintainAspectRatio: false,
+      scaleLabel: {
+        display:true,
+        labelString:'Amount'
+      }
 
     }] },
     plugins: {
@@ -121,6 +152,12 @@ export class DataComponent implements OnInit, AfterContentInit {
       }
     }
   };
+
+  public coinChartColor = [
+    {
+      backgroundColor: this.coinBarChartColors
+    }
+  ]
 
   public coinsDepositedChartLabels = this.coinsDepositedDate;
   public coinsDepositedChartType = 'bar';
@@ -142,20 +179,35 @@ export class DataComponent implements OnInit, AfterContentInit {
   //x axis data
   publicCrowsOnPerchValues: number[] = [];
 
+  
+  publicCrowColor1 = "#9CFFFA";
+  publicCrowColor2 = "#00A39B";
+  currentPublicCrowColor = this.publicCrowColor1;
+  publicCrowChartColors:string[] = [];
+
   //public crows on perch barchart options
   public publicCrowOnPerchChartOptions = {
     responsive: true,
-    scales: { xAxes: [{
-
-    }], yAxes: [{
-      display:true,
-      ticks: {
-        beginAtZero: true, 
-        stepSize: 1,
-      },
-      maintainAspectRatio: false,
-      labelString:'Location'
-    }] },
+    scales: { 
+      xAxes: [{
+        scaleLabel: {
+          display:true,
+          labelString:'Location'
+        }
+      }], 
+      yAxes: [{
+        display:true,
+        ticks: {
+          beginAtZero: true, 
+          stepSize: 1,
+        },
+        maintainAspectRatio: false,
+        scaleLabel: {
+          display:true,
+          labelString:'Amount'
+        }
+      }] 
+    },
     plugins: {
       datalabels: {
         anchor: 'end',
@@ -167,6 +219,12 @@ export class DataComponent implements OnInit, AfterContentInit {
   public publicCrowOnPerchChartLabels = this.publicCrowsOnPerchLocation;
   public publicCrowOnPerchChartType = 'bar';
   public publicCrowOnPerchChartLegend = true;
+
+  public publicCrowsOnPerchColor = [
+    {
+      backgroundColor: this.publicCrowChartColors
+    }
+  ]
 
   public publicCrowOnPerchChartData = [
     { data: this.publicCrowsOnPerchValues, label: "Number Of Crows That Landed On The Perch" }
@@ -180,20 +238,33 @@ export class DataComponent implements OnInit, AfterContentInit {
   publicCoinsDepositedLocation: string[] = [];
   publicCoinsDepositedValues: string[] = [];
 
+  publicCoinColor1 = "#FBE889";
+  publicCoinColor2 = "#F5CC14";
+  currentPublicCoinColor = this.publicCoinColor1;
+  publicCoinChartColor:string[] = [];
+
+
   //public crows on perch barchart options
   public publicCoinsDepositedChartOptions = {
     responsive: true,
-    scales: { xAxes: [{
-
-    }], yAxes: [{
+    scales: { 
+      xAxes: [{
+        scaleLabel: {
+          display:true,
+          labelString:'Location'
+        }
+      }], 
+    yAxes: [{
       display:true,
       ticks: {
         beginAtZero: true, 
         stepSize: 1,
       },
       maintainAspectRatio: false,
-      labelString:'Location'
-    }] },
+      scaleLabel: {
+        display:true,
+        labelString:'Amount'
+      }    }] },
     plugins: {
       datalabels: {
         anchor: 'end',
@@ -201,6 +272,12 @@ export class DataComponent implements OnInit, AfterContentInit {
       }
     }
   };
+
+  public publicCoinsColor = [
+    {
+      backgroundColor:this.publicCoinChartColor
+    }
+  ]
 
   public publicCoinsDepositedChartLabels = this.publicCoinsDepositedLocation;
   public publicCoinsDepositedChartType = 'bar';
@@ -216,7 +293,7 @@ export class DataComponent implements OnInit, AfterContentInit {
   showPublicData?:boolean;
 
   /* ---------------------------------------------------- */
-  constructor(private handleAuth: HandleAuthService, private crowboxService: CrowboxdbService) {
+  constructor(private handleAuth: HandleAuthService, private crowboxService: CrowboxdbService, public datepipe:DatePipe) {
 
   }
 
@@ -227,6 +304,7 @@ export class DataComponent implements OnInit, AfterContentInit {
     //Subscribe to the user auth state observable and wait 
     //to get the UID to proceed
     this.handleAuth.currentUser$
+    .pipe(first())
     .subscribe(user => {
       this.currentUserId = user.uid;
       this.handleAuth.isLoggedIn;
@@ -268,15 +346,18 @@ export class DataComponent implements OnInit, AfterContentInit {
     console.log("checkIfUserExists() called");
     this.userData$ = this.crowboxService.getUser().snapshotChanges();
 
-    this.userData$.subscribe(action => {
-      
+    this.userData$
+    .pipe(first())
+    .subscribe(action => {
       if(action.key){
         console.log("User is in the database");
         console.log(action.key);
-      } else {
-        //create the user and initialise their respective data slots here
+      } else { 
         console.log("In data component, no such user found");
         console.log("Creating user");
+        //create the user and initialise their respective data slots here
+        //get the current date
+        this.currentDate = this.datepipe.transform((new Date), 'yyyy/dd/MM');
         this.currentTrainingStage = 1;
         this.crowboxService.updateTrainingStage(this.currentTrainingStage);
         this.crowboxService.updateNotifcationSettings("null");
@@ -286,9 +367,8 @@ export class DataComponent implements OnInit, AfterContentInit {
         this.crowboxService.setUserEmail();
         this.crowboxService.updateCrowboxNickname("null");
         this.crowboxService.updateUserLocation("null");
-        this.crowboxService.updateDateJoined("null");        
-        this.crowboxService.setUserName();
-
+        this.crowboxService.updateDateJoined(this.currentDate);        
+        this.crowboxService.updateUserName("null");
       }
     });
   }
@@ -318,6 +398,8 @@ export class DataComponent implements OnInit, AfterContentInit {
         this.crownsOnPerchValues = [
           ...this.crownsOnPerchValues, action.payload.val().value
         ];
+        this.switchCrowChartColor();
+        this.crowBarChartColors.push(this.currentCrowColor);
       } else {
         //if it does exist, then we don't need to add the new date
         //simply replace the existing data value with the new data value
@@ -333,6 +415,16 @@ export class DataComponent implements OnInit, AfterContentInit {
       ];
     });
   }
+
+  switchCrowChartColor() {
+    if (this.currentCrowColor === this.crowColor1) {
+      this.currentCrowColor = this.crowColor2;
+    } else {
+      this.currentCrowColor = this.crowColor1;
+    }
+  }
+
+  
 
   getCoinDepositedDataChildren() {
     //get snapshot of child added 
@@ -357,6 +449,9 @@ export class DataComponent implements OnInit, AfterContentInit {
           ...this.coinsDepositedValues, action.payload.val().value
         ];
 
+        this.switchCoinChartColor();
+        this.coinBarChartColors.push(this.currentCoinColor);
+
       } else {
         //if it does exist, then we don't need to add the new date
         //simply replace the existing data value with the new data value
@@ -373,6 +468,15 @@ export class DataComponent implements OnInit, AfterContentInit {
       ];
     });
   }
+
+  
+  switchCoinChartColor() {
+    if (this.currentCoinColor === this.coinColor1) {
+      this.currentCoinColor = this.coinColor2;
+    } else {
+      this.currentCoinColor = this.coinColor1;
+    }
+  }
   /* ---------------------------------------------------- */
 
   /* PUBLIC DATA */
@@ -388,6 +492,9 @@ export class DataComponent implements OnInit, AfterContentInit {
       if(indexOfKey == -1) {
         this.publicCrowsOnPerchLocation.push(action.key);
         this.publicCrowsOnPerchValues.push(action.payload.val().crows_landed_on_perch);
+
+        this.switchPublicCrowChartColor();
+        this.publicCrowChartColors.push(this.currentPublicCrowColor);
       } else {
         this.publicCrowsOnPerchValues[indexOfKey] = action.payload.val().crows_landed_on_perch;
       }
@@ -398,6 +505,16 @@ export class DataComponent implements OnInit, AfterContentInit {
       { data: this.publicCrowsOnPerchValues, label: "Number Of Crows That Landed On The Perch" }
     ];
   }
+  
+  switchPublicCrowChartColor() {
+    if (this.currentPublicCrowColor === this.publicCrowColor1) {
+      this.currentPublicCrowColor = this.publicCrowColor2;
+    } else {
+      this.currentPublicCrowColor = this.publicCrowColor1;
+    }
+  }
+
+  
 
   getPublicCoinsDepositedData() {
     this.$childPublicCoinsDepositedSub = this.crowboxService
@@ -411,6 +528,8 @@ export class DataComponent implements OnInit, AfterContentInit {
       if (indexOfKey == -1) {
         this.publicCoinsDepositedLocation.push(action.key);
         this.publicCoinsDepositedValues.push(action.payload.val().coins_deposited);
+        this.switchPublicCoinsColors();
+        this.publicCoinChartColor.push(this.currentPublicCoinColor);
       } else {
         this.publicCoinsDepositedValues[indexOfKey] = action.payload.val().coins_deposited;
       }
@@ -421,6 +540,14 @@ export class DataComponent implements OnInit, AfterContentInit {
     this.publicCoinsDepositedChartData = [
       { data: this.publicCoinsDepositedValues, label: "Number Of Coins Deposited" }
     ];
+  }
+
+  switchPublicCoinsColors() {
+    if (this.currentPublicCoinColor === this.publicCoinColor1) {
+      this.currentPublicCoinColor = this.publicCoinColor2;
+    } else {
+      this.currentPublicCoinColor = this.publicCoinColor1;
+    }
   }
   /* ---------------------------------------------------- */
 

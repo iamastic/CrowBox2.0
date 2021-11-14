@@ -20,14 +20,14 @@ export class PictureComponent implements OnInit, OnChanges {
   constructor(private handleAuth:HandleAuthService, private storage: AngularFireStorage, private crowboxService:CrowboxdbService) { }
 
   ngOnInit(): void {
-    
+/*     
     this.handleAuth.getAuthUser$()
     .subscribe(result => {
       if (result) {
         this.userId = result.uid;
-        this.getProfilePicture();
+        //this.getProfilePicture();
       }
-    })
+    }) */
     
     //Subscribe to the user auth state observable and wait 
     //to get the UID to proceed
@@ -38,8 +38,7 @@ export class PictureComponent implements OnInit, OnChanges {
       console.log("AUTH STATE is: ")
       console.log(this.handleAuth.printAuthState());
     });
-    
-    
+
   }
 
   ngOnChanges() {

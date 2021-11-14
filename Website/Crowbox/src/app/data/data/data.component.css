@@ -1,3 +1,25 @@
+/* CONNECT CROWBOX */
+
+#userId {
+    position: absolute;
+    margin: auto; 
+    left: 44vh;
+    bottom: 37vh;
+}
+
+.mat-card{
+    background-color: #ededed;
+    width:50%;
+}
+
+p {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #cd6413;
+    font-weight: normal;
+    font-size: 20px;
+    text-align: center;
+    line-height: 150%;
+}
 
 /* CHARTS RELATED */
 
@@ -155,9 +177,8 @@
     height: 12%;
 }
 
-#userId {
-    position: absolute;
-    margin: auto; 
-    left: 0vh;
-    bottom: 0vh;
+
+/* BUTTON RELATED */
+.mat-button-toggle {
+    color: aqua;
 }

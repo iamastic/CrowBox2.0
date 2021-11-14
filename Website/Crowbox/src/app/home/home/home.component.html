@@ -1,25 +1,73 @@
-<div id = header *ngIf = "showHeader===false">
+<!-- CUSTOM HEADER SHOWING ONLY "HOME" -->
+<div id = "header" class="fontStyle" *ngIf = "showHeader===false">
     <nav>
         <a routerLink = "/home">HOME</a>
     </nav>
 </div>
 
-<div id = header2 *ngIf = "showHeader === true">
+<!-- ORIGINAL HEADER -->
+<div *ngIf = "showHeader === true">
     <app-header></app-header>
 </div>
 
-<div id = "homeContent">
-    <h1 id = "welcomeMessage">
-        Welcome to the Crowbox 2.0!
-    </h1>
+<!-- WELCOME TEXT -->
+<div id = "welcome">
+    <div id="welcome1"> 
+        <h2>Welcome to...</h2> 
+    </div>
 
-    <p id = main>
-        - Explanation of the crowbox 
-        - Code to activate the crowbox 
-        - Build files
-    </p>
+    <div id="welcome2" style="margin-bottom: 50px;"> <h1>The <br> Crowbox <br> 2.0</h1> </div>
+
+    <div id = "welcome3">
+       <h2>
+        A Citizen Science Project connecting Humans with Crows
+       </h2> 
+    </div>
+
+    
+    <div id=welcome4 style="z-index: 100;">
+        <app-auth></app-auth>
+   </div>
 </div>
 
-<div id="login">
-    <app-auth></app-auth>
+
+<div id="image1"> 
+    <img style="height: 100%; border-radius: 5%;" src="../../../assets/images/CrowboxImage1.jpg" alt="Crowbox Image 1">
 </div>
+
+<div id = "image2">
+    <img style="border-radius: 5%;" src="../../../assets/images/CrowboxImage2.jpg" alt="Crowbox Image 2">
+</div>
+   
+   
+
+<div id = "about">
+    <div id="aboutTitle">
+        <h3>ABOUT</h3>
+    </div>
+    <div id ="aboutContent">
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+
+        </p>
+    </div>
+</div>
+
+<div id = "start">
+    <div id="startTitle">
+        <h3>GETTING STARTED</h3>
+    </div>
+
+    <div id="startContent">
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+
+        </p>
+    </div>
+
+    <div id="startLogin">
+        <app-auth></app-auth>
+    </div>
+</div>
+
+

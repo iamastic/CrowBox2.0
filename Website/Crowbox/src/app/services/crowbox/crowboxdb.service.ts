@@ -172,7 +172,7 @@ export class CrowboxdbService {
 
 
   updateCrowboxNickname(nickname:string) {
-    this.crowboxReference.update({nickanme:nickname});
+    this.crowboxReference.update({nickname:nickname});
   }
 
   setUserEmail() {
@@ -198,6 +198,7 @@ export class CrowboxdbService {
   updateCrowboxCrowsOnPerch(crows:number) {
     this.crowboxReference.update({total_crows_landed_on_perch:crows});
   }
+
 
   /* PUBLIC RELATED */
   getAllPublicData(): AngularFireList<any> {
