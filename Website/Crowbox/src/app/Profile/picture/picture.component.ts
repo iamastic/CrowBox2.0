@@ -44,10 +44,13 @@ export class PictureComponent implements OnInit, OnChanges {
       .subscribe(result => {
         this.userName = result.payload.val().name;
       });
+
+      if(this.userId) {
+        this.getProfilePicture();
+      }
     });
 
 
-    //this.getProfilePicture();
 
   }
 
