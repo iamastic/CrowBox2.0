@@ -151,6 +151,24 @@ p {
     right: 60vh;
 }
 
+#image3 {
+    position: absolute;
+    margin: auto;
+    height:fit-content;
+    width: fit-content;
+    bottom: 12vh;
+    left: 45vh;
+}
+
+#image4 {
+    position: absolute;
+    margin: auto;
+    height:fit-content;
+    width: fit-content;
+    bottom: 20vh;
+    right: 2vh;
+}
+
 
 #about {
 /* 

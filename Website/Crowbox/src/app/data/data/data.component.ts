@@ -359,7 +359,9 @@ export class DataComponent implements OnInit, AfterContentInit {
         //get the current date
         this.currentDate = this.datepipe.transform((new Date), 'yyyy/dd/MM');
         this.currentTrainingStage = 1;
-        this.crowboxService.updateTrainingStage(this.currentTrainingStage);
+        if(this.currentTrainingStage) {
+          this.crowboxService.updateTrainingStage(this.currentTrainingStage);
+        }
         this.crowboxService.updateNotifcationSettings("null");
         this.crowboxService.updateSharingPreferences("null");
         this.crowboxService.updateTotalCoinsDeposited(0);
@@ -367,7 +369,9 @@ export class DataComponent implements OnInit, AfterContentInit {
         this.crowboxService.setUserEmail();
         this.crowboxService.updateCrowboxNickname("null");
         this.crowboxService.updateUserLocation("null");
-        this.crowboxService.updateDateJoined(this.currentDate);        
+        if(this.currentDate) {
+          this.crowboxService.updateDateJoined(this.currentDate);        
+        }
         this.crowboxService.updateUserName("null");
       }
     });

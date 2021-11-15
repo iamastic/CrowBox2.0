@@ -33,11 +33,21 @@ export class PictureComponent implements OnInit, OnChanges {
     //to get the UID to proceed
     this.handleAuth.currentUser$
     .subscribe(user => {
-      this.userName = user.displayName;
+      //this.userName = user.displayName;
       this.userId = user.uid;
       console.log("AUTH STATE is: ")
       console.log(this.handleAuth.printAuthState());
+
+      //subscribe to the reference object of the user and get their name
+      this.crowboxService.getUser()
+      .snapshotChanges()
+      .subscribe(result => {
+        this.userName = result.payload.val().name;
+      });
     });
+
+
+    //this.getProfilePicture();
 
   }
 

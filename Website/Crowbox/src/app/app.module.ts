@@ -8,6 +8,7 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { environment } from '../environments/environment';
 import { AngularFireStorageModule } from '@angular/fire/storage';
+import { AngularFireStorage } from '@angular/fire/storage'; 
 
 
 //to be deleted
@@ -93,7 +94,7 @@ import { DatePipe } from '@angular/common';
     MatButtonToggleModule,
 
   ],
-  providers: [HandleAuthService,DatePipe],
+  providers: [HandleAuthService,DatePipe,AngularFireStorage],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
