@@ -13,6 +13,11 @@
 #include <EEPROM.h>
 #include "cros_core.h"
 
+// Provide the token generation process info.
+#include "addons/TokenHelper.h"
+// Provide the RTDB payload printing info and other helper functions.
+#include "addons/RTDBHelper.h"
+
 // Define NTP Client to get time
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP);
@@ -123,13 +128,42 @@ void CCrowboxCore::Setup()
     //start with 0 coins deposited
     //numberOfCoinsDeposited = 0;
 
-    // Define NTP Client to get time
-/*     WiFiUDP ntpUDP;
-    NTPClient timeClient(ntpUDP); */
+    //set the User's Email and Password
+    USER_EMAIL = "qureshi.a.hamza@gmail.com";
+    USER_PASSWORD = "Maqhaq1maqhaq";
 
-    //username = "qureshiahamza";
-    USER_ID = "8Kiuz01fXcYMfDFpgsHnrckL2Kl1";
-    Serial.println("Username Set: " + USER_ID);
+    // Assign the api key (required)
+    config.api_key = API_KEY;
+
+
+    // Assign the user sign in credentials
+    auth.user.email = USER_EMAIL;
+    auth.user.password = USER_PASSWORD;
+
+    //assign the database url to config 
+    config.database_url = FIREBASE_HOST;
+    Firebase.reconnectWiFi(true);
+
+    // Assign the callback function for the long running token generation task
+    config.token_status_callback = tokenStatusCallback; 
+    //see addons/TokenHelper.h
+
+    // Assign the maximum retry of token generation
+    config.max_token_generation_retry = 5;
+
+    // Initialize the library with the Firebase authen and config
+    Firebase.begin(&config, &auth);
+    
+    // Getting the user UID might take a few seconds
+    Serial.println("Getting User UID");
+    while ((auth.token.uid) == "") {
+      Serial.print('.');
+      delay(1000);
+    }
+    // Print user UID
+    USER_ID = auth.token.uid.c_str();
+    Serial.print("User UID: ");
+    Serial.println(USER_ID);
 
     // Start with no enqueued deposits
     m_numEnqueuedDeposits = 0;
@@ -904,7 +938,7 @@ void CCrowboxCore::CheckTrainingPhaseSwitch()
 
   int newTrainingStage = 0;
 
-  if (Firebase.getInt(trainingPhase, "Users/"+USER_ID+"/Crowbox/current_training_stage")) {  
+  if (Firebase.RTDB.getInt(&trainingPhase, "Users/"+USER_ID+"/Crowbox/current_training_stage")) {  
     newTrainingStage = trainingPhase.to<int>();
     Serial.println("Got Training Stage");
     
@@ -1073,13 +1107,13 @@ void CCrowboxCore::WriteCurrentTrainingPhaseToEEPROM()
 void CCrowboxCore::WriteCurrentTrainingPhaseToFirebase()
 {
   Serial.println("Writing Training Phase to Firebase");
-  Firebase.setInt(trainingPhase,"Users/"+USER_ID+"/Crowbox/current_training_stage", m_currentTrainingPhase);
+  Firebase.RTDB.setInt(&trainingPhase,"Users/"+USER_ID+"/Crowbox/current_training_stage", m_currentTrainingPhase);
 }
 
 
 void CCrowboxCore::LoadCurrentTrainingPhaseFromFirebase()
 {
-  if (Firebase.getInt(trainingPhase, "Users/"+USER_ID+"/Crowbox/current_training_stage")) {  
+  if (Firebase.RTDB.getInt(&trainingPhase, "Users/"+USER_ID+"/Crowbox/current_training_stage")) {  
     
     m_currentTrainingPhase = trainingPhase.to<int>();
     Serial.println("Successfully got training stage");
@@ -1097,7 +1131,7 @@ void CCrowboxCore::WriteNumberOfCoinsDepositedToFirebase()
 {
   Serial.println("Writing Number of Coins Deposited to Firebase");
   /* Firebase.setInt(coinDeposit,"Users/"+username+"/Crowbox/coins_deposited", numberOfCoinsDeposited); */
-  Firebase.setInt(coinDeposit,"Users/"+USER_ID+"/Crowbox/coins_deposited/"+dayStamp+"/value", numberOfCoinsDeposited);
+  Firebase.RTDB.setInt(&coinDeposit,"Users/"+USER_ID+"/Crowbox/coins_deposited/"+dayStamp+"/value", numberOfCoinsDeposited);
 }
  
 void CCrowboxCore::LoadNumberOfCoinsDepositedFromFirebase(){
@@ -1112,7 +1146,7 @@ void CCrowboxCore::LoadNumberOfCoinsDepositedFromFirebase(){
   
   Serial.println("Loading Number of Coins Deposited From Firebase");
 
-  if (Firebase.getInt(coinDeposit, "Users/"+USER_ID+"/Crowbox/coins_deposited/"+dayStamp+"/value")){
+  if (Firebase.RTDB.getInt(&coinDeposit, "Users/"+USER_ID+"/Crowbox/coins_deposited/"+dayStamp+"/value")){
     
     //get the number of coins
     numberOfCoinsDeposited = coinDeposit.to<int>();
@@ -1137,12 +1171,12 @@ void CCrowboxCore::WriteNumberOfCrowsOnPerchToFirebase()
 {
   Serial.println("Writing Number of Crows landed on perch to Firebase");
 
- Firebase.setInt(crowOnPerch, "Users/"+USER_ID+"/Crowbox/crows_landed_on_perch/"+dayStamp+"/value", numberOfCrowsLanded);
+ Firebase.RTDB.setInt(&crowOnPerch, "Users/"+USER_ID+"/Crowbox/crows_landed_on_perch/"+dayStamp+"/value", numberOfCrowsLanded);
 }
 
 void CCrowboxCore::LoadNumberOfCrowsLandedOnPerchFromFirebase(){
 
-  if(Firebase.getInt(crowOnPerch, "Users/"+USER_ID+"/Crowbox/crows_landed_on_perch/"+dayStamp+"/value")) {
+  if(Firebase.RTDB.getInt(&crowOnPerch, "Users/"+USER_ID+"/Crowbox/crows_landed_on_perch/"+dayStamp+"/value")) {
     numberOfCrowsLanded = crowOnPerch.to<int>();
     Serial.println("Successfully got Number of Crows landed on perch");
 
@@ -1163,14 +1197,14 @@ void CCrowboxCore::LoadNumberOfCrowsLandedOnPerchFromFirebase(){
 
 void CCrowboxCore::GetUserLocation() {
   //get the sharing preferences first
-  if(Firebase.getString(sharingPreference,"Users/"+USER_ID+"/Crowbox/sharing_preference")) {
+  if(Firebase.RTDB.getString(&sharingPreference,"Users/"+USER_ID+"/Crowbox/sharing_preference")) {
     toShare = sharingPreference.stringData();
     Serial.println("Successfully got Sharing Preference");
 
     /* if sharing is turned on  */
     if(toShare == "ALLOWED") {
       /* then get the location of the user */
-      if(Firebase.getString(location, "Users/"+USER_ID+"/Crowbox/location")) {
+      if(Firebase.RTDB.getString(&location, "Users/"+USER_ID+"/Crowbox/location")) {
         userLocation = location.stringData();
         Serial.println("Successfully got Location");
         Serial.println(userLocation);
@@ -1192,13 +1226,13 @@ void CCrowboxCore::WritePublicCrowOnPerchData() {
     Serial.println("User location is not null");
     Serial.println(userLocation);
     /* Then fetch its data from firebase rtdb */
-    if(Firebase.getInt(publicCrowOnPerch,"Public/Location/"+userLocation+"/crows_landed_on_perch")) {
+    if(Firebase.RTDB.getInt(&publicCrowOnPerch,"Public/Location/"+userLocation+"/crows_landed_on_perch")) {
       int publicValue = publicCrowOnPerch.to<int>();
       //increment this value
       publicValue++;
       Serial.println(publicValue);
       //write this value back
-      Firebase.setInt(publicCrowOnPerch,"Public/Location/"+userLocation+"/crows_landed_on_perch", publicValue);
+      Firebase.RTDB.setInt(&publicCrowOnPerch,"Public/Location/"+userLocation+"/crows_landed_on_perch", publicValue);
     } else {
       Serial.println("Error in writing public crow on perch data to firebase");
       Serial.println("REASON: " + publicCrowOnPerch.errorReason());
@@ -1214,12 +1248,12 @@ void CCrowboxCore::WritePublicCoinsDepositedData(){
     Serial.println("User location is not null");
     Serial.println(userLocation);
 
-    if(Firebase.getInt(publicCoinsDeposited,"Public/Location/"+userLocation+"/coins_deposited")) {
+    if(Firebase.RTDB.getInt(&publicCoinsDeposited,"Public/Location/"+userLocation+"/coins_deposited")) {
       int publicValue = publicCoinsDeposited.to<int>();
       //increment value 
       publicValue++;
       Serial.println(publicValue);
-      Firebase.setInt(publicCoinsDeposited,"Public/Location/"+userLocation+"/coins_deposited", publicValue);
+      Firebase.RTDB.setInt(&publicCoinsDeposited,"Public/Location/"+userLocation+"/coins_deposited", publicValue);
     } else {
         Serial.println("Error in writing public coins deposited data to firebase");
         Serial.println("REASON: " + publicCoinsDeposited.errorReason());

@@ -18,21 +18,25 @@
 /* MY WORK */
 #include <ESP32Servo.h>
 #include <WiFi.h> 
-#include <FirebaseESP32.h>
+//#include <FirebaseESP32.h>
+//new Updated firebase client 
+#include <Firebase_ESP_Client.h>
+
 
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 
-
 #define WIFI_SSID "Vodafone-72DA74"                                          
 #define WIFI_PASSWORD "t6vaHAN6bpy5z4qb"     
-#define FIREBASE_HOST "crowbox-37e57-default-rtdb.firebaseio.com"              // the project name address from firebase id
-#define FIREBASE_AUTH "pgwTyjv4NBcA8xZ2k0IkTjvsMxKiG6cSXmRSldS6"       // the secret key generated from firebase
 
-// Define NTP Client to get time
-/* WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP);
- */
+//the project name address from firebase id
+//the database url
+#define FIREBASE_HOST "crowbox-37e57-default-rtdb.firebaseio.com"            
+#define API_KEY "AIzaSyBxA1xYz2zbcuOw9f_Xi3OzCVLc_2OzMf8" 
+
+// the secret key generated from firebase
+//no longer needed
+//#define FIREBASE_AUTH "pgwTyjv4NBcA8xZ2k0IkTjvsMxKiG6cSXmRSldS6"       
 
 //the UID of the user
 /* #define USER_ID "n8hWiynNjVNLaKgQ2TSHUmc0ZSG2"
@@ -40,7 +44,7 @@ NTPClient timeClient(ntpUDP);
 
 /* END MY WORK */
 
-// #include <Arduino.h>
+#include <Arduino.h>
 #include "cros_types.h"
 #include "cros_constants.h"
 
@@ -81,6 +85,11 @@ public:
     cros_time_t HowLongHasBirdBeenGone();
 
     /* MY WORK */
+    //for auth
+    FirebaseAuth auth;
+    //for configuration
+    FirebaseConfig config;
+
     int numberOfCrowsLanded;
     FirebaseData crowOnPerch;
     int numberOfCoinsDeposited;
@@ -90,8 +99,11 @@ public:
     // Variables to save date and time
     String formattedDate;
     String dayStamp;
-    //the UID of the user
+
+    //the UID, email and password of the user
     String USER_ID; 
+    String USER_PASSWORD;
+    String USER_EMAIL;
 
     unsigned long currentTime;
 
