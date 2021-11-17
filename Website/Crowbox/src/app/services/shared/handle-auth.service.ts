@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import firebase from 'firebase/app';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
+import { textChangeRangeIsUnchanged } from 'typescript';
 
 export interface User {
   uid: string;
@@ -27,29 +28,14 @@ export class HandleAuthService {
 
   currentUserState?: User;
 
+  //to be set when signing up only
+  userName:any;
+  userLocation:any;
+
   constructor(private fireAuth: AngularFireAuth, private ngZone: NgZone, private router: Router) { 
-    /* initialise the currentUserId to that of the local storage */
-/* 
-    this.fireAuth.authState.subscribe(user => {
-      if (user) {
-        console.log("User is LOGGED IN");
-        this.currentUserState = {
-          uid: user.uid!,
-          email: user.email!,
-          displayName: user.displayName!
-        };
 
-        console.log("Current User State is:");
-        console.log(this.currentUserState);
-
-        localStorage.setItem('user', JSON.stringify(this.currentUserState));
-      } else {
-        console.log("User is not logged in?");
-        localStorage.setItem('user', "null");
-      }
-    }) */
-
-    
+    this.userLocation = "null";
+    /* initialise the currentUserId to that of the local storage */    
     this.currentUser$ = this.fireAuth.authState.pipe(
       take(1),
       map(user => {
@@ -68,27 +54,41 @@ export class HandleAuthService {
     );
   }
 
+  signUp(email:string, password:string, name:string, location?:string) {
+    this.fireAuth.createUserWithEmailAndPassword(email, password)
+    .then(value => {
+      //save all the data? Not sure how...
+      console.log("Inside HandleAuth - New User has signed up!");
+      this.userName = name; 
+      this.userLocation = location;
+      console.log("User's name is: " + this.userName + " User's Location is: " + this.userLocation);
+      this.router.navigate(['data']);
+    })
+    .catch(error => {
+      console.log("User was not able to sign up: " + error);
+      alert("Account with this Email already exists!");
+    })
+  }
 
-  login() {
+  login(email:string, password:string) {
     /* Sign in or Sign Up with google's pop up.
     This essentially kills two birds with one stone. */
 
-    return this.googleLogin( new firebase.auth.GoogleAuthProvider());
+    //return this.googleLogin( new firebase.auth.GoogleAuthProvider());
+    this.fireAuth.signInWithEmailAndPassword(email, password)
+    .then(value => {
+      console.log("HandleAuth - User has logged in");
+      this.router.navigate(['data']);
+    })
+    .catch(error => {
+      console.log("HandleAuth - Unable to log in - there is some issue!");
+      alert("This Email/Password combination is incorrect, please try again.");
+    })
   }
 
   get isLoggedIn():boolean {
 
     console.log("INSIDE isLoggedIn()");
-/* 
-    const item = localStorage.getItem('user');
-    if (item !=='undefined' && item!==null) {
-      const currentUser = JSON.parse(item);
-      return (currentUser !== null)? true: false;
-    } else {
-      console.log("USER IS NOT LOGGED IN");
-      return false;
-    }   
- */
     const userStatus = localStorage.getItem('userStatus');
     if(userStatus === "loggedIn") {
       console.log("USER IS LOGGED IN - isLoggedIn()");
@@ -100,20 +100,7 @@ export class HandleAuthService {
       console.log("USER is NOT LOGGED IN - isLoggedIn()");
       return false;
     }
-    
-/*     console.log("INSIDE isLoggedIn()");
-    this.fireAuth.user
-    .subscribe(result => {
-      if(result) {
-        console.log(result.displayName);
-        return true;
-      } else {
-        console.log("USER IS NOT LOGGED IN");
-        return false;
-      }
-    }); */
-
-    }
+  }
 
   getAuthUser$(): Observable<any> {
     return this.fireAuth.user;

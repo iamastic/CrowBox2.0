@@ -1,6 +1,14 @@
-button {
+.mat-raised-button {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: x-large;
+    font-size: large;
     border: none;
-    background-color: transparent;
+    border-radius: 40px;
+    background-color: #25356a;
+  
+}
+
+#login {
+    position: absolute;
+    margin: auto;
+    left: 12vh;
 }
