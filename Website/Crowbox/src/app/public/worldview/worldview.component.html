@@ -1,0 +1,8 @@
+<canvas #globeCanvas (window:resize)="onWindowResize()"></canvas>
+
+
+<div id = "info" [style.display]= "displayType" [style.top] = "top"  [style.left] = "left">
+    <div id = "displayCountryName">
+        <b>Country :</b>   {{countryName}}
+    </div>
+</div>

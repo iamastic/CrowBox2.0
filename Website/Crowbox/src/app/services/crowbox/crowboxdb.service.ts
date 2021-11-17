@@ -36,8 +36,12 @@ export class CrowboxdbService {
 
   //Location List
   locationReference!:AngularFireList<any>;
-  locationDataPath = 'Public/Location/'
+  locationDataPath = 'Public/Location/';
 
+  //Country List - to replace "Location"
+ /*  countryReference!:AngularFireList<any>;
+  countryDataPath = 'Public/Countries/';
+ */
   //Site Data list
   siteReference!:AngularFireList<any>;
   siteDataPath = 'Site/';
@@ -108,6 +112,9 @@ export class CrowboxdbService {
 
     //set up the Location list 
     this.locationReference = this.db.list(this.locationDataPath);
+
+    //set up country reference
+    //this.countryReference = this.db.list(this.countryDataPath);
 
     //set up site list
     this.siteReference = this.db.list(this.siteDataPath);
@@ -208,6 +215,10 @@ export class CrowboxdbService {
   getAllLocationData(): AngularFireList<any> {
     return this.locationReference;
   }
+/* 
+  getAllCountryData():AngularFireList<any> {
+    return this.countryReference;
+  } */
 
   /* SITE RELATED */
 

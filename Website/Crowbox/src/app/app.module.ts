@@ -54,6 +54,8 @@ import { FormsModule,ReactiveFormsModule  } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { SignupComponent } from './home/signup/signup.component';
 import { LoginComponent } from './home/login/login.component';
+import { WorldviewComponent } from './public/worldview/worldview.component';
+import { PublicComponent } from './public/public/public.component';
 
 
 
@@ -76,6 +78,8 @@ import { LoginComponent } from './home/login/login.component';
     PictureComponent,
     SignupComponent,
     LoginComponent,
+    WorldviewComponent,
+    PublicComponent,
 
   ],
   imports: [
