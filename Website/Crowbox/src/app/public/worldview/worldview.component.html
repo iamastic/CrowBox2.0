@@ -1,8 +1,51 @@
+<app-header></app-header>
+
 <canvas #globeCanvas (window:resize)="onWindowResize()"></canvas>
 
+<div id = "welcome">
+    <div id= "welcome1">
+        <h1>The  World <br style="display: block;
+            content: '';
+            margin-top: 70px;"> View</h1>
+    </div>
+
+    <div id="welcome2">
+        <h2>
+            Spin the Globe... <br style="display: block;
+            content: '';
+            margin-top: 10px;">
+            Click on the Bar Charts... <br style="display: block;
+            content: '';
+            margin-top: 10px;">
+            Check out the Data...
+        </h2>
+    </div>
+ 
+</div>
 
 <div id = "info" [style.display]= "displayType" [style.top] = "top"  [style.left] = "left">
-    <div id = "displayCountryName">
+<!--     <div id = "displayCountryName">
         <b>Country :</b>   {{countryName}}
-    </div>
+
+        <div *ngIf="coinsDeposited">
+            <b>Number of Coins Deposited by Crows: </b> {{coinsDeposited}}
+        </div>
+        <div *ngIf="crowsLandedOnPerch">
+            <b>Number of Crows that Landed On the Perch: </b> {{crowsLandedOnPerch}}
+        </div>
+    </div> -->
+    
+    <mat-card>
+        <mat-card-title>
+            {{countryName}}
+        </mat-card-title>
+        <mat-card-content>
+            <div *ngIf="coinsDeposited">
+                <b>Number of Coins Deposited by Crows: </b> {{coinsDeposited}}
+            </div>
+            <div *ngIf="crowsLandedOnPerch">
+                <b>Number of Crows that Landed On the Perch: </b> {{crowsLandedOnPerch}}
+            </div>
+        </mat-card-content>
+    </mat-card>
 </div>

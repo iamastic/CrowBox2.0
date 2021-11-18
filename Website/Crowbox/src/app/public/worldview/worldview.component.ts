@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener, Host } from '@angular/core';
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
-import { CrowboxdbService } from 'src/app/services/crowbox/crowboxdb.service';
 import { PublicService } from 'src/app/services/public/public.service';
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
@@ -18,6 +17,8 @@ export class WorldviewComponent implements OnInit {
   @ViewChild('globeCanvas') cReference!: ElementRef;
 
   countryName! : string | null;
+  coinsDeposited!: string | null;
+  crowsLandedOnPerch!:string | null;
 
   displayType! : string;
   
@@ -213,57 +214,51 @@ export class WorldviewComponent implements OnInit {
     let globeLatRads = latitude * (Math.PI / 180);
     let globeLongRads = -longitude * (Math.PI / 180);
 
-    console.log("GlobeLatRads = " + globeLatRads);
-    console.log("Coins deposited = " + coins_deposited);
-
     //get x, y and z coordinates
     let x = Math.cos(globeLatRads) * Math.cos(globeLongRads) * radius;
     let y = Math.cos(globeLatRads) * Math.sin(globeLongRads) * radius;
     let z = Math.sin(globeLatRads) * radius;
 
+    console.log(x,y,z);
     
     //credit: https://stackoverflow.com/questions/51800598/threejs-make-meshes-perpendicular-to-the-sphere-face-its-sitting-on
-    //for cylinder barchart
-    
-    let height = coins_deposited/18;
-    let poi2 = new THREE.CylinderGeometry(0.1,0.1,height,64);
+    //for cylinder barchart of COINS DEPOSITED
+    let height1 = coins_deposited/5;
+    let poi2 = new THREE.CylinderGeometry(0.05,0.05,height1,64);
     poi2.applyMatrix4(new THREE.Matrix4().makeRotationX(-Math.PI/2));
 
     let poi2Material = new THREE.MeshBasicMaterial();
 
     let point2 = new THREE.Mesh(poi2, poi2Material);
-    point2.position.set( x, z, y);
+    point2.position.set( x, z, y+0.1);
     point2.lookAt(0,0,0);
     point2.userData.Country = country;
-    point2.userData.LiteracyRate = coins_deposited;
+    point2.userData.Coins_Deposited = coins_deposited;
 
     point2.material.color.set(0xFF2C05);
 
+    //FOR CROWS ON PERCH
+    let height2 = crows_landed_on_perch/5;
+    let poi3 = new THREE.CylinderGeometry(0.05,0.05,height2,64);
+    poi3.applyMatrix4(new THREE.Matrix4().makeRotationX(-Math.PI/2));
+    let poi3Material = new THREE.MeshBasicMaterial();
+    let point3 = new THREE.Mesh(poi3, poi3Material);
+    point3.position.set(x,z,y);
+    point3.lookAt(0,0,0);
+    point3.userData.Country = country;
+    point3.userData.Crows_Landed_On_Perch = crows_landed_on_perch;
+    point3.material.color.set(0xffff00);
+
     this.globe.add(point2); 
-
-/*     let pointOfInterest = new THREE.SphereGeometry(.1, 32, 32);
-    
-    let material = new THREE.MeshBasicMaterial({color:"#ff0000"});
-
-    let mesh = new THREE.Mesh(
-      pointOfInterest,
-      material
-    );
-
-  
-    mesh.position.set(x,z,y); 
-
-    mesh.rotation.set(0.0, -globeLongRads, globeLatRads-Math.PI*0.5);
-
-    this.globe.add(mesh); */
+    this.globe.add(point3);
 }
 
 setAllPoints() {
 
   //remove all children if any and add new ones
-/*   while(this.globe.children.length) {
+  while(this.globe.children.length) {
     this.globe.remove(this.globe.children[0]);
-  } */
+  } 
 
   for (let i = 0; i < this.listOfCountries.length; i++) {
 
@@ -303,6 +298,8 @@ onMouseClick(event : any) {
     //@ts-ignore
     intersects[ 0 ].object.material.color.set( 0x52307c );
     this.countryName = intersects[0].object.userData.Country;
+    this.coinsDeposited = intersects[0].object.userData.Coins_Deposited;
+    this.crowsLandedOnPerch = intersects[0].object.userData.Crows_Landed_On_Perch;
   }
 }
 
