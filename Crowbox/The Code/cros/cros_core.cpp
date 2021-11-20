@@ -1197,20 +1197,22 @@ void CCrowboxCore::LoadNumberOfCrowsLandedOnPerchFromFirebase(){
 
 void CCrowboxCore::GetUserLocation() {
   //get the sharing preferences first
-  if(Firebase.RTDB.getString(&sharingPreference,"Users/"+USER_ID+"/Crowbox/sharing_preference")) {
+  if(Firebase.RTDB.getString(&sharingPreference,"Users/"+USER_ID+"/sharing_preference")) {
     toShare = sharingPreference.stringData();
     Serial.println("Successfully got Sharing Preference");
 
     /* if sharing is turned on  */
-    if(toShare == "ALLOWED") {
+    if(toShare == "Public") {
       /* then get the location of the user */
-      if(Firebase.RTDB.getString(&location, "Users/"+USER_ID+"/Crowbox/location")) {
+      if(Firebase.RTDB.getString(&location, "Users/"+USER_ID+"/location")) {
         userLocation = location.stringData();
         Serial.println("Successfully got Location");
         Serial.println(userLocation);
       }
     } else {
       Serial.println("Error - Sharing Preferences is OFF");
+      Serial.println(toShare);
+      userLocation = "null";
     }
   } else {
       Serial.println("Error in retrieving sharing preferences");
@@ -1226,7 +1228,7 @@ void CCrowboxCore::WritePublicCrowOnPerchData() {
     Serial.println("User location is not null");
     Serial.println(userLocation);
     /* Then fetch its data from firebase rtdb */
-    if(Firebase.RTDB.getInt(&publicCrowOnPerch,"Public/Location/"+userLocation+"/crows_landed_on_perch")) {
+    if(Firebase.RTDB.getInt(&publicCrowOnPerch,"Public/Countries/"+userLocation+"/crows_landed_on_perch")) {
       int publicValue = publicCrowOnPerch.to<int>();
       //increment this value
       publicValue++;
@@ -1239,6 +1241,8 @@ void CCrowboxCore::WritePublicCrowOnPerchData() {
       Serial.println("------------------------------------");
       Serial.println();
     }
+  } else {
+    Serial.println("User location is null");
   }
 }
 
@@ -1248,7 +1252,7 @@ void CCrowboxCore::WritePublicCoinsDepositedData(){
     Serial.println("User location is not null");
     Serial.println(userLocation);
 
-    if(Firebase.RTDB.getInt(&publicCoinsDeposited,"Public/Location/"+userLocation+"/coins_deposited")) {
+    if(Firebase.RTDB.getInt(&publicCoinsDeposited,"Public/Countries/"+userLocation+"/coins_deposited")) {
       int publicValue = publicCoinsDeposited.to<int>();
       //increment value 
       publicValue++;
