@@ -29,7 +29,7 @@ import { HeaderComponent } from './header/header.component';
 import { TroubleshootComponent } from './TroubleShoot/troubleshoot/troubleshoot.component';
 import { ProfileComponent } from './Profile/profile/profile.component';
 import { InformationComponent } from './data/information/information.component';
-import { EditInfoComponent, EditLocationComponent } from './Profile/edit-info/edit-info.component';
+import { EditInfoComponent, EditOtherComponent,EditLocationComponent,EditNotificationComponent,EditSharingComponent, EditBoxComponent } from './Profile/edit-info/edit-info.component';
 import { ProfileboxComponent } from './Profile/profilebox/profilebox.component';
 import { PictureComponent } from './Profile/picture/picture.component';
 
@@ -47,7 +47,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
-
+import { MatSelectModule} from '@angular/material/select';
 
 
 import { FormsModule,ReactiveFormsModule  } from '@angular/forms';
@@ -74,12 +74,16 @@ import { PublicComponent } from './public/public/public.component';
     InformationComponent,
     EditInfoComponent,
     ProfileboxComponent,
-    EditLocationComponent,
+    EditOtherComponent,
     PictureComponent,
     SignupComponent,
     LoginComponent,
     WorldviewComponent,
     PublicComponent,
+    EditLocationComponent,
+    EditNotificationComponent,
+    EditSharingComponent,
+    EditBoxComponent,
 
   ],
   imports: [
@@ -101,6 +105,7 @@ import { PublicComponent } from './public/public/public.component';
     MatCardModule,
     MatIconModule,
     MatButtonToggleModule,
+    MatSelectModule,
 
   ],
   providers: [HandleAuthService,DatePipe,AngularFireStorage],

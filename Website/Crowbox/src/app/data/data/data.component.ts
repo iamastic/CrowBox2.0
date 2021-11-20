@@ -362,8 +362,8 @@ export class DataComponent implements OnInit, AfterContentInit {
         if(this.currentTrainingStage) {
           this.crowboxService.updateTrainingStage(this.currentTrainingStage);
         }
-        this.crowboxService.updateNotifcationSettings("null");
-        this.crowboxService.updateSharingPreferences("null");
+        this.crowboxService.updateNotifcationSettings("ON");
+        this.crowboxService.updateSharingPreferences("PUBLIC");
         this.crowboxService.updateTotalCoinsDeposited(0);
         this.crowboxService.updateTotalCrowsLandedOnPerch(0);
         this.crowboxService.setUserEmail();

@@ -11,8 +11,11 @@
 
     <mat-form-field appearance="fill">
         <mat-label>Select A Location</mat-label>
-        <input matInput placeholder="Portugal"
-        [formControl]="userLocation" required>
+        <mat-select [formControl]="userLocation" required>
+          <mat-option *ngFor="let country of countries$ | async" [value]="country.key" >
+            {{country.key}}
+          </mat-option>
+        </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="fill">

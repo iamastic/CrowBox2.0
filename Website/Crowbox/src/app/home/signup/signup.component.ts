@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
 
 import {FormControl, Validators} from '@angular/forms';
+import { PublicService } from 'src/app/services/public/public.service';
+import { first, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -19,12 +22,33 @@ export class SignupComponent implements OnInit {
 
   userPassword = new FormControl('', [Validators.required]);
 
+  countries$?:Observable<any>;
+  listOfCountries: any[] = [];
+  selectedCountry?:any;
+
   hide = true;
 
-
-  constructor(private handleAuth:HandleAuthService) { }
+  constructor(private handleAuth:HandleAuthService, private publicService:PublicService) { }
 
   ngOnInit(): void {
+    this.getCountriesList();
+  }
+
+  getCountriesList() {
+    this.countries$ = this.publicService.getAllCountryData()
+    .snapshotChanges()
+    .pipe(
+      map(value => 
+        value.map(v => (
+          {key: v.payload.key, ...v.payload.val()}
+        )))
+    );
+
+    this.countries$
+    .pipe(first())
+    .subscribe(result => {
+      this.listOfCountries = result;
+    })
   }
 
   signUp() {
