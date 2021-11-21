@@ -108,7 +108,8 @@ public:
     unsigned long currentTime;
 
     /* PUBLIC DATA MANAGING */
-    FirebaseData publicCrowOnPerch;
+    FirebaseData publicCrowOnPerchGet;
+    FirebaseData publicCrowOnPerchSet;
     FirebaseData publicCoinsDeposited;
     FirebaseData location;
     FirebaseData sharingPreference;

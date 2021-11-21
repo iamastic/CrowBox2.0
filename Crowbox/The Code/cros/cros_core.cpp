@@ -129,8 +129,8 @@ void CCrowboxCore::Setup()
     //numberOfCoinsDeposited = 0;
 
     //set the User's Email and Password
-    USER_EMAIL = "qureshi.a.hamza@gmail.com";
-    USER_PASSWORD = "Maqhaq1maqhaq";
+    USER_EMAIL = "imhaq7@gmail.com";
+    USER_PASSWORD = "maqhaq";
 
     // Assign the api key (required)
     config.api_key = API_KEY;
@@ -1198,14 +1198,14 @@ void CCrowboxCore::LoadNumberOfCrowsLandedOnPerchFromFirebase(){
 void CCrowboxCore::GetUserLocation() {
   //get the sharing preferences first
   if(Firebase.RTDB.getString(&sharingPreference,"Users/"+USER_ID+"/sharing_preference")) {
-    toShare = sharingPreference.stringData();
+    toShare = sharingPreference.to<String>();
     Serial.println("Successfully got Sharing Preference");
 
     /* if sharing is turned on  */
-    if(toShare == "Public") {
+    if(toShare == "PUBLIC") {
       /* then get the location of the user */
       if(Firebase.RTDB.getString(&location, "Users/"+USER_ID+"/location")) {
-        userLocation = location.stringData();
+        userLocation = location.to<String>();
         Serial.println("Successfully got Location");
         Serial.println(userLocation);
       }
@@ -1228,16 +1228,16 @@ void CCrowboxCore::WritePublicCrowOnPerchData() {
     Serial.println("User location is not null");
     Serial.println(userLocation);
     /* Then fetch its data from firebase rtdb */
-    if(Firebase.RTDB.getInt(&publicCrowOnPerch,"Public/Countries/"+userLocation+"/crows_landed_on_perch")) {
-      int publicValue = publicCrowOnPerch.to<int>();
+    if(Firebase.RTDB.getInt(&publicCrowOnPerchGet,"Public/Countries/"+userLocation+"/crows_landed_on_perch")) {
+      int publicValue = publicCrowOnPerchGet.to<int>();
       //increment this value
       publicValue++;
       Serial.println(publicValue);
       //write this value back
-      Firebase.RTDB.setInt(&publicCrowOnPerch,"Public/Location/"+userLocation+"/crows_landed_on_perch", publicValue);
+      Firebase.RTDB.setInt(&publicCrowOnPerchSet,"Public/Countries/"+userLocation+"/crows_landed_on_perch", publicValue);
     } else {
       Serial.println("Error in writing public crow on perch data to firebase");
-      Serial.println("REASON: " + publicCrowOnPerch.errorReason());
+      Serial.println("REASON: " + publicCrowOnPerchSet.errorReason());
       Serial.println("------------------------------------");
       Serial.println();
     }
@@ -1257,7 +1257,7 @@ void CCrowboxCore::WritePublicCoinsDepositedData(){
       //increment value 
       publicValue++;
       Serial.println(publicValue);
-      Firebase.RTDB.setInt(&publicCoinsDeposited,"Public/Location/"+userLocation+"/coins_deposited", publicValue);
+      Firebase.RTDB.setInt(&publicCoinsDeposited,"Public/Countries/"+userLocation+"/coins_deposited", publicValue);
     } else {
         Serial.println("Error in writing public coins deposited data to firebase");
         Serial.println("REASON: " + publicCoinsDeposited.errorReason());
