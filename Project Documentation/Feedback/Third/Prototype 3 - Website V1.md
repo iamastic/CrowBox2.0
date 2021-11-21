@@ -1,11 +1,11 @@
 ### User 1
-**ACTION:**Starting from the Home Page: 
+**ACTION:** Starting from the Home Page: 
 
-**1) Can you find the About Section? **
+**1) Can you find the About Section?**
 The user did not realise that that this page was scrollable. They were unable to figure out how to get to the About Page as there was no inidicator (other than the scroll bar to the right) that you could go down. Eventually, I hinted that they could scroll. They quickly picked it up and was able to find the About Section. 
 
 
-**2)Can you find out how to Get Started? **
+**2)Can you find out how to Get Started?**
 Granted that this was just below the About Section, the user was able to find it with ease. 
 
 **ACTION:** I then gave the user free reigns, and asked them what they would like to do next. They clicked the "Login" button. I filled out the details with a premade account and asked them to pretend as if they had already set up this account earlier. Upon logging in, the user was redirected to the "DATA" Page. 
