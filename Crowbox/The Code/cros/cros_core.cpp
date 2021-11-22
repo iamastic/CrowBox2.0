@@ -130,7 +130,7 @@ void CCrowboxCore::Setup()
 
     //set the User's Email and Password
     USER_EMAIL = "imhaq7@gmail.com";
-    USER_PASSWORD = "maqhaq";
+    USER_PASSWORD = "password";
 
     // Assign the api key (required)
     config.api_key = API_KEY;
