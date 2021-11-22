@@ -59,7 +59,7 @@ p {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #25356a;
     font-weight: normal;
-    font-size: 20px;
+    font-size: 17px;
     text-align: left;
     line-height: 150%;
 }
@@ -156,7 +156,7 @@ p {
     margin: auto;
     height:fit-content;
     width: fit-content;
-    bottom: 12vh;
+    top: 12vh;
     left: 45vh;
 }
 
@@ -182,7 +182,7 @@ p {
     left: 0vh;
     right: 0vh;
     width:100%;
-    height: 75%;
+    height: 150%;
 
     background-color: #B0D784;
 }
@@ -204,13 +204,22 @@ p {
     right: 50vh;
 }
 
+#aboutContent2{
+    position: absolute;
+    margin: auto;
+    width: 27%;
+
+    top: 80vh;
+    left: 40vh;
+}
+
 #start {
     position: absolute;
     margin: auto; 
  /*    border-style: solid;
     border-color: 0x00ff00; */
 
-    top: 180vh;
+    top: 255vh;
     right: 0vh;
     left: 0vh;
     width:100%;
