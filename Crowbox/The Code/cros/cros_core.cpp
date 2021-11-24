@@ -109,6 +109,7 @@ CCrowboxCore::CCrowboxCore()
     // Initialize this to never for now. It will come to use 
     // later as birds come and go.
     m_uptimeScheduledBasketClose = TIME_NEVER;    
+
 }
 
 //----------------------------------------------------------
@@ -142,7 +143,7 @@ void CCrowboxCore::Setup()
 
     //assign the database url to config 
     config.database_url = FIREBASE_HOST;
-    Firebase.reconnectWiFi(true);
+
 
     // Assign the callback function for the long running token generation task
     config.token_status_callback = tokenStatusCallback; 
@@ -153,7 +154,41 @@ void CCrowboxCore::Setup()
 
     // Initialize the library with the Firebase authen and config
     Firebase.begin(&config, &auth);
-    
+    Firebase.reconnectWiFi(true);
+    //optional - but good to allow firebase to retry any errors
+    Firebase.RTDB.setMaxRetry(&crowOnPerch, 3);
+    Firebase.RTDB.setMaxRetry(&coinDeposit, 3);
+    Firebase.RTDB.setMaxRetry(&trainingPhase, 3);
+    Firebase.RTDB.setMaxRetry(&publicCrowOnPerchGet, 3);
+    Firebase.RTDB.setMaxRetry(&publicCrowOnPerchSet, 3);
+    Firebase.RTDB.setMaxRetry(&publicCoinsDeposited, 3);
+    Firebase.RTDB.setMaxRetry(&location, 3);
+    Firebase.RTDB.setMaxRetry(&sharingPreference, 3);
+    Firebase.RTDB.setMaxRetry(&trainingPhaseLoop, 3);
+
+    //Optional, set number of error resumable queues
+    Firebase.RTDB.setMaxErrorQueue(&crowOnPerch, 30);
+    Firebase.RTDB.setMaxErrorQueue(&coinDeposit, 30);
+    Firebase.RTDB.setMaxErrorQueue(&trainingPhase, 30);
+    Firebase.RTDB.setMaxErrorQueue(&publicCrowOnPerchGet, 30);
+    Firebase.RTDB.setMaxErrorQueue(&publicCrowOnPerchSet, 30);
+    Firebase.RTDB.setMaxErrorQueue(&publicCoinsDeposited, 30);
+    Firebase.RTDB.setMaxErrorQueue(&location, 30);
+    Firebase.RTDB.setMaxErrorQueue(&sharingPreference, 30);
+    Firebase.RTDB.setMaxErrorQueue(&trainingPhaseLoop, 30);
+
+
+    //min size is 1024
+    crowOnPerch.setResponseSize(8192);
+    coinDeposit.setResponseSize(8192);
+    trainingPhase.setResponseSize(8192);
+    publicCrowOnPerchGet.setResponseSize(8192);
+    publicCrowOnPerchSet.setResponseSize(8192);
+    publicCoinsDeposited.setResponseSize(8192);
+    location.setResponseSize(8192);
+    sharingPreference.setResponseSize(8192);
+    trainingPhaseLoop.setResponseSize(8192);
+
     // Getting the user UID might take a few seconds
     Serial.println("Getting User UID");
     while ((auth.token.uid) == "") {
@@ -167,6 +202,12 @@ void CCrowboxCore::Setup()
 
     // Start with no enqueued deposits
     m_numEnqueuedDeposits = 0;
+
+    //set the user's current location to
+    userLocation = "null";
+
+    //set the public crows on perch value to 0
+    publicCrowOnPerchValue = 0;
        
     // Set up the indicator LED pin, then turn the LED off to
     // save that microscopic amount of power. 
@@ -801,10 +842,15 @@ void CCrowboxCore::RunPhaseTwoProtocol()
       LoadNumberOfCrowsLandedOnPerchFromFirebase();
       WriteNumberOfCrowsOnPerchToFirebase(); 
 
-      delay(1000);
+      delay(10000);
       //for public data
-      GetUserLocation();
-      WritePublicCrowOnPerchData();
+      GetSharingPreference();
+      
+      delay(10000);
+
+      GetUserLocation(); /*    
+      LoadPublicCrowOnPerchData();
+      WritePublicCrowOnPerchData(); */
     }
   }
 }      
@@ -938,18 +984,17 @@ void CCrowboxCore::CheckTrainingPhaseSwitch()
 
   int newTrainingStage = 0;
 
-  if (Firebase.RTDB.getInt(&trainingPhase, "Users/"+USER_ID+"/Crowbox/current_training_stage")) {  
-    newTrainingStage = trainingPhase.to<int>();
+  if (Firebase.RTDB.getInt(&trainingPhaseLoop, "Users/"+USER_ID+"/Crowbox/current_training_stage")) {  
+    newTrainingStage = trainingPhaseLoop.to<int>();
     Serial.println("Got Training Stage");
     
   } else {
       Serial.println("FAILED to receive Training Phase from Firebase");
-      Serial.println("REASON: " + trainingPhase.errorReason());
+      Serial.println("REASON: " + trainingPhaseLoop.errorReason());
       Serial.println("------------------------------------");
       Serial.println();
   }
 
-  
   if ((newTrainingStage >=1) && (newTrainingStage <=4)) {
     if (newTrainingStage != m_currentTrainingPhase) {
       //restart esp32
@@ -1195,25 +1240,12 @@ void CCrowboxCore::LoadNumberOfCrowsLandedOnPerchFromFirebase(){
   }
 }
 
-void CCrowboxCore::GetUserLocation() {
-  //get the sharing preferences first
+void CCrowboxCore::GetSharingPreference() {
+  //get the sharing preferences to set the string
   if(Firebase.RTDB.getString(&sharingPreference,"Users/"+USER_ID+"/sharing_preference")) {
     toShare = sharingPreference.to<String>();
     Serial.println("Successfully got Sharing Preference");
-
-    /* if sharing is turned on  */
-    if(toShare == "PUBLIC") {
-      /* then get the location of the user */
-      if(Firebase.RTDB.getString(&location, "Users/"+USER_ID+"/location")) {
-        userLocation = location.to<String>();
-        Serial.println("Successfully got Location");
-        Serial.println(userLocation);
-      }
-    } else {
-      Serial.println("Error - Sharing Preferences is OFF");
-      Serial.println(toShare);
-      userLocation = "null";
-    }
+    Serial.println(toShare);
   } else {
       Serial.println("Error in retrieving sharing preferences");
       Serial.println("REASON: " + sharingPreference.errorReason());
@@ -1222,27 +1254,57 @@ void CCrowboxCore::GetUserLocation() {
   }
 }
 
-void CCrowboxCore::WritePublicCrowOnPerchData() {
+void CCrowboxCore::GetUserLocation() {
+
+  /* if sharing is turned on  */
+  if(toShare == "PUBLIC") {
+    /* then get the location of the user */
+    if(Firebase.RTDB.getString(&location, "Users/"+USER_ID+"/location")) {
+      userLocation = location.to<String>();
+      Serial.println("Successfully got Location");
+      Serial.println(userLocation);
+    } else {
+        Serial.println("Error in retrieving location");
+        Serial.println("REASON: " + location.errorReason());
+        Serial.println("------------------------------------");
+        Serial.println();
+    }
+  } else {
+    Serial.println("Error - Sharing Preferences is OFF");
+    Serial.println(toShare);
+    userLocation = "null";
+  }
+}
+
+void CCrowboxCore::LoadPublicCrowOnPerchData() {
   /* if the user has indeed entered their current location */
   if(userLocation != "null") {
     Serial.println("User location is not null");
     Serial.println(userLocation);
-    /* Then fetch its data from firebase rtdb */
-    if(Firebase.RTDB.getInt(&publicCrowOnPerchGet,"Public/Countries/"+userLocation+"/crows_landed_on_perch")) {
-      int publicValue = publicCrowOnPerchGet.to<int>();
+    
+    /* Then fetch its data from firebase rtdb */  
+    if(Firebase.RTDB.getInt(&publicCrowOnPerchGet,"Users/"+USER_ID+"/test/crows_landed_on_perch")) {
+      publicCrowOnPerchValue = publicCrowOnPerchGet.to<int>();
       //increment this value
-      publicValue++;
-      Serial.println(publicValue);
-      //write this value back
-      Firebase.RTDB.setInt(&publicCrowOnPerchSet,"Public/Countries/"+userLocation+"/crows_landed_on_perch", publicValue);
+      publicCrowOnPerchValue++;
+      Serial.println(publicCrowOnPerchValue);
     } else {
-      Serial.println("Error in writing public crow on perch data to firebase");
-      Serial.println("REASON: " + publicCrowOnPerchSet.errorReason());
+      Serial.println("Error in getting public crow on perch data from firebase");
+      Serial.println("REASON: " + publicCrowOnPerchGet.errorReason());
       Serial.println("------------------------------------");
       Serial.println();
     }
   } else {
     Serial.println("User location is null");
+    publicCrowOnPerchValue = 0;
+  }
+}
+
+void CCrowboxCore::WritePublicCrowOnPerchData() {
+  Serial.println("Writing public crows on perch to firebase");
+  //write the public value to firebase
+  if (publicCrowOnPerchValue != 0) {
+    Firebase.RTDB.setInt(&publicCrowOnPerchSet,"Users/"+USER_ID+"/test/crows_landed_on_perch", publicCrowOnPerchValue);
   }
 }
 

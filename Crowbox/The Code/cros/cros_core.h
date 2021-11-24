@@ -95,6 +95,7 @@ public:
     int numberOfCoinsDeposited;
     FirebaseData coinDeposit;
     FirebaseData trainingPhase;
+    FirebaseData trainingPhaseLoop;
 
     // Variables to save date and time
     String formattedDate;
@@ -108,6 +109,7 @@ public:
     unsigned long currentTime;
 
     /* PUBLIC DATA MANAGING */
+    int publicCrowOnPerchValue;
     FirebaseData publicCrowOnPerchGet;
     FirebaseData publicCrowOnPerchSet;
     FirebaseData publicCoinsDeposited;
@@ -174,8 +176,11 @@ protected:
     void LoadNumberOfCrowsLandedOnPerchFromFirebase();
     void WriteNumberOfCoinsDepositedToFirebase();
     void WriteNumberOfCrowsOnPerchToFirebase();
+    void GetSharingPreference();
     void GetUserLocation();
+    void LoadPublicCrowOnPerchData();
     void WritePublicCrowOnPerchData();
+
     void WritePublicCoinsDepositedData();
 
     //time methods
