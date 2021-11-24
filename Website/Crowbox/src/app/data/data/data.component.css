@@ -182,3 +182,16 @@ p {
 .mat-button-toggle {
     color: aqua;
 }
+
+/* OFFLINE MODE */
+
+#offlineFile {
+    position: absolute;
+    margin: auto;
+    bottom: 10vh;
+    left:60vh;
+}
+
+.file-input {
+    display: none;
+  }

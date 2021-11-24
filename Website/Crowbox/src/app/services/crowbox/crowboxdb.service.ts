@@ -226,4 +226,18 @@ export class CrowboxdbService {
     return this.siteReference;
   }
 
+  updateOfflineCrowsOnPerch(date:string, crows:number) {
+    let path = `Users/${this.currentUserId}/Crowbox/crows_landed_on_perch/${date}`;
+
+    let offlineReference = this.db.object(path);
+    offlineReference.update({value:crows});
+  }
+
+  updateOfflineCoinsDeposited(date:string, coins:number) {
+    let path = `Users/${this.currentUserId}/Crowbox/coins_deposited/${date}`;
+
+    let offlineReference = this.db.object(path);
+    offlineReference.update({value:coins});
+  }
+
 }

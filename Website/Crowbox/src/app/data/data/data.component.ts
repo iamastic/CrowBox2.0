@@ -14,6 +14,13 @@ import { first } from 'rxjs/operators';
 
 //to get the current date when user first makes an account
 import { DatePipe } from '@angular/common';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+
+/* FOR OFFLINE PURPOSES */
+interface dataObject {
+  date:string;
+  value:number;
+}
 
 @Component({
   selector: 'app-data',
@@ -21,6 +28,21 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./data.component.css']
 })
 export class DataComponent implements OnInit, AfterContentInit {
+
+  /* OFFLINE RELATED */
+
+
+  file:any;
+  fileName:any;
+  //For crows
+  offlineCrowData:dataObject[] = [];
+  offlineCurrentCrowDate:any = "null";
+
+  //For coins
+  offlineCoinData:dataObject[] = [];
+  offlineCurrentCoinDate:any = "null";
+
+  /* ---------------------------------------------------- */
 
   /* USER RELATED */
   //the user id taken from HandleAuthService
@@ -560,5 +582,105 @@ export class DataComponent implements OnInit, AfterContentInit {
   }
   showPublic() {
     this.showPublicData = true;
+  }
+
+  /* OFFLINE MODE */
+
+  //Get the file
+  
+  uploadFile(event:any) {
+    this.file = event.target.files[0];    
+  }
+
+  readFile() {
+    let fileReader = new FileReader();
+    fileReader.readAsText(this.file);
+
+    fileReader.onload = (e) => {
+      console.log(fileReader.result);
+      //For each line in the file...
+      let tempData = (<string>fileReader.result).split('\n');
+      tempData.forEach(line => {
+        //Seperate each line by the comma delimiter to get
+        //individual values
+        let tempLine = line.split(',');
+
+        if(tempLine[0]=== "crows_landed_on_perch") {
+          this.offlineCrowsOnPerch(tempLine);
+        }
+
+        if (tempLine[0]==="coins_deposited") {
+          this.offlineCoinsDeposited(tempLine);
+        }
+      });
+
+      console.log("OFFLINE DATA");
+      console.log(this.offlineCrowData);
+      //Once the array is filled up, we update these 
+      //values into Firebase!
+      this.offlineCrowData.forEach(data => {
+        this.crowboxService.updateOfflineCrowsOnPerch(data.date,data.value);
+      });
+
+      this.offlineCoinData.forEach(data => {
+        this.crowboxService.updateOfflineCoinsDeposited(data.date,data.value);
+      })
+    };
+  }
+
+  offlineCrowsOnPerch(tempLine:any) {
+    //check the date, have we moved on to another day?
+    //if so, then add on a new object 
+    if(tempLine[1] !== this.offlineCurrentCrowDate) {
+      console.log("New Date Found");
+      console.log(tempLine[1]);
+      this.offlineCurrentCrowDate = tempLine[1];
+      //In here, we will be pushing this object onto 
+      //the existing array as it is a brand new date
+      let tempDataObject:dataObject = {
+        date : this.offlineCurrentCrowDate,
+        value : parseInt(tempLine[2])
+      }
+      this.offlineCrowData.push(tempDataObject);
+
+    } else {
+        console.log("Date currently is: " + this.offlineCurrentCrowDate);
+        console.log("Length of array is: " + this.offlineCrowData.length);
+        //If it is the same date, then we need to update
+        //rather than push the object
+        //We convert the value into an Integer/number
+        let tempValue = parseInt(tempLine[2]);
+        //Then replace the existing value with the new one 
+        //at the same date
+        this.offlineCrowData[this.offlineCrowData.length-1].value = tempValue;
+      }
+  }
+
+  offlineCoinsDeposited(tempLine:any) {
+    //check the date, have we moved on to another day?
+    //if so, then add on a new object 
+    if(tempLine[1] !== this.offlineCurrentCoinDate) {
+      console.log("New Date Found");
+      console.log(tempLine[1]);
+      this.offlineCurrentCoinDate = tempLine[1];
+      //In here, we will be pushing this object onto 
+      //the existing array as it is a brand new date
+      let tempDataObject:dataObject = {
+        date : this.offlineCurrentCoinDate,
+        value : parseInt(tempLine[2])
+      }
+      this.offlineCoinData.push(tempDataObject);
+
+    } else {
+        console.log("Date currently is: " + this.offlineCurrentCoinDate);
+        console.log("Length of array is: " + this.offlineCoinData.length);
+        //If it is the same date, then we need to update
+        //rather than push the object
+        //We convert the value into an Integer/number
+        let tempValue = parseInt(tempLine[2]);
+        //Then replace the existing value with the new one 
+        //at the same date
+        this.offlineCoinData[this.offlineCoinData.length-1].value = tempValue;
+      }
   }
 }

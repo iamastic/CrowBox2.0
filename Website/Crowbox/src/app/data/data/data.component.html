@@ -92,3 +92,31 @@
     </mat-card>
  
 </div>
+
+<div id = "offlineFile">
+    <!-- <div>
+        <input type="file" (change)="uploadFile($event)" accept=".txt" />
+    </div>
+
+    <div>
+        <button (click)="readFile()">
+            Submit
+        </button>
+    </div>
+ -->
+    <input type="file" class="file-input"
+       (change)="uploadFile($event)" #fileUpload>
+
+    <div class="file-upload">
+        {{fileName || "No file uploaded yet."}}
+
+        <button mat-mini-fab color="primary" class="upload-btn"
+            (click)="fileUpload.click()">
+            <mat-icon>attach_file</mat-icon>
+        </button>
+    </div>
+
+    <div>
+        <button (click)="readFile()">Upload</button>
+    </div>
+</div>
