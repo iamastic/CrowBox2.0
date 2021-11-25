@@ -116,6 +116,11 @@ CCrowboxCore::CCrowboxCore()
 //----------------------------------------------------------
 void CCrowboxCore::Setup()
 {
+
+  //memory at start
+      Serial.println("Memory At Setup ");
+      Serial.println(xPortGetFreeHeapSize());
+
 /* #if defined( CROS_USE_SERIAL_DEBUG )
     Serial.begin( CROS_SERIAL_BAUD_RATE ); 
 #endif *///CROS_USE_SERIAL_DEBUG
@@ -324,6 +329,10 @@ void CCrowboxCore::Setup()
 //----------------------------------------------------------
 void CCrowboxCore::Loop() 
 {
+    //Let's print the heap memory 
+  /*   Serial.println("Memory Remaining: ");
+    Serial.println(xPortGetFreeHeapSize()); */
+
     // Take a quick sample of the uptime in milliseconds. We'll use this value
     // near the end of this function to determine how long this call to Loop()
     // will take.
@@ -794,6 +803,8 @@ void CCrowboxCore::RunPhaseOneProtocol()
 void CCrowboxCore::RunPhaseTwoProtocol()
 {
 
+
+
   // If a bird is on the perch, logically speaking- This means
   // more than knowing if the perch is depressed, it's about 
   // having internal state that indicates that a bird is truly present.
@@ -836,21 +847,42 @@ void CCrowboxCore::RunPhaseTwoProtocol()
       // unlimited time to remove unlimited food from the basket and throw
       // it somewhere else for later retrieval.
       ScheduleBasketCloseWithDelay( BASKET_REMAIN_OPEN_DURATION );
+       
+        Serial.println("Memory Remaining At Start of Phase 2: ");
+        Serial.println(xPortGetFreeHeapSize());
 
       //for private data
       GetCurrentDate();
       LoadNumberOfCrowsLandedOnPerchFromFirebase();
-      WriteNumberOfCrowsOnPerchToFirebase(); 
+      Serial.println("Memory Remaining After Loading Num Crows Landed On Perch of Phase 2: ");
+      Serial.println(xPortGetFreeHeapSize());
 
-      delay(10000);
+      //will this clear up some memory?
+      //RTDB.clear();
+
+      WriteNumberOfCrowsOnPerchToFirebase(); 
+      Serial.println("Memory Remaining After Writing num crows on perch in Phase 2: ");
+      Serial.println(xPortGetFreeHeapSize());
+
+      //RTDB.clear();
+
+      //delay(10000);
       //for public data
       GetSharingPreference();
+      Serial.println("Memory Remaining After getting sharing preference in Phase 2: ");
+      Serial.println(xPortGetFreeHeapSize());
       
-      delay(10000);
+      //delay(10000);
+      //RTDB.clear();
 
       GetUserLocation(); /*    
       LoadPublicCrowOnPerchData();
       WritePublicCrowOnPerchData(); */
+      //RTDB.clear();
+
+      
+      Serial.println("Memory Remaining At End of Phase 2: ");
+      Serial.println(xPortGetFreeHeapSize());
     }
   }
 }      
@@ -982,11 +1014,18 @@ void CCrowboxCore::CheckTrainingPhaseSwitch()
   //Write it to Firebase Database
   //WriteCurrentTrainingPhaseToFirebase();
 
+    
+      Serial.println("Memory Remaining At Start of Check Training Switch: ");
+      Serial.println(xPortGetFreeHeapSize());
+
   int newTrainingStage = 0;
 
   if (Firebase.RTDB.getInt(&trainingPhaseLoop, "Users/"+USER_ID+"/Crowbox/current_training_stage")) {  
     newTrainingStage = trainingPhaseLoop.to<int>();
+   
     Serial.println("Got Training Stage");
+        Serial.println("Memory Remaining At End of Check Training Switch: ");
+      Serial.println(xPortGetFreeHeapSize());
     
   } else {
       Serial.println("FAILED to receive Training Phase from Firebase");
@@ -997,10 +1036,15 @@ void CCrowboxCore::CheckTrainingPhaseSwitch()
 
   if ((newTrainingStage >=1) && (newTrainingStage <=4)) {
     if (newTrainingStage != m_currentTrainingPhase) {
+      
+      Serial.println("Memory Remaining At End of Check Training Switch: ");
+      Serial.println(xPortGetFreeHeapSize());
       //restart esp32
       ESP.restart();
     }
   } else {
+      Serial.println("Memory Remaining At End of Check Training Switch: ");
+      Serial.println(xPortGetFreeHeapSize());
       Serial.println("New training stage is outside valid range");
   }
 }
