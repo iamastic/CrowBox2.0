@@ -112,6 +112,7 @@ public:
     int publicCrowOnPerchValue;
     FirebaseData publicCrowOnPerchGet;
     FirebaseData publicCrowOnPerchSet;
+    int publicCoinsDepositedValue;
     FirebaseData publicCoinsDeposited;
     FirebaseData location;
     FirebaseData sharingPreference;
@@ -180,7 +181,7 @@ protected:
     void GetUserLocation();
     void LoadPublicCrowOnPerchData();
     void WritePublicCrowOnPerchData();
-
+    void LoadPublicCoinsDepositedData();
     void WritePublicCoinsDepositedData();
 
     //time methods

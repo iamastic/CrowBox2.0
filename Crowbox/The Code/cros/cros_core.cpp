@@ -405,6 +405,7 @@ void CCrowboxCore::Loop()
       Serial.println("1 Minute is up, checking training phase");
       currentTime = millis();
       CheckTrainingPhaseSwitch();
+      trainingPhaseLoop.clear();
     }
 
     // Now we do some time arithmetic to figure out how long this loop took to
@@ -859,27 +860,33 @@ void CCrowboxCore::RunPhaseTwoProtocol()
 
       //will this clear up some memory?
       //RTDB.clear();
+      
 
       WriteNumberOfCrowsOnPerchToFirebase(); 
       Serial.println("Memory Remaining After Writing num crows on perch in Phase 2: ");
       Serial.println(xPortGetFreeHeapSize());
 
-      //RTDB.clear();
+      //clear memory used by this firebase object
+      crowOnPerch.clear();
 
-      //delay(10000);
       //for public data
       GetSharingPreference();
       Serial.println("Memory Remaining After getting sharing preference in Phase 2: ");
       Serial.println(xPortGetFreeHeapSize());
       
-      //delay(10000);
-      //RTDB.clear();
+    
+      sharingPreference.clear();
 
-      GetUserLocation(); /*    
+      GetUserLocation();   
+      location.clear();
+
       LoadPublicCrowOnPerchData();
-      WritePublicCrowOnPerchData(); */
-      //RTDB.clear();
+      publicCrowOnPerchGet.clear();
 
+
+      WritePublicCrowOnPerchData();
+      publicCrowOnPerchSet.clear();
+  
       
       Serial.println("Memory Remaining At End of Phase 2: ");
       Serial.println(xPortGetFreeHeapSize());
@@ -907,25 +914,6 @@ void CCrowboxCore::RunPhaseThreeProtocol()
   if( m_numEnqueuedDeposits > 0 && !IsRewardBasketOpen() )
   {
     Serial.println("Coin has been deteced");
-    //EIFR = 0x01;
-
-    //add delay to avoid coin contact bounce
-    //delay(500);
-    //reattach interrupt to coin sensor but send to blank function to 
-    //flush out the pending interrupts
-    //attachInterrupt( digitalPinToInterrupt(INPUT_PIN_COIN), FlushOutInterrupts, FALLING );
-
-    //add another delay
-    //delay(500);
-    //detach the interrupt again
-    //detachInterrupt(digitalPinToInterrupt(17));
-   
-    //add another delay
-    //delay(500);
-    //reattach the interrupt to the correct function
-    //attachInterrupt( digitalPinToInterrupt(INPUT_PIN_COIN), Interrupt_CoinDeposit, FALLING );
-
-    //Serial.println("Reattached interrupt for coin sensor");
 
     RemoveEnqueuedCoin();// Un-count this deposit since we're paying it off now.
 
@@ -934,24 +922,35 @@ void CCrowboxCore::RunPhaseThreeProtocol()
     // Set it up to close.
     ScheduleBasketCloseWithDelay( BASKET_REMAIN_OPEN_DURATION );
 
-    //numberOfCoinsDeposited++;
-    /* Firebase.setInt(coinDeposit, "crowbox/coins_deposited", numberOfCoinsDeposited); */ 
-    //WriteNumberOfCoinsDepositedToFirebase();
-
-
     GetCurrentDate();
     //now, we need to check if this date and its data exists
     //in the firebase database. We need to load it and also 
     //increment it within this function
     LoadNumberOfCoinsDepositedFromFirebase();
+    coinDeposit.clear();
 
     //then, we need to write this data back to firebase
     WriteNumberOfCoinsDepositedToFirebase();
+    coinDeposit.clear();
 
-    delay(1000);
+    //for public data
+    GetSharingPreference();
+    Serial.println("Memory Remaining After getting sharing preference in Phase 3: ");
+    Serial.println(xPortGetFreeHeapSize());
+    sharingPreference.clear();
 
     GetUserLocation();
+    location.clear();
+
+    LoadPublicCoinsDepositedData();
+    publicCoinsDeposited.clear();
+
     WritePublicCoinsDepositedData();
+    publicCoinsDeposited.clear();
+
+          
+    Serial.println("Memory Remaining At End of Phase 3: ");
+    Serial.println(xPortGetFreeHeapSize());
 
   }
 }
@@ -1224,15 +1223,6 @@ void CCrowboxCore::WriteNumberOfCoinsDepositedToFirebase()
 }
  
 void CCrowboxCore::LoadNumberOfCoinsDepositedFromFirebase(){
-
-  /* if (Firebase.getInt(coinDeposit, "Users/"+username+"/Crowbox/coins_deposited")) {  
-    numberOfCoinsDeposited = coinDeposit.to<int>();
-    Serial.println("Successfully got Number of Coins");
-    Serial.println(numberOfCoinsDeposited);
-  } else {
-    Serial.println("Error retreiving data from Firebase");
-  } */
-  
   Serial.println("Loading Number of Coins Deposited From Firebase");
 
   if (Firebase.RTDB.getInt(&coinDeposit, "Users/"+USER_ID+"/Crowbox/coins_deposited/"+dayStamp+"/value")){
@@ -1327,7 +1317,7 @@ void CCrowboxCore::LoadPublicCrowOnPerchData() {
     Serial.println(userLocation);
     
     /* Then fetch its data from firebase rtdb */  
-    if(Firebase.RTDB.getInt(&publicCrowOnPerchGet,"Users/"+USER_ID+"/test/crows_landed_on_perch")) {
+    if(Firebase.RTDB.getInt(&publicCrowOnPerchGet,"Public/Countries/"+userLocation+"/crows_landed_on_perch")) {
       publicCrowOnPerchValue = publicCrowOnPerchGet.to<int>();
       //increment this value
       publicCrowOnPerchValue++;
@@ -1348,28 +1338,51 @@ void CCrowboxCore::WritePublicCrowOnPerchData() {
   Serial.println("Writing public crows on perch to firebase");
   //write the public value to firebase
   if (publicCrowOnPerchValue != 0) {
-    Firebase.RTDB.setInt(&publicCrowOnPerchSet,"Users/"+USER_ID+"/test/crows_landed_on_perch", publicCrowOnPerchValue);
+    Firebase.RTDB.setInt(&publicCrowOnPerchSet,"Public/Countries/"+userLocation+"/crows_landed_on_perch", publicCrowOnPerchValue);
   }
+}
+
+void CCrowboxCore::LoadPublicCoinsDepositedData() {
+    /* if the user has indeed entered their current location */
+    if(userLocation != "null") {
+      Serial.println("User location is not null");
+      Serial.println(userLocation);
+
+      /* Then fetch its data from firebase rtdb */  
+      if(Firebase.RTDB.getInt(&publicCoinsDeposited,"Public/Countries/"+userLocation+"/coins_deposited")) {
+        publicCoinsDepositedValue = publicCoinsDeposited.to<int>();
+        //increment this value
+        publicCoinsDepositedValue++;
+        Serial.println(publicCoinsDepositedValue);
+
+      } else {
+          Serial.println("Error in loading public coins deposited data to firebase");
+          Serial.println("REASON: " + publicCoinsDeposited.errorReason());
+          Serial.println("------------------------------------");
+          Serial.println();
+      }
+    } else {
+        Serial.println("User location is null");
+        publicCoinsDepositedValue = 0;
+      }
 }
 
 void CCrowboxCore::WritePublicCoinsDepositedData(){
   
-  if(userLocation != "null") {
-    Serial.println("User location is not null");
-    Serial.println(userLocation);
-
-    if(Firebase.RTDB.getInt(&publicCoinsDeposited,"Public/Countries/"+userLocation+"/coins_deposited")) {
-      int publicValue = publicCoinsDeposited.to<int>();
-      //increment value 
-      publicValue++;
-      Serial.println(publicValue);
-      Firebase.RTDB.setInt(&publicCoinsDeposited,"Public/Countries/"+userLocation+"/coins_deposited", publicValue);
+  Serial.println("Writing public coins deposited to firebase");
+  //write public value to firebase
+  if(publicCoinsDepositedValue != 0) {
+    if (Firebase.RTDB.setInt(&publicCoinsDeposited,"Public/Countries/"+userLocation+"/coins_deposited", publicCoinsDepositedValue)) {
+      Serial.println("Sucessfully wrote public coins deposited to firebase");
     } else {
         Serial.println("Error in writing public coins deposited data to firebase");
         Serial.println("REASON: " + publicCoinsDeposited.errorReason());
         Serial.println("------------------------------------");
         Serial.println();
     }
+  } else {
+    Serial.println("Public coins deposited is 0?");
+    Serial.println(publicCoinsDepositedValue);
   }
 }
 
