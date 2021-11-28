@@ -126,13 +126,7 @@ void CCrowboxCore::Setup()
 #endif *///CROS_USE_SERIAL_DEBUG
 
     DebugPrint( "Setup() method CALLED...\n" );
-    //start with 0 crows landed on perch
-    //this will need to change eventually, and it should ideally load
-    //in the data from the database (otherwise it will always
-    //start on 0, which is incorrect!)
-    //numberOfCrowsLanded = 0;
-    //start with 0 coins deposited
-    //numberOfCoinsDeposited = 0;
+  
 
     //set the User's Email and Password
     USER_EMAIL = "imhaq7@gmail.com";
@@ -219,57 +213,13 @@ void CCrowboxCore::Setup()
     pinMode( OUTPUT_PIN_LED, OUTPUT );
     digitalWrite( OUTPUT_PIN_LED, LOW );
 
-    // Ensure that the stored EEPROM data is valid, then load
-    // the current training phase from storage there.
-    /* if( !ValidateEEPROMData() )
-    {
-      // Oops! The EEPROM data is not valid. This probably just
-      // means that the Arduino board in use has not been used 
-      // to operate a crowbox before. So we'll create valid 
-      // EEPROM data that can be used henceforth. 
-      CreateEEPROMData();
 
-      // Now that we've created EEPROM data for CrOS, let's be
-      // sure that it actually worked. If not, that's a fatal
-      // error that needs to be reported! 
-      if( !ValidateEEPROMData() )
-      {
-        ReportSystemError( kError_EEPROM );
-      }
-    } */
-
-      // Initialize a NTPClient to get time and date
-      timeClient.begin();
-      timeClient.setTimeOffset(3600);
+    // Initialize a NTPClient to get time and date
+    timeClient.begin();
+    timeClient.setTimeOffset(3600);
     
-
-
-    // If we reach this point, we're sure the EEPROM data is good
-    // so we'll retrieve the stored data there which tells use which
-    // phase of the training protocol is currently in use.
-    //LoadCurrentTrainingPhaseFromEEPROM();    
-
     //initiate the main variables from firebase
     LoadCurrentTrainingPhaseFromFirebase();
-
-    //don't need these functions in the setup anymore
-    //these functions will run everytime a coin or perch event occurs
-    //LoadNumberOfCoinsDepositedFromFirebase();
-    //LoadNumberOfCrowsLandedOnPerchFromFirebase();
-
-
-
-    /* switch( m_currentTrainingPhase )
-    {
-      case PHASE_ONE:   DebugPrint("Loaded PHASE ONE from EEPROM\n" );    break;
-      case PHASE_TWO:   DebugPrint("Loaded PHASE TWO from EEPROM\n" );    break;
-      case PHASE_THREE: DebugPrint("Loaded PHASE THREE from EEPROM\n" );  break;
-      case PHASE_FOUR:  DebugPrint("Loaded PHASE FOUR from EEPROM\n" );   break;
-      default:
-        DebugPrint("Loaded garbage training phase from EEPROM!");
-        ReportSystemError( kError_BadTrainingPhase );
-        break;
-    } */
 
     switch( m_currentTrainingPhase )
     {
@@ -294,6 +244,15 @@ void CCrowboxCore::Setup()
     pinMode( INPUT_PIN_COIN, INPUT_PULLUP );
     attachInterrupt( digitalPinToInterrupt(INPUT_PIN_COIN), Interrupt_CoinDeposit, FALLING );
 
+    // Set up the Food Level Sensor 
+    pinMode(INPUT_FOOD_SENSOR, INPUT);
+    // Initialise the "detected" variable for the food level
+    // i.e. is there food in the basket? Starts with "false"
+    isFoodThere = false;
+
+    pinMode(INPUT_COINSLEVEL_SENSOR, INPUT);
+    isCoinsThere = false;
+
     DebugPrint( "  Servo initialization and lid parking...\n" );
     
     // Attach the servo device to the pin which controls the servo position
@@ -317,7 +276,10 @@ void CCrowboxCore::Setup()
     StopRecordingVideo();
 
     //set the current time for training phase
-    currentTime = millis();
+    trainingPhaseTime = millis();
+
+    //set the current time for the troubleshoot period
+    troubleshootTime = millis();
     
     // Ensure everything has settled out before proceeding. 
     delay( 1000 );
@@ -395,18 +357,25 @@ void CCrowboxCore::Loop()
             StopRecordingVideo();
         }
     }
-
-    // Poll to see if the human operator has pressed the switch which is
-    // used to change the selected training phase.
     
     //check the current training stage every 1 minute to avoid 
     //too many requests to firebase database
-    if((millis() - currentTime) >= 60000) {
+    if((millis() - trainingPhaseTime) >= 60000) {
       Serial.println("1 Minute is up, checking training phase");
-      currentTime = millis();
+      trainingPhaseTime = millis();
       CheckTrainingPhaseSwitch();
       trainingPhaseLoop.clear();
     }
+
+
+    //Check the Troubleshoot setup every 30 minutes 
+    //CHANGE TO 30 MINS!!
+    if((millis() - troubleshootTime) >= 10000) {
+      Serial.println("10 seconds over, checking box status in troubleshoot");
+      troubleshootTime = millis();
+      TroubleShoot();
+    }
+
 
     // Now we do some time arithmetic to figure out how long this loop took to
     // execute. If it's less than IDEAL_LOOP_MS, then we make the system 
@@ -1448,4 +1417,73 @@ void CCrowboxCore::StopRecordingVideo()
   // Does nothing presently, but here is where you would 
   // interface with your camera, through a relay or perhaps
   // a serial communication message.
+}
+
+/* SENSOR TROUBLESHOOT HANDLING */
+
+//This function is a wrapper function for 
+//all other troubleshoot related functions
+void CCrowboxCore::TroubleShoot() {
+  CheckFoodLevel();
+  CheckCoinsLevel();
+}
+
+void CCrowboxCore::CheckFoodLevel() {
+  int foodLevel = !digitalRead(INPUT_FOOD_SENSOR);
+
+  if(foodLevel) {
+    if (!isFoodThere) {
+      //We have a new input i.e. new food has been added
+      isFoodThere = true;
+      Serial.println("Food has been added - Back to working order");
+      //Update the value in firebase to "WORKING"
+      Firebase.RTDB.setString(&foodData, "Users/"+USER_ID+"/Crowbox/Status/food", "WORKING");
+    } else {
+      //Food is still present, nothing has changed since 
+      //the last time we checked and everything is working
+      Serial.println("Food is present in the basket");
+      //We do not need to update anything in firebase here
+    }
+  } else {
+      //There is no/low food in the basket
+      //Needs to be refilled
+      if (isFoodThere) {isFoodThere = false;} 
+      
+      Serial.println("Food basket needs to be refilled");
+      Firebase.RTDB.setString(&foodData, "Users/"+USER_ID+"/Crowbox/Status/food", "LOW");
+  }
+
+  //clear the data to make space!
+  foodData.clear();
+
+}
+
+void CCrowboxCore::CheckCoinsLevel() {
+int coinsLevel = !digitalRead(INPUT_COINSLEVEL_SENSOR);
+
+  if(coinsLevel) {
+    if (!isCoinsThere) {
+      //We have a new input i.e. new food has been added
+      isCoinsThere = true;
+      Serial.println("Coins have been added - Back to working order");
+      //Update the value in firebase to "WORKING"
+      Firebase.RTDB.setString(&coinsData, "Users/"+USER_ID+"/Crowbox/Status/coins", "WORKING");
+    } else {
+      //Food is still present, nothing has changed since 
+      //the last time we checked and everything is working
+      Serial.println("Coins are present in the dispenser");
+      //We do not need to update anything in firebase here
+    }
+  } else {
+      //There is no/low food in the basket
+      //Needs to be refilled
+      if (isCoinsThere) {isCoinsThere = false;} 
+      
+      Serial.println("Food basket needs to be refilled");
+      Firebase.RTDB.setString(&coinsData, "Users/"+USER_ID+"/Crowbox/Status/coins", "LOW");
+  }
+
+  //clear the data to make space!
+  coinsData.clear();
+
 }

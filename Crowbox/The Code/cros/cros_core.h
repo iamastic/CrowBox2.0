@@ -106,7 +106,7 @@ public:
     String USER_PASSWORD;
     String USER_EMAIL;
 
-    unsigned long currentTime;
+    unsigned long trainingPhaseTime;
 
     /* PUBLIC DATA MANAGING */
     int publicCrowOnPerchValue;
@@ -119,6 +119,16 @@ public:
 
     String toShare;
     String userLocation;
+
+    /* TROUBLESHOOT */
+    unsigned long troubleshootTime;
+    //Food level 
+    bool isFoodThere;
+    FirebaseData foodData;
+
+    //Coins Level
+    bool isCoinsThere; 
+    FirebaseData coinsData;
 
 
     /* END MY WORK */
@@ -192,6 +202,14 @@ protected:
     //--------------------------------------
     void RecordVideo( cros_time_t duration );
     void StopRecordingVideo();
+
+    
+    //--------------------------------------
+    // Troubleshoot
+    //--------------------------------------
+    void TroubleShoot();
+    void CheckFoodLevel();
+    void CheckCoinsLevel();
 
 private:
     cros_time_t m_uptimeWhenBirdLanded;

@@ -114,6 +114,10 @@
 #define INPUT_PIN_PERCH         16
 #define INPUT_PIN_COIN          17
 #define INPUT_PIN_PHASE_SELECT  4
+
+//FOR TROUBLESHOOT
+#define INPUT_FOOD_SENSOR       21
+#define INPUT_COINSLEVEL_SENSOR 22
  /* END MY WORK */
 
 //======================================
