@@ -38,13 +38,13 @@ export class CrowboxdbService {
   locationReference!:AngularFireList<any>;
   locationDataPath = 'Public/Location/';
 
-  //Country List - to replace "Location"
- /*  countryReference!:AngularFireList<any>;
-  countryDataPath = 'Public/Countries/';
- */
   //Site Data list
   siteReference!:AngularFireList<any>;
   siteDataPath = 'Site/';
+
+  //Status Object 
+  statusReference!:AngularFireObject<any>;
+  statusDataPath: any;
 
 
   constructor(private db: AngularFireDatabase, private handleAuth: HandleAuthService) {
@@ -64,25 +64,6 @@ export class CrowboxdbService {
 
       this.setupReferences();
     });
-
-/*     //get the user's name
-    this.userName = this.handleAuth.currentUserState?.displayName;
-    //get the user's email
-    this.userEmail = this.handleAuth.currentUserState?.email; */
-
-    //if you cannot get the user id from handleAuth, then get it from the localStorage
-    //there is no need for this anymore! we shall wait for the subscription
-/*     if(!this.currentUserId) {
-      console.log("Error in crowboxdb Service - Cannot retrieve user id from handleAuth");
-      //get the user information from the local storage
-      const item = localStorage.getItem('user');
-      if (item !=='undefined' && item!==null) {
-        const currentUser = JSON.parse(item);
-        this.currentUserId = currentUser.uid!;
-      }
-    } else {
-      console.log("GOT UID from HandleAuthService");
-    } */
   }
 
   setupReferences() {
@@ -113,11 +94,12 @@ export class CrowboxdbService {
     //set up the Location list 
     this.locationReference = this.db.list(this.locationDataPath);
 
-    //set up country reference
-    //this.countryReference = this.db.list(this.countryDataPath);
-
     //set up site list
     this.siteReference = this.db.list(this.siteDataPath);
+
+    //set up the Troubleshoot/status reference
+    this.statusDataPath = `Users/${this.currentUserId}/Crowbox/Status`;
+    this.statusReference = this.db.object(this.statusDataPath);
   }
 
 
@@ -215,10 +197,6 @@ export class CrowboxdbService {
   getAllLocationData(): AngularFireList<any> {
     return this.locationReference;
   }
-/* 
-  getAllCountryData():AngularFireList<any> {
-    return this.countryReference;
-  } */
 
   /* SITE RELATED */
 
@@ -226,6 +204,12 @@ export class CrowboxdbService {
     return this.siteReference;
   }
 
+  /* TROUBLESHOOT RELATED */
+  getStatusData():AngularFireObject<any>{
+    return this.statusReference;
+  }
+
+  /* OFFLINE RELATED */
   updateOfflineCrowsOnPerch(date:string, crows:number) {
     let path = `Users/${this.currentUserId}/Crowbox/crows_landed_on_perch/${date}`;
 

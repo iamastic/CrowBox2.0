@@ -13,6 +13,7 @@ export class InformationComponent implements OnInit, OnChanges {
   @Input() crowsOnPerch!:number[];
   @Input() coinsDeposited!:number[]; 
 
+  //is the user logged in yet?
   userSet:boolean = false;
 
   totalCrowsLandedOnPerch:number = 0;
@@ -34,6 +35,11 @@ export class InformationComponent implements OnInit, OnChanges {
   //boolean to check if the user needs to fill out profile details
   pendingProfileDetails!:boolean;
 
+  //Status of crowbox 
+  status?:any;
+  isError = false;
+  showStatusBox = false;
+
   constructor(private handleAuth:HandleAuthService, private crowboxService:CrowboxdbService) { }
 
   ngOnInit(): void {
@@ -44,6 +50,7 @@ export class InformationComponent implements OnInit, OnChanges {
       this.userSet = true;
       this.getTrainingStage();
       this.getAllInformationData();
+      this.getTroubleshootInfo();
     });
   }
 
@@ -130,20 +137,34 @@ export class InformationComponent implements OnInit, OnChanges {
       this.crowboxNickname= result.payload.val().nickname;
     });
 
-      /* this.checkIfPendingProfile(); */
     });
   }
-/* 
-  checkIfPendingProfile() {
-    if(this.informationBox.date_joined !== "null") {
-      if(this.informationBox.nickname !== "null") {
-        this.pendingProfileDetails = false;
-      } else {
-          this.pendingProfileDetails = true;
-      }
+
+  /* FOR TROUBLESHOOTING PURPOSES */
+  getTroubleshootInfo() {
+    this.crowboxService
+    .getStatusData()
+    .snapshotChanges()
+    .subscribe(result => {
+        this.isError = false;
+        this.status = "WORKING";
+
+        Object.values(result.payload.val()).forEach(element => {
+          if(element !== "WORKING") {
+            this.isError = true;
+            this.status = "ERROR";
+            //ADD THE REST HERE
+          } 
+        })
+    });
+  }
+
+  changeBoxStatus() {
+    if(this.showStatusBox == true) {
+      this.showStatusBox = false;
     } else {
-        this.pendingProfileDetails = true;
+      this.showStatusBox = true;
     }
-  } */
+  }
 
 }

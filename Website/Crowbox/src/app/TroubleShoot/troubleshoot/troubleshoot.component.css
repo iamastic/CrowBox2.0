@@ -6,8 +6,8 @@
 #food {
     position: absolute;
     width: 22%;
-    height:20%;
-    top: 30vh;
+    height:30%;
+    top:10vh;
     left: 15vh;
 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -17,8 +17,8 @@
 #coin {
     position: absolute;
     width: 22%;
-    height:20%;
-    top: 30vh;
+    height:30%;
+    top: 10vh;
     margin: auto;
     left: 0vh;
     right: 0vh;
@@ -28,8 +28,8 @@
 #lid {
     position: absolute;
     width: 22%;
-    height:20%;
-    top: 30vh;
+    height:30%;
+    top: 10vh;
     right:15vh
 }
 
@@ -38,8 +38,8 @@
 #perch {
     position: absolute;
     width: 22%;
-    height:20%;
-    bottom: 17vh;
+    height:30%;
+    bottom: 10vh;
     left: 15vh;
 }
 
@@ -47,8 +47,8 @@
 #water {
     position: absolute;
     width: 22%;
-    height:20%;
-    bottom: 17vh;
+    height:30%;
+    bottom: 10vh;
     margin: auto;
     left: 0vh;
     right: 0vh;
@@ -58,8 +58,8 @@
 #wifi {
     position: absolute;
     width: 22%;
-    height:20%;
-    bottom: 17vh;
+    height:30%;
+    bottom: 10vh;
     right:15vh
 }
 

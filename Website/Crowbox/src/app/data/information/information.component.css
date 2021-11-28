@@ -141,3 +141,29 @@ h1 {
     width: 75%;
     height: 12%;
 }
+
+#boxStatusButton {
+    background-color: transparent;
+    border: none;
+}
+
+#statusError {
+    position: absolute;
+    height:60%;
+    width:90%;
+    margin:auto;
+    top:0vh;
+    bottom:0vh;
+    right:0vh;
+    left:0vh;
+    z-index: 100;
+}
+
+#closeStatusError {
+    position:absolute;
+    margin: auto;
+  
+    right: 87.5vh;
+    
+    bottom: 1vh;
+}

@@ -42,8 +42,19 @@
     <div id = "status">
         <mat-card>
             <h5>STATUS</h5>
+            
+            <!-- If not working, show button - Maybe Icon? -->
+            <button id="boxStatusButton" (click)="changeBoxStatus()">
+                <!-- Show Box's status -->
+                <h2>{{ status }}</h2>
+               <mat-icon *ngIf="isError" style="position: absolute; margin: auto; right: 12vh; color: red;">error</mat-icon> 
+            </button>
+            
         </mat-card>
     </div>
+
+    
+
 
     <!-- DROP DOWN TO SELECT TRAINING STAGE -->
     <div class="row">
@@ -60,3 +71,13 @@
         </div>
     </div>
 </div>
+
+<!-- This div will open when the button is pressed if 
+    there is an error -->
+    <div id ="statusError" *ngIf="showStatusBox">
+       <mat-card style="background-color: #ededed;">
+            <app-troubleshoot></app-troubleshoot>
+        </mat-card>
+
+        <button id="closeStatusError" mat-raised-button (click)="changeBoxStatus()">Close</button>
+    </div>
