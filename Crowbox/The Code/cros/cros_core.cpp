@@ -32,19 +32,8 @@ NTPClient timeClient(ntpUDP);
 //==========================================================
 void IRAM_ATTR Interrupt_CoinDeposit()
 {
-    //Serial.println("Entered interrupt");
-    //detach the interrupt temporarily
-    //detachInterrupt(digitalPinToInterrupt(17));
-    //Serial.println("detached interrupt for coin sensor");
-
     g_crOSCore.EnqueueCoin();
 }
-
-//this function does absolutely nothing
-void IRAM_ATTR FlushOutInterrupts() {
-  Serial.println("Doing nothing");
-}
-
 
 //----------------------------------------------------------
 // Simple function to pipe the provided string to serial
@@ -127,14 +116,12 @@ void CCrowboxCore::Setup()
 
     DebugPrint( "Setup() method CALLED...\n" );
   
-
     //set the User's Email and Password
     USER_EMAIL = "imhaq7@gmail.com";
     USER_PASSWORD = "password";
 
     // Assign the api key (required)
     config.api_key = API_KEY;
-
 
     // Assign the user sign in credentials
     auth.user.email = USER_EMAIL;
@@ -370,7 +357,7 @@ void CCrowboxCore::Loop()
 
     //Check the Troubleshoot setup every 30 minutes 
     //CHANGE TO 30 MINS!!
-    if((millis() - troubleshootTime) >= 10000) {
+    if((millis() - troubleshootTime) >= 1800000) {
       Serial.println("10 seconds over, checking box status in troubleshoot");
       troubleshootTime = millis();
       TroubleShoot();

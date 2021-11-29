@@ -9,7 +9,8 @@
 // http://www.thecrowbox.com
 //==========================================================
 //   Except where otherwise noted, this work is licensed 
-//   under a Creative Commons Attribution-ShareAlike 4.0 
+
+//   under a Creative Commons Attribution-ShareAlike 4.0
 //   International License
 //==========================================================
 
