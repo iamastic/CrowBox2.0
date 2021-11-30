@@ -26,6 +26,9 @@
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 
+#include <dht11.h>
+
+
 #define WIFI_SSID "Vodafone-72DA74"                                          
 #define WIFI_PASSWORD "t6vaHAN6bpy5z4qb"     
 
@@ -34,13 +37,7 @@
 #define FIREBASE_HOST "crowbox-37e57-default-rtdb.firebaseio.com"            
 #define API_KEY "AIzaSyBxA1xYz2zbcuOw9f_Xi3OzCVLc_2OzMf8" 
 
-// the secret key generated from firebase
-//no longer needed
-//#define FIREBASE_AUTH "pgwTyjv4NBcA8xZ2k0IkTjvsMxKiG6cSXmRSldS6"       
 
-//the UID of the user
-/* #define USER_ID "n8hWiynNjVNLaKgQ2TSHUmc0ZSG2"
- */
 
 /* END MY WORK */
 
@@ -130,6 +127,11 @@ public:
     bool isCoinsThere; 
     FirebaseData coinsData;
 
+    //Humidity Level 
+    int newHumidityValue;
+    int previousHumidityValue;
+    FirebaseData humidity; 
+
 
     /* END MY WORK */
     
@@ -210,6 +212,7 @@ protected:
     void TroubleShoot();
     void CheckFoodLevel();
     void CheckCoinsLevel();
+    void CheckHumidityLevel();
 
 private:
     cros_time_t m_uptimeWhenBirdLanded;

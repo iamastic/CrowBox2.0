@@ -114,10 +114,20 @@
 #define INPUT_PIN_PERCH         16
 #define INPUT_PIN_COIN          17
 #define INPUT_PIN_PHASE_SELECT  4
+#define INPUT_PIN_HUMIDITY      27
 
 //FOR TROUBLESHOOT
 #define INPUT_FOOD_SENSOR       21
 #define INPUT_COINSLEVEL_SENSOR 22
+
+//FOR SENSORS
+#define HUMIDITY_THRESHOLD      70
+
+//FOR OFFLINE MODE
+#undef OFFLINE_MODE
+// #define OFFLINE_MODE
+
+
  /* END MY WORK */
 
 //======================================

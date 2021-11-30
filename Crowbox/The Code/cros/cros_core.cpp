@@ -22,6 +22,9 @@
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP);
 
+//define the DHT object
+dht11 DHT;
+
 //==========================================================
 // Interrupt function called when the coin sensor is struck
 // by a coin, bringing the coin pin to LOW (switched to ground).
@@ -120,6 +123,14 @@ void CCrowboxCore::Setup()
     USER_EMAIL = "imhaq7@gmail.com";
     USER_PASSWORD = "password";
 
+
+//----------------------------------------------------------
+// This is if the OFFLINE_MODE has not been defined. 
+// Here, we will be using the online data storage
+// method: Firebase. 
+//----------------------------------------------------------
+
+    #ifndef OFFLINE_MODE
     // Assign the api key (required)
     config.api_key = API_KEY;
 
@@ -186,29 +197,23 @@ void CCrowboxCore::Setup()
     Serial.print("User UID: ");
     Serial.println(USER_ID);
 
-    // Start with no enqueued deposits
-    m_numEnqueuedDeposits = 0;
-
     //set the user's current location to
     userLocation = "null";
 
     //set the public crows on perch value to 0
     publicCrowOnPerchValue = 0;
-       
-    // Set up the indicator LED pin, then turn the LED off to
-    // save that microscopic amount of power. 
-    pinMode( OUTPUT_PIN_LED, OUTPUT );
-    digitalWrite( OUTPUT_PIN_LED, LOW );
 
+    //set the humidity value to -1
+    previousHumidityValue = -1;
 
     // Initialize a NTPClient to get time and date
     timeClient.begin();
     timeClient.setTimeOffset(3600);
-    
+
     //initiate the main variables from firebase
     LoadCurrentTrainingPhaseFromFirebase();
 
-    switch( m_currentTrainingPhase )
+        switch( m_currentTrainingPhase )
     {
       case PHASE_ONE:   DebugPrint("Loaded PHASE ONE from Firebase\n" );    break;
       case PHASE_TWO:   DebugPrint("Loaded PHASE TWO from Firebase\n" );    break;
@@ -220,6 +225,56 @@ void CCrowboxCore::Setup()
         break;
     }
 
+    /* MOVED FROM BELOW TO UP HERE */
+    // Set up the Food Level Sensor 
+    pinMode(INPUT_FOOD_SENSOR, INPUT);
+    // Initialise the "detected" variable for the food level
+    // i.e. is there food in the basket? Starts with "false"
+    isFoodThere = false;
+
+    pinMode(INPUT_COINSLEVEL_SENSOR, INPUT);
+    isCoinsThere = false;
+    
+    //set the current time for training phase
+    trainingPhaseTime = millis();
+    //set the current time for the troubleshoot period
+    troubleshootTime = millis();
+    #endif //OFFLINE_MODE
+
+
+//----------------------------------------------------------
+// This is if the OFFLINE_MODE has been defined. 
+// Here, we will not be using any online data storage
+// such as Firebase. Instead, we will be storing the data in 
+// an SD card. Everything will be manually controlled. 
+// For example, to change the training stage we need use the
+// physical switch. Essentially, everything will be very 
+// similar to the original Crowbox OS.
+//----------------------------------------------------------
+
+    #ifdef OFFLINE_MODE
+
+    //Create the EEPROM if it does not exist
+
+    //Load the training Phase from EEPROM
+
+    //Switch the training phase top print out
+
+    // Initialise the SD card?
+
+    #endif//OFFLINE_MODE
+
+
+
+    // Start with no enqueued deposits
+    m_numEnqueuedDeposits = 0;
+
+         
+    // Set up the indicator LED pin, then turn the LED off to
+    // save that microscopic amount of power. 
+    pinMode( OUTPUT_PIN_LED, OUTPUT );
+    digitalWrite( OUTPUT_PIN_LED, LOW );
+
     // Set up the pin that is attached to the pushbutton
     // which is used to cycle the training phase
     pinMode( INPUT_PIN_PHASE_SELECT, INPUT_PULLUP );
@@ -230,15 +285,6 @@ void CCrowboxCore::Setup()
     // Set up the COIN detect switch AND its interrupt
     pinMode( INPUT_PIN_COIN, INPUT_PULLUP );
     attachInterrupt( digitalPinToInterrupt(INPUT_PIN_COIN), Interrupt_CoinDeposit, FALLING );
-
-    // Set up the Food Level Sensor 
-    pinMode(INPUT_FOOD_SENSOR, INPUT);
-    // Initialise the "detected" variable for the food level
-    // i.e. is there food in the basket? Starts with "false"
-    isFoodThere = false;
-
-    pinMode(INPUT_COINSLEVEL_SENSOR, INPUT);
-    isCoinsThere = false;
 
     DebugPrint( "  Servo initialization and lid parking...\n" );
     
@@ -261,12 +307,6 @@ void CCrowboxCore::Setup()
 
     // Ensure video is not being recorded
     StopRecordingVideo();
-
-    //set the current time for training phase
-    trainingPhaseTime = millis();
-
-    //set the current time for the troubleshoot period
-    troubleshootTime = millis();
     
     // Ensure everything has settled out before proceeding. 
     delay( 1000 );
@@ -278,18 +318,9 @@ void CCrowboxCore::Setup()
 //----------------------------------------------------------
 void CCrowboxCore::Loop() 
 {
-    //Let's print the heap memory 
-  /*   Serial.println("Memory Remaining: ");
-    Serial.println(xPortGetFreeHeapSize()); */
-
     // Take a quick sample of the uptime in milliseconds. We'll use this value
     // near the end of this function to determine how long this call to Loop()
     // will take.
-
-    //Ensure the date and time client updates
-    while(!timeClient.update()) {
-      timeClient.forceUpdate();
-    }
     unsigned long msWhenLoopBegan = millis();
 
     // If the basket is scheduled to close on a timer and it is time to close 
@@ -332,19 +363,13 @@ void CCrowboxCore::Loop()
       break;
     }  
 
-    // FOR FUTURE EXPANSION:
-    // Run the logic for video recording. Note that the way this logic 
-    // is arranged, calling RecordVideo() while the system is already 
-    // recording video will magically extend the duration  
-    if( m_isRecordingVideo )
-    {
-        // Should we turn off?
-        if( GetUptimeSeconds() >= m_uptimeStopRecordingVideo )
-        {
-            StopRecordingVideo();
-        }
-    }
     
+    #ifndef OFFLINE_MODE
+    //Ensure the date and time client updates
+    while(!timeClient.update()) {
+      timeClient.forceUpdate();
+    }
+
     //check the current training stage every 1 minute to avoid 
     //too many requests to firebase database
     if((millis() - trainingPhaseTime) >= 60000) {
@@ -356,13 +381,17 @@ void CCrowboxCore::Loop()
 
 
     //Check the Troubleshoot setup every 30 minutes 
-    //CHANGE TO 30 MINS!!
+    //CHANGE TO 30 MINS!! 1800000
     if((millis() - troubleshootTime) >= 1800000) {
       Serial.println("10 seconds over, checking box status in troubleshoot");
       troubleshootTime = millis();
       TroubleShoot();
     }
+    #endif //OFFLINE_MODE
 
+    #ifdef OFFLINE_MODE 
+      //Check the offline training phase switch
+    #endif //OFFLINE_MODE
 
     // Now we do some time arithmetic to figure out how long this loop took to
     // execute. If it's less than IDEAL_LOOP_MS, then we make the system 
@@ -1413,6 +1442,7 @@ void CCrowboxCore::StopRecordingVideo()
 void CCrowboxCore::TroubleShoot() {
   CheckFoodLevel();
   CheckCoinsLevel();
+  CheckHumidityLevel();
 }
 
 void CCrowboxCore::CheckFoodLevel() {
@@ -1466,11 +1496,49 @@ int coinsLevel = !digitalRead(INPUT_COINSLEVEL_SENSOR);
       //Needs to be refilled
       if (isCoinsThere) {isCoinsThere = false;} 
       
-      Serial.println("Food basket needs to be refilled");
+      Serial.println("Coins Dispenser needs to be refilled");
       Firebase.RTDB.setString(&coinsData, "Users/"+USER_ID+"/Crowbox/Status/coins", "LOW");
   }
 
   //clear the data to make space!
   coinsData.clear();
 
+}
+
+void CCrowboxCore::CheckHumidityLevel() {
+  //initialise the DHT value and pin
+  DHT.read(INPUT_PIN_HUMIDITY);
+  
+  newHumidityValue = DHT.humidity; 
+  Serial.println("Printing Humidity Value");
+  Serial.println(newHumidityValue);
+
+  //Initially, before any values are read
+  if(previousHumidityValue < 0) {
+    Serial.println("Setting initial humidity to WORKING");
+    Firebase.RTDB.setString(&humidity, "Users/"+USER_ID+"/Crowbox/Status/humidity", "WORKING");
+  }
+
+  //is the value we just received greater than the threshold? 
+  if(newHumidityValue >= HUMIDITY_THRESHOLD) {
+    //is the previous value less than the threshold? If it is, then
+    //and only then should we update firebase. 
+    //This is to avoid sending too many requests, one is enough. 
+    if (previousHumidityValue < HUMIDITY_THRESHOLD) {
+      Serial.println("Setting WET for humidity");
+      Firebase.RTDB.setString(&humidity, "Users/"+USER_ID+"/Crowbox/Status/humidity", "WET");
+    }
+  } else {
+    //If not, then perhaps we need to reset it back to working. 
+    //First check if the previous value was greater than the threshold
+    //If it is greater, then that means we are going from WET to WORKING
+      if (previousHumidityValue >= HUMIDITY_THRESHOLD) {
+        Serial.println("Setting WORKING for humidity");
+        Firebase.RTDB.setString(&humidity, "Users/"+USER_ID+"/Crowbox/Status/humidity", "WORKING");
+      }
+  }
+
+  //Update the previous value
+  previousHumidityValue = newHumidityValue;
+  humidity.clear();
 }
