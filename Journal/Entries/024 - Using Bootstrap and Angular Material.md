@@ -41,3 +41,4 @@ Using the library was quite simple. To build the carousel, I simply used the cod
 ```
 By using the `ngbSlide` directive, I identified the two elements (the two charts) that needed to be a part of the carousel. The carousel allows the user to slide left and right, switching between the two charts, as can be seen below:
 
+![carousel](https://github.com/iamastic/CrowBox2.0/blob/main/Journal/Images/Carousel.PNG)
