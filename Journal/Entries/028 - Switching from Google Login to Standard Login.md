@@ -8,5 +8,5 @@ As outlined in one of my previous journals, I introduced User Authentication to 
 
 However, I noticed that if a user signed up via the google provider, they were not recognized by the email+password combination provider. As a result, I had to switch my methodology to integrate a custom sign up and log in page. This time, users could use any email as well as password combination and were no longer limited to their gmail accounts. Alongside this, they now simply needed to enter in their email and password into the ESP32 code and it will authenticate their crowbox as well. I created two new components called **SignUp** and **Login**. These two displayed simple form fields from Angular MatFormMudle, helping to restrict the content e.g. only valid emails and passwords are hidden. You can also now set your location and name. Here is a snapshot below: 
 
-[!signup](https://github.com/iamastic/CrowBox2.0/blob/main/Journal/Images/Sign%20Up.PNG)
+![signup](https://github.com/iamastic/CrowBox2.0/blob/main/Journal/Images/Sign%20Up.PNG)
 
