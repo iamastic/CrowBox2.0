@@ -10,3 +10,33 @@ However, I noticed that if a user signed up via the google provider, they were n
 
 ![signup](https://github.com/iamastic/CrowBox2.0/blob/main/Journal/Images/Sign%20Up.PNG)
 
+Upon clicking the "Sign Up" or "Login" button from the homepage, users a redirected to a different page - that is the page above. The process to sign up is simple. After ensuring that all the form fields have been filled, we use the **HandleAuthService** to sign the user up and create a new user:
+
+```js
+  signUp() {
+    if (this.userEmail.value && this.userPassword.value && this.userLocation.value && this.userName.value) {
+      this.handleAuth.signUp(this.userEmail.value, this.userPassword.value,this.userName.value,this.userLocation.value);
+    } else {
+      alert("Missing Information! Please fill out all required boxes");
+    }
+  }
+```
+
+In **HandleAuthService**, he sign up function is: 
+
+```js
+  signUp(email:string, password:string, name:string, location?:string) {
+    this.fireAuth.createUserWithEmailAndPassword(email, password)
+    .then(value => {
+      //save all the data
+      this.userName = name; 
+      this.userLocation = location;
+      this.router.navigate(['data']);
+    })
+    .catch(error => {
+      alert("Account with this Email already exists!");
+    })
+  }
+```
+
+Saving all the data in the service to be accessed by other components. 
