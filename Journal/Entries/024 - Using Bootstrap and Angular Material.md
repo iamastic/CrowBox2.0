@@ -6,7 +6,7 @@ After installing bootstrap, I also installed [ng-bootstrap](https://ng-bootstrap
 
 Using the library was quite simple. To build the carousel, I simply used the code provided by the [documentation page](https://ng-bootstrap.github.io/#/components/carousel/examples) of the library. They provided numerous examples from which I bits and pieces to help achieve what I intended to build. All of the examples cyle through a list of items (images in this case) using the `*ngFor` directive. As I did not have a list of items, I had to use the preset chart builds instead. Here is the final output of the carousel holding two charts: 
 
-```js
+```html
 <div *ngIf="showPublicData === false">
     <ngb-carousel #carousel id = "chartsCarousel" [interval] = "false">
         <ng-template ngbSlide>
