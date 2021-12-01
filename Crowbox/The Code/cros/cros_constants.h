@@ -28,6 +28,19 @@
 #define CROS_EEPROM_ADDRESS_TRAINING_PHASE  4
 
 //======================================
+// Constants used by the code that stores
+// the Day and Time for the Offline Mode 
+// within the SD Card.
+//======================================]
+#define CROS_EEPROM_ADDRESS_CURRENT_DAY     5
+// #define CROS_EEPROM_ADDRESS_TIME            9
+#define CROS_EEPROM_CROWS_ON_PERCH          9
+#define CROS_EEPROM_COINS_DEPOSITED         13
+
+#define OFFLINE_TIME                        600000
+// 86400000
+
+//======================================
 // Default baud rate used for serial
 // communications. The main application 
 // for serial communication in this early
@@ -115,6 +128,7 @@
 #define INPUT_PIN_COIN          17
 #define INPUT_PIN_PHASE_SELECT  4
 #define INPUT_PIN_HUMIDITY      27
+#define OUTPUT_PIN_SD_CARD      5
 
 //FOR TROUBLESHOOT
 #define INPUT_FOOD_SENSOR       21
@@ -124,8 +138,8 @@
 #define HUMIDITY_THRESHOLD      70
 
 //FOR OFFLINE MODE
-#undef OFFLINE_MODE
-// #define OFFLINE_MODE
+// #undef OFFLINE_MODE
+#define OFFLINE_MODE
 
 
  /* END MY WORK */

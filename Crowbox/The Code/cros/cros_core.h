@@ -45,7 +45,10 @@
 #include "cros_types.h"
 #include "cros_constants.h"
 
-//global variables
+//for the SD Card
+#include <SD.h>
+#include <SPI.h>
+
    
 
 //==========================================================
@@ -132,6 +135,11 @@ public:
     int previousHumidityValue;
     FirebaseData humidity; 
 
+    /* FOR OFFLINE MODE */
+    File sdCardDataFile;
+    unsigned long offlineDay;
+    unsigned long offlineTime;
+
 
     /* END MY WORK */
     
@@ -170,7 +178,8 @@ protected:
     void RunPhaseFourProtocol();
     void AdvanceCurrentTrainingPhase();
 
-    void CheckTrainingPhaseSwitch();
+    void CheckOnlineTrainingPhaseSwitch();
+    void CheckOfflineTrainingPhaseSwitch();
 
     //--------------------------------------
     // EEPROM Methods
@@ -179,6 +188,16 @@ protected:
     void  CreateEEPROMData();
     void  LoadCurrentTrainingPhaseFromEEPROM();
     void  WriteCurrentTrainingPhaseToEEPROM();
+    void  StoreCrowsOnPerchInEEPROM();
+    void  StoreCoinsDepositedInEEPROM();
+    void  LoadCrowsOnPerchFromEEPROM();
+    void  LoadCoinsDepositedFromEEPROM();
+    void  LoadCurrentOfflineDayFromEEPROM();  
+    void  WriteCurrentOfflineDayToEEPROM();
+    // void  LoadCurrentOfflineTimeFromEEPROM();
+    // void  WriteCurrentOfflineTimeToEEPROM();
+    void  CheckIfItIsNextDay();
+    void  WriteDataToSDCard(String type, int value);
 
     //--------------------------------------
     // Firebase Methods

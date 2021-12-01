@@ -38,43 +38,7 @@ void setup()
 {
     //MY WORK
     Serial.begin(115200);
-    delay(1000);  
-    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);                               
-    Serial.print("Connecting to ");
-    Serial.print(WIFI_SSID);
-    while (WiFi.status() != WL_CONNECTED) 
-    {
-      Serial.print(".");
-      delay(500);
-    }
-    Serial.println();
-    Serial.print("Connected to ");
-    Serial.println(WIFI_SSID);
-
     
-    // Assign the api key (required)
-    //config.api_key = API_KEY;
-
-    // Assign the user sign in credentials
-    //auth.user.email = USER_EMAIL;
-    //auth.user.password = USER_PASSWORD;
-
-    //config.database_url = FIREBASE_HOST;
-
-    
-    //Firebase.reconnectWiFi(true);
-
-
-    // Assign the callback function for the long running token generation task
-    //config.token_status_callback = tokenStatusCallback; //see addons/TokenHelper.h
-
-    // Assign the maximum retry of token generation
-    //config.max_token_generation_retry = 5;
-
-    // Initialize the library with the Firebase authen and config
-    //Firebase.begin(&config, &auth);
-    //connect to firebase
-
 
     //END MY WORK
 

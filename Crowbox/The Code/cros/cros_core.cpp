@@ -110,8 +110,8 @@ void CCrowboxCore::Setup()
 {
 
   //memory at start
-      Serial.println("Memory At Setup ");
-      Serial.println(xPortGetFreeHeapSize());
+  Serial.println("Memory At Setup ");
+  Serial.println(xPortGetFreeHeapSize());
 
 /* #if defined( CROS_USE_SERIAL_DEBUG )
     Serial.begin( CROS_SERIAL_BAUD_RATE ); 
@@ -131,6 +131,23 @@ void CCrowboxCore::Setup()
 //----------------------------------------------------------
 
     #ifndef OFFLINE_MODE
+    Serial.println("Setup: In ONLINE MODE");
+
+    //Connect to WiFi
+    delay(1000);  
+    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);                               
+    Serial.print("Connecting to ");
+    Serial.print(WIFI_SSID);
+    while (WiFi.status() != WL_CONNECTED) 
+    {
+      Serial.print(".");
+      delay(500);
+    }
+    Serial.println();
+    Serial.print("Connected to ");
+    Serial.println(WIFI_SSID);
+
+
     // Assign the api key (required)
     config.api_key = API_KEY;
 
@@ -253,14 +270,76 @@ void CCrowboxCore::Setup()
 //----------------------------------------------------------
 
     #ifdef OFFLINE_MODE
+    Serial.println("Setup: In OFFLINE MODE");
 
     //Create the EEPROM if it does not exist
+    // Ensure that the stored EEPROM data is valid, then load
+    // the current training phase from storage there.
+    if( !ValidateEEPROMData() )
+    {
+      // Oops! The EEPROM data is not valid. This probably just
+      // means that the Arduino board in use has not been used 
+      // to operate a crowbox before. So we'll create valid 
+      // EEPROM data that can be used henceforth. 
+      CreateEEPROMData();
+
+      //initialise the Offline Data Variables
+      offlineDay = 1;
+      //store this data within the EEPROM
+      WriteCurrentOfflineDayToEEPROM();
+
+      numberOfCrowsLanded = 0;
+      StoreCrowsOnPerchInEEPROM();
+      numberOfCoinsDeposited = 0;
+      StoreCoinsDepositedInEEPROM();
+
+
+      // Now that we've created EEPROM data for CrOS, let's be
+      // sure that it actually worked. If not, that's a fatal
+      // error that needs to be reported! 
+      if( !ValidateEEPROMData() )
+      {
+        ReportSystemError( kError_EEPROM );
+      }
+    }
 
     //Load the training Phase from EEPROM
+    // If we reach this point, we're sure the EEPROM data is good
+    // so we'll retrieve the stored data there which tells use which
+    // phase of the training protocol is currently in use.
+    LoadCurrentTrainingPhaseFromEEPROM();    
+
+    //Load the current day and time for SD card storage
+    // LoadCurrentOfflineTimeFromEEPROM();
+    LoadCurrentOfflineDayFromEEPROM();
+    // offlineTime = 0;
+
+    LoadCrowsOnPerchFromEEPROM();
+    LoadCoinsDepositedFromEEPROM();
 
     //Switch the training phase top print out
+    switch( m_currentTrainingPhase )
+    {
+      case PHASE_ONE:   DebugPrint("Loaded PHASE ONE from EEPROM\n" );    break;
+      case PHASE_TWO:   DebugPrint("Loaded PHASE TWO from EEPROM\n" );    break;
+      case PHASE_THREE: DebugPrint("Loaded PHASE THREE from EEPROM\n" );  break;
+      case PHASE_FOUR:  DebugPrint("Loaded PHASE FOUR from EEPROM\n" );   break;
+      default:
+        DebugPrint("Loaded garbage training phase from EEPROM!");
+        ReportSystemError( kError_BadTrainingPhase );
+        break;
+    }
 
-    // Initialise the SD card?
+    // Initialise the SD card
+    pinMode(OUTPUT_PIN_SD_CARD, OUTPUT);
+
+      // SD Card Initialization
+    if (SD.begin()) {
+      Serial.println("SD card is ready to use.");
+    } else {
+        Serial.println("SD card initialization failed");
+        return;
+    }
 
     #endif//OFFLINE_MODE
 
@@ -375,10 +454,9 @@ void CCrowboxCore::Loop()
     if((millis() - trainingPhaseTime) >= 60000) {
       Serial.println("1 Minute is up, checking training phase");
       trainingPhaseTime = millis();
-      CheckTrainingPhaseSwitch();
+      CheckOnlineTrainingPhaseSwitch();
       trainingPhaseLoop.clear();
     }
-
 
     //Check the Troubleshoot setup every 30 minutes 
     //CHANGE TO 30 MINS!! 1800000
@@ -389,8 +467,10 @@ void CCrowboxCore::Loop()
     }
     #endif //OFFLINE_MODE
 
+
     #ifdef OFFLINE_MODE 
       //Check the offline training phase switch
+      CheckOfflineTrainingPhaseSwitch();
     #endif //OFFLINE_MODE
 
     // Now we do some time arithmetic to figure out how long this loop took to
@@ -788,9 +868,6 @@ void CCrowboxCore::RunPhaseOneProtocol()
 //----------------------------------------------------------
 void CCrowboxCore::RunPhaseTwoProtocol()
 {
-
-
-
   // If a bird is on the perch, logically speaking- This means
   // more than knowing if the perch is depressed, it's about 
   // having internal state that indicates that a bird is truly present.
@@ -817,9 +894,7 @@ void CCrowboxCore::RunPhaseTwoProtocol()
     {
       // EDGE CASE: A new bird has arrived!
       DebugPrint( "A customer has landed on the perch!\n" );
-      numberOfCrowsLanded++;
-      /* Firebase.setInt(crowOnPerch, "crowbox/crow_on_perch", 
-      numberOfCrowsLanded); */
+      
 
       m_uptimeWhenBirdLanded = GetUptimeSeconds();
 
@@ -834,23 +909,22 @@ void CCrowboxCore::RunPhaseTwoProtocol()
       // it somewhere else for later retrieval.
       ScheduleBasketCloseWithDelay( BASKET_REMAIN_OPEN_DURATION );
        
-        Serial.println("Memory Remaining At Start of Phase 2: ");
-        Serial.println(xPortGetFreeHeapSize());
+      Serial.println("Memory Remaining At Start of Phase 2: ");
+      Serial.println(xPortGetFreeHeapSize());
+
+      /* ONLINE MODE */
+      #ifndef OFFLINE_MODE
+      Serial.println("Training Stage 2 perch pressed - ONLINE MODE!");
 
       //for private data
       GetCurrentDate();
       LoadNumberOfCrowsLandedOnPerchFromFirebase();
       Serial.println("Memory Remaining After Loading Num Crows Landed On Perch of Phase 2: ");
-      Serial.println(xPortGetFreeHeapSize());
-
-      //will this clear up some memory?
-      //RTDB.clear();
-      
+      Serial.println(xPortGetFreeHeapSize());      
 
       WriteNumberOfCrowsOnPerchToFirebase(); 
       Serial.println("Memory Remaining After Writing num crows on perch in Phase 2: ");
       Serial.println(xPortGetFreeHeapSize());
-
       //clear memory used by this firebase object
       crowOnPerch.clear();
 
@@ -858,8 +932,6 @@ void CCrowboxCore::RunPhaseTwoProtocol()
       GetSharingPreference();
       Serial.println("Memory Remaining After getting sharing preference in Phase 2: ");
       Serial.println(xPortGetFreeHeapSize());
-      
-    
       sharingPreference.clear();
 
       GetUserLocation();   
@@ -871,6 +943,25 @@ void CCrowboxCore::RunPhaseTwoProtocol()
 
       WritePublicCrowOnPerchData();
       publicCrowOnPerchSet.clear();
+      #endif //OFFLINE_MODE
+
+      
+      /* FOR OFFLINE MODE */
+      //SD Card Logic goes here to store the data
+      #ifdef OFFLINE_MODE
+      Serial.println("Training Stage 2 perch pressed - OFFLINE MODE!");
+
+      //Have we progressed to the next day? If so, 
+      //change the day to be stored.
+      CheckIfItIsNextDay();
+      Serial.println(offlineDay);
+
+      StoreCrowsOnPerchInEEPROM();
+
+      WriteDataToSDCard("crows_landed_on_perch", numberOfCrowsLanded);
+
+      #endif //OFFLINE_MODE
+
   
       
       Serial.println("Memory Remaining At End of Phase 2: ");
@@ -907,6 +998,10 @@ void CCrowboxCore::RunPhaseThreeProtocol()
     // Set it up to close.
     ScheduleBasketCloseWithDelay( BASKET_REMAIN_OPEN_DURATION );
 
+    
+    /* ONLINE MODE */
+    #ifndef OFFLINE_MODE
+    Serial.println("Training Stage 3 Coin deposited - ONLINE MODE!");
     GetCurrentDate();
     //now, we need to check if this date and its data exists
     //in the firebase database. We need to load it and also 
@@ -932,7 +1027,27 @@ void CCrowboxCore::RunPhaseThreeProtocol()
 
     WritePublicCoinsDepositedData();
     publicCoinsDeposited.clear();
+    #endif //OFFLINE_MODE
 
+   
+    /* FOR OFFLINE MODE */
+    //SD Card Logic goes here to store the data
+    #ifdef OFFLINE_MODE
+    Serial.println("Training Stage 3 Coin deposited - OFFLINE MODE!");
+
+    //Have we progressed to the next day? If so, 
+    //change the day to be stored.
+    CheckIfItIsNextDay();
+    Serial.println(offlineDay);
+
+    //Either the value has been incremented,
+    //or it has been reset to 1 (if it is a new day)
+    //Nonetheless, we store this in the EEPROM for future use
+    StoreCoinsDepositedInEEPROM();
+    //Then, we write the data to the SD Card
+    WriteDataToSDCard("coins_deposited", numberOfCoinsDeposited);
+
+    #endif //OFFLINE_MODE
           
     Serial.println("Memory Remaining At End of Phase 3: ");
     Serial.println(xPortGetFreeHeapSize());
@@ -974,7 +1089,7 @@ void CCrowboxCore::RunPhaseFourProtocol()
 // so we need to check to see if it's pulled to ground. If 
 // yes, the physical switch is pressed.
 //----------------------------------------------------------
-void CCrowboxCore::CheckTrainingPhaseSwitch()
+void CCrowboxCore::CheckOnlineTrainingPhaseSwitch()
 {
   /* if( digitalRead( INPUT_PIN_PHASE_SELECT ) != LOW )
   {
@@ -1033,6 +1148,29 @@ void CCrowboxCore::CheckTrainingPhaseSwitch()
   }
 }
 
+void CCrowboxCore::CheckOfflineTrainingPhaseSwitch() {
+  if( digitalRead( INPUT_PIN_PHASE_SELECT ) != LOW )
+  {
+    // Button not depressed- do nothing more.
+    return;
+  }
+
+  DebugPrint(" Training switch pressed!\n" ); 
+
+  while( digitalRead( INPUT_PIN_PHASE_SELECT ) == LOW )
+  {
+    // Waste time until the person releases the switch.
+    delay( 10 );
+  };
+  
+  AdvanceCurrentTrainingPhase();
+  ReportCurrentTrainingPhase();
+
+  // Write it to the PROM now.
+  WriteCurrentTrainingPhaseToEEPROM();
+}
+
+
 //----------------------------------------------------------
 // Push ahead to the next training phase. If we pass phase
 // four, wrap to phase one.
@@ -1072,20 +1210,6 @@ bool CCrowboxCore::ValidateEEPROMData()
     pHeaderCharacter++;
   }
   /* END MY ADDITION */
-
-  /* for( int addr = 0 ; addr < 4 ; ++addr )
-  {
-    if( *pHeaderCharacter != EEPROM[ addr ] )
-    {
-      // We found a character in the EEPROM data which does
-      // not match the CrOS header. 
-      DebugPrint( "EEPROM data header is invalid\n" );
-      return false;
-    }
-
-    // On to the next character
-    pHeaderCharacter++;
-  } */
   
   // Data header is in order
   DebugPrint( "EEPROM Header Validated\n" );
@@ -1120,25 +1244,6 @@ void CCrowboxCore::CreateEEPROMData()
   /* END MY ADDITION */
 
   DebugPrint( "...Done!\n" );
-
-//----------------------------------------------------------
-
-  /* const char *pHeaderCharacter = CROS_EEPROM_HEADER_STRING;
-
-  for( int addr = 0 ; addr < 4 ; ++addr )
-  {
-    EEPROM[ addr ] = *pHeaderCharacter;
-
-    // On to the next character
-    pHeaderCharacter++;
-  } */
-
-  // Immediately after the header we write out a byte with a 
-  // value of 1 so that the default for a brand-new Crowbox
-  // would be to start in training phase one.
- /*  EEPROM[ CROS_EEPROM_ADDRESS_TRAINING_PHASE ] = PHASE_ONE;
-
-  DebugPrint( "...Done!\n" ); */
 }
 
 //----------------------------------------------------------
@@ -1175,6 +1280,162 @@ void CCrowboxCore::WriteCurrentTrainingPhaseToEEPROM()
   EEPROM.commit();
   DebugPrint(" EEPROM Updated!\n" );
 }
+
+void CCrowboxCore::StoreCrowsOnPerchInEEPROM() {
+  EEPROM.begin(512);
+
+  EEPROM.put(CROS_EEPROM_CROWS_ON_PERCH , numberOfCrowsLanded >> 8);
+  EEPROM.put(CROS_EEPROM_CROWS_ON_PERCH + 1, numberOfCrowsLanded & 0xFF);    
+  EEPROM.commit();
+
+  Serial.println("Successfully Written Crows On perch data to EEPROM");
+}
+
+void CCrowboxCore::LoadCrowsOnPerchFromEEPROM(){
+  EEPROM.begin(512);
+  numberOfCrowsLanded = 
+  (EEPROM.read(CROS_EEPROM_CROWS_ON_PERCH) << 8) + EEPROM.read(CROS_EEPROM_CROWS_ON_PERCH + 1);
+
+  
+  Serial.println("Successfully Loaded Crows Deposited from EEPROM");
+  Serial.println(numberOfCrowsLanded);
+
+}
+
+void CCrowboxCore::StoreCoinsDepositedInEEPROM() {
+  EEPROM.begin(512);
+
+  EEPROM.put(CROS_EEPROM_COINS_DEPOSITED , numberOfCoinsDeposited >> 8);
+  EEPROM.put(CROS_EEPROM_COINS_DEPOSITED + 1, numberOfCoinsDeposited & 0xFF);  
+  EEPROM.commit();
+
+  Serial.println("Successfully Written Coins Deposited data to EEPROM");
+}
+
+void CCrowboxCore::LoadCoinsDepositedFromEEPROM() {
+  EEPROM.begin(512);
+  numberOfCoinsDeposited = 
+  (EEPROM.read(CROS_EEPROM_COINS_DEPOSITED) << 8) + EEPROM.read(CROS_EEPROM_COINS_DEPOSITED + 1);
+
+  Serial.println("Successfully Loaded coins deposited from EEPROM");
+  Serial.println(numberOfCoinsDeposited);
+}
+
+void CCrowboxCore::LoadCurrentOfflineDayFromEEPROM() {
+  EEPROM.begin(512);
+  
+  offlineDay = 
+    ((unsigned long)EEPROM.read(CROS_EEPROM_ADDRESS_CURRENT_DAY) << 24) 
+  + ((unsigned long)EEPROM.read(CROS_EEPROM_ADDRESS_CURRENT_DAY + 1) << 16) 
+  + ((unsigned long)EEPROM.read(CROS_EEPROM_ADDRESS_CURRENT_DAY + 2) << 8) 
+  + ((unsigned long)EEPROM.read(CROS_EEPROM_ADDRESS_CURRENT_DAY + 3));
+
+  Serial.println("Successfully loaded Offline Day from EEPROM");
+  Serial.println(offlineDay);
+}
+
+void CCrowboxCore::WriteCurrentOfflineDayToEEPROM() {
+  //initiate the EEPROM
+  EEPROM.begin(512);
+
+  //Break the time down into 4 bytes
+  EEPROM.put(CROS_EEPROM_ADDRESS_CURRENT_DAY, (offlineDay >> 24) & 0xFF);
+  EEPROM.put(CROS_EEPROM_ADDRESS_CURRENT_DAY + 1, (offlineDay >> 16) & 0xFF);
+  EEPROM.put(CROS_EEPROM_ADDRESS_CURRENT_DAY + 2, (offlineDay >> 8) & 0xFF);
+  EEPROM.put(CROS_EEPROM_ADDRESS_CURRENT_DAY + 3, offlineDay & 0xFF);
+  
+  EEPROM.commit();
+  Serial.println("Successfully Written Offline Day to EEPROM");
+}
+
+/* 
+void CCrowboxCore::LoadCurrentOfflineTimeFromEEPROM() {
+  EEPROM.begin(512);
+
+  offlineTime = 
+    ((unsigned long)EEPROM.read(CROS_EEPROM_ADDRESS_TIME) << 24) 
+  + ((unsigned long)EEPROM.read(CROS_EEPROM_ADDRESS_TIME + 1) << 16) 
+  + ((unsigned long)EEPROM.read(CROS_EEPROM_ADDRESS_TIME + 2) << 8) 
+  + ((unsigned long)EEPROM.read(CROS_EEPROM_ADDRESS_TIME + 3));
+
+  // offlineTime += millis();wa
+
+  Serial.println("Successfully loaded Offline Time from EEPROM");
+  Serial.println(offlineTime);
+  
+} */
+/* 
+void CCrowboxCore::WriteCurrentOfflineTimeToEEPROM() {
+  //initiate the EEPROM
+  EEPROM.begin(512);
+
+  //Break the time down into 4 bytes
+
+  EEPROM.put(CROS_EEPROM_ADDRESS_TIME, (offlineTime >> 24) & 0xFF);
+  EEPROM.put(CROS_EEPROM_ADDRESS_TIME + 1, (offlineTime >> 16) & 0xFF);
+  EEPROM.put(CROS_EEPROM_ADDRESS_TIME + 2, (offlineTime >> 8) & 0xFF);
+  EEPROM.put(CROS_EEPROM_ADDRESS_TIME + 3, offlineTime & 0xFF);
+  
+  EEPROM.commit();
+  Serial.println("Successfully Written Offline Time to EEPROM");
+} */
+
+void CCrowboxCore::CheckIfItIsNextDay() {
+  if (millis() - offlineTime > OFFLINE_TIME) {
+    offlineDay++;
+    offlineTime = millis();
+
+    //reset this value since it is a new day
+    numberOfCrowsLanded = 1;
+    numberOfCoinsDeposited = 1;
+    WriteCurrentOfflineDayToEEPROM();
+  } else {
+      numberOfCrowsLanded++;
+  }
+} 
+
+void CCrowboxCore::WriteDataToSDCard(String type, int value) {
+  sdCardDataFile = SD.open("/data.txt", FILE_WRITE);
+  String line = type;
+  line += ',';
+  line += String(offlineDay);
+  line += ',';
+  line += String(value);
+
+  if (sdCardDataFile) {
+    Serial.println("Sending Data to File");
+    sdCardDataFile.println(line);
+    sdCardDataFile.close();
+    Serial.println("Done Sending Data");
+  } else {
+    Serial.println("Error in opening data file when writing");
+    
+  }
+
+  //Print out what is in the SD card to see
+  //This is just a test, delete after
+  sdCardDataFile = SD.open("/data.txt");
+  if (sdCardDataFile) {
+    Serial.println("Reading Data From File");
+
+    while(sdCardDataFile.available()){
+      Serial.write(sdCardDataFile.read());
+    }
+    
+    sdCardDataFile.close();
+    Serial.println("Done Reading Data");
+  } else {
+    Serial.println("Error in opening data file when reading");
+  }
+}
+
+
+
+
+
+
+
+
 
 
 void CCrowboxCore::WriteCurrentTrainingPhaseToFirebase()
