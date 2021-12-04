@@ -89,4 +89,10 @@ void CCrowboxCore::CheckHumidityLevel() {
 
 Here is an image of all 3 sensors working in tandem: 
 
-![sensors]()
+![sensors](https://github.com/iamastic/CrowBox2.0/blob/main/Journal/Images/3%20Sensors.jpg). 
+
+### Perch Switches
+It was difficult to figure out how I would go about testing if the Perch Switches were working correctly or not. I realised that it would be counter intuitive to check if the perch switches were working as I would need to install seperate sensors for that. As a result, those new sensors are also subject to failure. Thus, it would result in me falling in a never ending cycle of testing if all the sensors are working. If the perch switches do fail, there would be no realistic way for me to assess that without using an additonal sensor. This additional sensor may also fail. As a result, it becomes redundant. 
+
+### Servo and WiFi 
+These two do not need sensors to be check and will be discussed in a future Journal Entry.
