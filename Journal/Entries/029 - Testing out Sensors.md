@@ -41,3 +41,10 @@ void CCrowboxCore::CheckFoodLevel() {
 
 ### Coins Level 
 For the Coins, I initially tried to use a [touch sensor](https://www.botnroll.com/en/sensors/2504-digital-capacitive-touch-sensor-for-arduino.html). According to the [documentation](https://wiki.dfrobot.com/DFRobot_Capacitive_Touch_Sensor_SKU_DFR0030), this sensor works with the human touch as well as with metal. Given that the coins I am using are copper covered steel coins, I expected the sensor to register the existence of coins on it. However, it did not and failed to register the contact of the coins. It did, however, work with human touch. As a result, I resorted to using another IR Sensor (the same one used for the food level) to check if the amount of coins left. The idea is that if there are no coins obstructing the IR sensor's view, then it will update the status of the crowbox to an ERROR and notify the user. 
+
+### The Humidity/Water Sensor 
+To check if there is water in leaking into the Crowbox, I decided to make use of the very popular [DHT11](https://www.botnroll.com/en/temperature/471--dht11-temperature-and-humidity-sensor.html) Sensor. Connecting this was also simple as it only made use of GND, VCC and a Digital or Analog on the NodeMCU ESP32 GPIOs. I initially tried to use this sensor by utilising the standard `DHT11.h` library. I quickly noticed, however, that the sensor was not able to receive any input and was returning `NaN` instead of the value (i.e. the Humidity value). Checking the [documentation]() of the sensor, I learnt that the engineers built their own library for this specific device. I imagine this might be an issue down the road if different users from around the world cannot access the exact same sensor, therefore having to use another library that might be incompatible with my code. Nonetheless, here is the code I used: 
+
+```c++
+
+```
