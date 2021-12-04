@@ -1717,18 +1717,17 @@ void CCrowboxCore::CheckFoodLevel() {
       //Update the value in firebase to "WORKING"
       Firebase.RTDB.setString(&foodData, "Users/"+USER_ID+"/Crowbox/Status/food", "WORKING");
     } else {
-      //Food is still present, nothing has changed since 
-      //the last time we checked and everything is working
-      Serial.println("Food is present in the basket");
-      //We do not need to update anything in firebase here
+        //Food is still present, nothing has changed since 
+        //the last time we checked and everything is working
+        Serial.println("Food is present in the basket");
+        //We do not need to update anything in firebase here
     }
   } else {
       //There is no/low food in the basket
       //Needs to be refilled
-      if (isFoodThere) {isFoodThere = false;} 
-      
-      Serial.println("Food basket needs to be refilled");
-      Firebase.RTDB.setString(&foodData, "Users/"+USER_ID+"/Crowbox/Status/food", "LOW");
+      if (isFoodThere) {isFoodThere = false;}   
+        Serial.println("Food basket needs to be refilled");
+        Firebase.RTDB.setString(&foodData, "Users/"+USER_ID+"/Crowbox/Status/food", "LOW");
   }
 
   //clear the data to make space!
