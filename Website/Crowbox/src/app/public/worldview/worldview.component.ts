@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, HostListener, Host } from '@a
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { PublicService } from 'src/app/services/public/public.service';
+import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 
@@ -11,7 +12,8 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
   styleUrls: ['./worldview.component.css']
 })
 export class WorldviewComponent implements OnInit {
-  
+  showHeader!:boolean;
+
   countries$?:Observable<any>;
 
   @ViewChild('globeCanvas') cReference!: ElementRef;
@@ -51,7 +53,7 @@ export class WorldviewComponent implements OnInit {
 
 
 
-  constructor(private countryService: PublicService) { 
+  constructor(private countryService: PublicService, private handleAuth:HandleAuthService ) { 
 
     
     this.windowWidth = window.innerWidth;
@@ -72,6 +74,12 @@ export class WorldviewComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    if(this.isLoggedIn()){
+      this.showHeader = true;
+    } else {
+      this.showHeader = false;
+    }
 
     this.countries$ = this.countryService.getAllCountryData()
     .snapshotChanges()
@@ -97,6 +105,11 @@ export class WorldviewComponent implements OnInit {
       this.initPoints();
     });
 
+  }
+
+  
+  isLoggedIn() {
+    return this.handleAuth.isLoggedIn;
   }
 
   initPoints(){

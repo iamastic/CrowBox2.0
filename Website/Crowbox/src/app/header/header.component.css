@@ -1,9 +1,9 @@
 #navContainer {
     
- /*    border-style: solid;
+  /*    border-style: solid;
     border-width: 5px;
     border-radius: 5%;
-    border-color: black;  */
+    border-color: black;   */
      
     position: absolute;
     margin: auto; 
@@ -11,6 +11,7 @@
     left: 0vh;
     top:2vh;
     height:5%;
+    width:38%;
 }
 
 a {
@@ -47,11 +48,26 @@ a {
     border-color: black; 
  */
 
-    margin-left: 18.5%;
+    /* margin-left: 0%; */
+    left:0vh;
     position: absolute;
 /*     margin: auto; */    
-    width: 20%;
+    width: fit-content;
     height: 100%;
+}
+
+#public {
+    /*     border-style: solid;
+    border-width: 5px;
+    border-radius: 5%;
+    border-color: black;  */
+
+    position: absolute;
+    /* margin-left: 35.5%; */
+    left: 19vh;
+    width: fit-content;
+    height: 100%;
+
 }
 
 #data {
@@ -60,10 +76,12 @@ a {
     border-radius: 5%;
     border-color: black;   */
 
-    position: absolute;
-    margin-left: 34.5%;
 
-    width: 8%;
+    position: absolute;
+    /* margin-left: %; */
+    
+    right: 24.5vh;
+    width: fit-content;
     height: 100%;
 
 }
@@ -83,6 +101,8 @@ a {
 
 }
 
+
+
 #profile {
     
 /*     border-style: solid;
@@ -91,8 +111,8 @@ a {
     border-color: black; 
      */
     position: absolute;
-    margin-left: 62%;
-    width: 20%;
+    right: 0vh;
+    width: fit-content;
     height: 100%;
 
 }

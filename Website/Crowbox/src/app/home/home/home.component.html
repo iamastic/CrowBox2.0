@@ -1,8 +1,19 @@
 <!-- CUSTOM HEADER SHOWING ONLY "HOME" -->
 <div id = "header" class="fontStyle" *ngIf = "showHeader===false">
-    <nav>
-        <a routerLink = "/home">HOME</a>
-    </nav>
+    <div id = "home" class = "fontStyle">
+        <nav>
+            <a routerLink = "/home"> HOME </a>
+        </nav>
+    </div>
+    
+    <mat-divider vertical="true" style="margin-left:45%; top:-1vh;"> </mat-divider>
+
+    <div id = public class = "fontStyle">
+        <nav>
+            <a routerLink = "/public"> WORLD </a>
+        </nav>
+    </div>
+
 </div>
 
 <!-- ORIGINAL HEADER -->

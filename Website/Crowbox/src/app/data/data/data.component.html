@@ -3,22 +3,19 @@
 <div id = "publicButton">
     <mat-button-toggle-group>
         <mat-button-toggle (click)="showPersonal()">
-            YOUR DATA
+            CROWS LANDED ON PERCH
         </mat-button-toggle>
 
         <mat-button-toggle (click)="showPublic()">
-            PUBLIC DATA
+            COINS DEPOSITED
         </mat-button-toggle>
     </mat-button-toggle-group>
 
 </div>
 
 <!-- PERSONAL DATA SECTION -->
-<div *ngIf="showPublicData === false">
-    <ngb-carousel #carousel id = "chartsCarousel" [interval] = "false">
-        <ng-template ngbSlide>
-            <div id = "crowOnPerchChart">
-                <canvas baseChart
+<div *ngIf="showCoinsDeposited === false" id = "charts" >
+    <canvas baseChart
                     [datasets]="crowOnPerchChartData"
                     [labels]="crowOnPerchChartLabels"
                     [options]="crowOnPerchChartOptions"
@@ -26,57 +23,21 @@
                     [chartType]="crowOnPerchChartType"
                     [colors]="crowOnPerchChartColor"
                     >
-                </canvas>
-            </div>
-        </ng-template>
-    
-        <ng-template ngbSlide>
-            <div id = "coinsDepositedChart">
-                <canvas baseChart
-                        [datasets]="coinsDepositedChartData"
-                        [labels]="coinsDepositedChartLabels"
-                        [options]="coinsDepositedChartOptions"
-                        [legend]="coinsDepositedChartLegend"
-                        [chartType]="coinsDepositedChartType"
-                        [colors]="coinChartColor"
-                        >
-                </canvas>
-            </div>
-        </ng-template>
-    </ngb-carousel>
+    </canvas>             
 </div>
 
 <!-- PUBLIC DATA SECTION -->
-<div *ngIf="showPublicData === true">
-    <ngb-carousel #carousel id = "chartsCarousel" [interval] = "false">
-        <ng-template ngbSlide>
-            <div id = "publicCrowOnPerchChart">
-                <canvas baseChart
-                    [datasets]="publicCrowOnPerchChartData"
-                    [labels]="publicCrowOnPerchChartLabels"
-                    [options]="publicCrowOnPerchChartOptions"
-                    [legend]="publicCrowOnPerchChartLegend"
-                    [chartType]="publicCrowOnPerchChartType"
-                    [colors]="publicCrowsOnPerchColor"
-                    >
-                </canvas>
-            </div>
-        </ng-template>
+<div *ngIf="showCoinsDeposited === true" id = "charts">
     
-        <ng-template ngbSlide>
-            <div id = "publicCoinsDeposited">
-                <canvas baseChart
-                    [datasets]="publicCoinsDepositedChartData"
-                    [labels]="publicCoinsDepositedChartLabels"
-                    [options]="publicCoinsDepositedChartOptions"
-                    [legend]="publicCoinsDepositedChartLegend"
-                    [chartType]="publicCoinsDepositedChartType"
-                    [colors]="publicCoinsColor"
-                    >
-                </canvas>
-            </div>
-        </ng-template>
-    </ngb-carousel>
+        <canvas baseChart
+                [datasets]="coinsDepositedChartData"
+                [labels]="coinsDepositedChartLabels"
+                [options]="coinsDepositedChartOptions"
+                [legend]="coinsDepositedChartLegend"
+                [chartType]="coinsDepositedChartType"
+                [colors]="coinChartColor"
+                >
+        </canvas>
 </div>
 
 <div>

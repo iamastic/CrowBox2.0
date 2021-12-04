@@ -14,7 +14,6 @@ import { first } from 'rxjs/operators';
 
 //to get the current date when user first makes an account
 import { DatePipe } from '@angular/common';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 /* FOR OFFLINE PURPOSES */
 interface dataObject {
@@ -30,8 +29,6 @@ interface dataObject {
 export class DataComponent implements OnInit, AfterContentInit {
 
   /* OFFLINE RELATED */
-
-
   file:any;
   fileName:any;
   //For crows
@@ -312,7 +309,7 @@ export class DataComponent implements OnInit, AfterContentInit {
   /* ---------------------------------------------------- */
 
   /* PERSONAL OR PUBLIC DATA */
-  showPublicData?:boolean;
+  showCoinsDeposited?:boolean;
 
   /* ---------------------------------------------------- */
   constructor(private handleAuth: HandleAuthService, private crowboxService: CrowboxdbService, public datepipe:DatePipe) {
@@ -578,10 +575,10 @@ export class DataComponent implements OnInit, AfterContentInit {
   /* ---------------------------------------------------- */
 
   showPersonal() {
-    this.showPublicData = false;
+    this.showCoinsDeposited = false;
   }
   showPublic() {
-    this.showPublicData = true;
+    this.showCoinsDeposited = true;
   }
 
   /* OFFLINE MODE */

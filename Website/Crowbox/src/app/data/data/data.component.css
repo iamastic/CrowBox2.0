@@ -23,7 +23,13 @@ p {
 
 /* CHARTS RELATED */
 
-#chartsCarousel {
+#charts {
+/*     border-style: inset;
+    border-width: 5px;
+    border-radius: 5%;
+    border-color: 0x00ff00; */
+
+    position: absolute;
     height:50%;
     width: 50%;
     top: 30vh;
@@ -36,147 +42,6 @@ p {
     top: 25vh;
     left: 55vh;
 }
-
-
-/* INFO BOX RELATED */
-#dataInformation {
-    color : #25356a;
-
-    text-align: center;
-    border-style: inset;
-    border-width: 5px;
-    border-radius: 5%;
-    border-color: 0x00ff00;
-    background-color: rgb(255, 255, 255);
-    opacity: 58%;   
-    font-size: 9pt;
-    font-style: normal;
-
-    position: absolute;
-    margin: auto; 
-    top: 15vh;
-    right: 20vh;
-    width: 30%;
-    height: 75%;
-}
-
-#Nickname {
-
-    color : #ffffff;
-
-    text-align: center;
-    border-style: inset;
-    border-width: 5px;
-    border-radius: 5%;
-    border-color: 0x00ff00;
-    background-color: rgb(43, 80, 48);
-    opacity: 58%;   
-    font-size: 9pt;
-    font-style: normal;
-
-    position: absolute;
-    margin: auto; 
-    right: 0vh;
-    left: 0vh;
-    top: 12vh;
-    width: 75%;
-    height: 12%;
-}
-
-
-#startDate {
-
-    color : #ffffff;
-
-    text-align: center;
-    border-style: inset;
-    border-width: 5px;
-    border-radius: 5%;
-    border-color: 0x00ff00;
-    background-color: rgb(43, 80, 48);
-    opacity: 58%;   
-    font-size: 9pt;
-    font-style: normal;
-
-    position: absolute;
-    margin: auto; 
-    right: 0vh;
-    left: 0vh;
-    top: 22vh;
-    width: 75%;
-    height: 12%;
-}
-
-#totalCoinsDeposited {
-
-    color : #ffffff;
-
-    text-align: center;
-    border-style: inset;
-    border-width: 5px;
-    border-radius: 5%;
-    border-color: 0x00ff00;
-    background-color: rgb(43, 80, 48);
-    opacity: 58%;   
-    font-size: 9pt;
-    font-style: normal;
-
-    position: absolute;
-    margin: auto; 
-    right: 0vh;
-    left: 0vh;
-    top: 32vh;
-    width: 75%;
-    height: 12%;
-}
-
-#numBirdsOnPerch {
-
-    color : #ffffff;
-
-    text-align: center;
-    border-style: inset;
-    border-width: 5px;
-    border-radius: 5%;
-    border-color: 0x00ff00;
-    background-color: rgb(43, 80, 48);
-    opacity: 58%;   
-    font-size: 9pt;
-    font-style: normal;
-
-    position: absolute;
-    margin: auto; 
-    right: 0vh;
-    left: 0vh;
-    top: 42vh;
-    width: 75%;
-    height: 12%;
-}
-
-
-#status {
-
-    color : #ffffff;
-
-    text-align: center;
-    border-style: inset;
-    border-width: 5px;
-    border-radius: 5%;
-    border-color: 0x00ff00;
-    background-color: rgb(43, 80, 48);
-    opacity: 58%;   
-    font-size: 9pt;
-    font-style: normal;
-
-    position: absolute;
-    margin: auto; 
-    right: 0vh;
-    left: 0vh;
-    top: 52vh;
-    width: 75%;
-    height: 12%;
-}
-
 
 /* BUTTON RELATED */
 .mat-button-toggle {
