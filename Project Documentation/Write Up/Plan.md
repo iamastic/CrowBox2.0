@@ -82,8 +82,9 @@
     * Overachieving in certain areas e.g. implementing the Offline Mode was only a contingency plan that was added on in the end 
     * Achieving the objectives of displaying data in real time + offerring a troubleshooting system 
     * Evaluate against the User Stories 
-    * Cons: Poor UI design - too simple perhaps - too archaic - Extra sensors might make it difficult to obtain - different libraries required for different sensors - code might not be universal for all people 
+    * Cons: Poor UI design - too simple perhaps - too archaic - Extra sensors might make it difficult to obtain - different libraries required for different sensors - code might not be universal for all people
   * Future Work 
     * Uploading and displaying images in real time using Firebase Storage (touched upon in profile pictue) 
     * Allow a pintrest board of some sort page for people to view images 
     * Proper data aggregation and analysis tools e.g. How many crows have landed on the perch during stage 1? What about Stage 2?  
+    * Allow more than one crowbox to be linked to one account
