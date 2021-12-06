@@ -39,10 +39,12 @@
     * The practice of integrating an IoT System
     * The Microcontrollers: Arduino, ATMega, ESP8266, ESP32, NodeMCU - comparison and discussion for best fit
     * The Pricing Structure - Lowering or maintaining the price as much as possible of the build 
+    * Design of the website - how should the website look? On what principles should we build the website? See Gerhard
     * Displaying the Data - The type of data, private vs public data, sharing preferences
     * The notification system 
     * What about offline? Accommodating for WiFi issues e.g. short range or inavailability 
     * Software decisions - which STACK to use for web dev? Coding in C++ and Arduino language - considering Docker - Using Github 
     * Continuous integration - issues with this and why it was not done? Or perhaps, it was done through online surveys and in person users.
-    * 
+
+
     
