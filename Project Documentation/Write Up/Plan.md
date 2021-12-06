@@ -48,14 +48,18 @@
 
 * Section 3
   * The Research
+    * Using the Agile Method 
+    * Mood Boards 
     * Understanding the core problem - primary research using the google forum
     * Building User Stories 
     * The first User Journey Draft after building the First Crowbox
   * The Crowbox
     * Switching the Arduino out for the NodeMCU ESP8266 and then to NodeMCU ESP32 - redoing the code - fixing bugs - running into various issues
-    * Introducing the Sensors - DHT11 and IR Sensor - Testing other sensors e.g. the capacitive touch sensor 
+    * Introducing the Sensors - DHT11 and IR Sensor - Testing other sensors e.g. the capacitive touch sensor. This should be inline with the User Stories and they will act as your primary evidence/justification for doing things. 
     * Offline Mode
     * Testing the Crowbox 
+    * The Second User Journey (replacing Arduino with NodeMCU and all the new sensors)
+    * Bugs and Issues solved (or unsolved)
   * Firebase/Backend
     * Deciding on using firebase for the backend
     * Software as a Service (SaaS) - benefits of this (might have already been touched upon in Background and Context) 
@@ -65,5 +69,13 @@
     * Use of Angular 
     * Progression of the website - using surveys, observations, interviews to generate feedback on each prototype of the website
     * Brief walkthrough of each prototype 
-    * Final Implementation of key aspects: The charts, the globe, offline mode, troubleshoot/status update, profile and settings 
-    *      
+    * Final Implementation of key aspects: The charts, the globe, offline mode, troubleshoot/status update, profile and settings. This should also be inline with the User Stories. 
+    * Progression of the Data Schema - the various drafts and how it improved - removing too many nested structures  
+    * The Third and Final User Journey - Making an account on the website and using it
+    * Developing the UI and UX - getting feedback on this 
+    * Deployment on Firebase Hosting - the advantages and disadvantages to this (critical)
+    * Bugs and Issues solved (or unsolved) 
+
+* Section 4
+  * Evaluation
+    * 
