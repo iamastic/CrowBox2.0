@@ -1391,11 +1391,12 @@ void CCrowboxCore::CheckIfItIsNextDay() {
     WriteCurrentOfflineDayToEEPROM();
   } else {
       numberOfCrowsLanded++;
+      numberOfCoinsDeposited++;
   }
 } 
 
 void CCrowboxCore::WriteDataToSDCard(String type, int value) {
-  sdCardDataFile = SD.open("/data.txt", FILE_WRITE);
+  sdCardDataFile = SD.open("/data.txt", FILE_APPEND);
   String line = type;
   line += ',';
   line += String(offlineDay);
