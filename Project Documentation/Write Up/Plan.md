@@ -25,4 +25,9 @@
       *  Improve the user experience, thereby encouraging a higher uptake of the project
       *  Improve the data collection, aggregation and sharing method to encourage users to train corvid species
     *  Lower Level Objectives
-      *  Create a website     
+       *  Introduce WiFi into the Crowbox, giving it the ability to communicate wireless to the user
+       *  Create a website for users to view their data being updated in real time 
+       *  Introduce a troubleshoot system that analyses the box's condition and notifies the user of any issues
+       *  Enable the user to share their results for the world to see
+
+    
