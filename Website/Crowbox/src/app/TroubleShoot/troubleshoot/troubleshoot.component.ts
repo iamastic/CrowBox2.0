@@ -31,6 +31,7 @@ export class TroubleshootComponent implements OnInit {
     .subscribe(result => {
       this.coinsRemaining = result.payload.val().coins;
       this.foodLevel = result.payload.val().food;
+      this.water = result.payload.val().humidity;
     });
   }
 
