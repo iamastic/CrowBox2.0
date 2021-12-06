@@ -29,5 +29,15 @@
        *  Create a website for users to view their data being updated in real time 
        *  Introduce a troubleshoot system that analyses the box's condition and notifies the user of any issues
        *  Enable the user to share their results for the world to see
-
+* Section 2
+  * Background and Context
+    * Brief explanation of what the original Crowbox Project was about (citing the original dissertation)
+    * CAD Designing and Laser Printing 
+    * What is an IoT System
+    * Existing Citizen Science Projects that employ an IoT system
+    * Design Practices - Design Thinking and Agile - Brief comparison of different design practices
+    * The practice of integrating an IoT System
+    * The Microcontrollers: Arduino, ATMega, ESP8266, ESP32, NodeMCU - comparison and discussion for best fit
+    * The Pricing Structure - Lowering or maintaining the price as much as possible of the build 
+    * 
     
