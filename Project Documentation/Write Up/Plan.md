@@ -21,4 +21,8 @@
     *  The inability for the project to be a widescale success due to the aforementioned problem 
   * Aims and Objectives
     * Higher Level Objectives 
-      *     
+      *  Integrate an IoT System into an existing Citizen Science Project
+      *  Improve the user experience, thereby encouraging a higher uptake of the project
+      *  Improve the data collection, aggregation and sharing method to encourage users to train corvid species
+    *  Lower Level Objectives
+      *  Create a website     
