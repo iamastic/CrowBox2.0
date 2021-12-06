@@ -40,11 +40,30 @@
     * The Microcontrollers: Arduino, ATMega, ESP8266, ESP32, NodeMCU - comparison and discussion for best fit
     * The Pricing Structure - Lowering or maintaining the price as much as possible of the build 
     * Design of the website - how should the website look? On what principles should we build the website? See Gerhard
-    * Displaying the Data - The type of data, private vs public data, sharing preferences
+    * Displaying the Data - The type of data, private vs public data, sharing preferences, Data Schema drafts
     * The notification system 
     * What about offline? Accommodating for WiFi issues e.g. short range or inavailability 
     * Software decisions - which STACK to use for web dev? Coding in C++ and Arduino language - considering Docker - Using Github 
     * Continuous integration - issues with this and why it was not done? Or perhaps, it was done through online surveys and in person users.
 
-
-    
+* Section 3
+  * The Research
+    * Understanding the core problem - primary research using the google forum
+    * Building User Stories 
+    * The first User Journey Draft after building the First Crowbox
+  * The Crowbox
+    * Switching the Arduino out for the NodeMCU ESP8266 and then to NodeMCU ESP32 - redoing the code - fixing bugs - running into various issues
+    * Introducing the Sensors - DHT11 and IR Sensor - Testing other sensors e.g. the capacitive touch sensor 
+    * Offline Mode
+    * Testing the Crowbox 
+  * Firebase/Backend
+    * Deciding on using firebase for the backend
+    * Software as a Service (SaaS) - benefits of this (might have already been touched upon in Background and Context) 
+    * Using the Firebase Library for Arduino and for the Website - picking the correct library (mobitz vs the other one I downloaded) 
+    * Studying the library documentations for Arduino and Web Dev 
+  * The Website
+    * Use of Angular 
+    * Progression of the website - using surveys, observations, interviews to generate feedback on each prototype of the website
+    * Brief walkthrough of each prototype 
+    * Final Implementation of key aspects: The charts, the globe, offline mode, troubleshoot/status update, profile and settings 
+    *      
