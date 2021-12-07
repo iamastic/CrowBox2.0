@@ -9,7 +9,6 @@ import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
 import { CrowboxdbService } from 'src/app/services/crowbox/crowboxdb.service';
 
 //import the carousel handling module
-import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 import { first } from 'rxjs/operators';
 
 //to get the current date when user first makes an account
@@ -188,126 +187,6 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
 
   /* ---------------------------------------------------- */
 
-  /* PUBLIC CROWS ON PERCH DATA */
-  //observable to initialise data set
-  $initialPublicCrowOnPerchSub?:Observable<any>;
-  //observable to get the new child 
-  $childPublicCrowOnPerchSub?:Observable<any>;
-  //y axis data
-  publicCrowsOnPerchLocation:string[] = [];
-  //x axis data
-  publicCrowsOnPerchValues: number[] = [];
-
-  
-  publicCrowColor1 = "#9CFFFA";
-  publicCrowColor2 = "#00A39B";
-  currentPublicCrowColor = this.publicCrowColor1;
-  publicCrowChartColors:string[] = [];
-
-  //public crows on perch barchart options
-  public publicCrowOnPerchChartOptions = {
-    responsive: true,
-    scales: { 
-      xAxes: [{
-        scaleLabel: {
-          display:true,
-          labelString:'Location'
-        }
-      }], 
-      yAxes: [{
-        display:true,
-        ticks: {
-          beginAtZero: true, 
-          stepSize: 1,
-        },
-        maintainAspectRatio: false,
-        scaleLabel: {
-          display:true,
-          labelString:'Amount'
-        }
-      }] 
-    },
-    plugins: {
-      datalabels: {
-        anchor: 'end',
-        align: 'end',
-      }
-    }
-  };
-
-  public publicCrowOnPerchChartLabels = this.publicCrowsOnPerchLocation;
-  public publicCrowOnPerchChartType = 'bar';
-  public publicCrowOnPerchChartLegend = true;
-
-  public publicCrowsOnPerchColor = [
-    {
-      backgroundColor: this.publicCrowChartColors
-    }
-  ]
-
-  public publicCrowOnPerchChartData = [
-    { data: this.publicCrowsOnPerchValues, label: "Number Of Crows That Landed On The Perch" }
-  ];
-  /* ---------------------------------------------------- */
-
-  /* PUBLIC CROWS ON PERCH DATA */
-
-  $initialPublicCoinsDepositedSub?:Observable<any>;
-  $childPublicCoinsDepositedSub?:Observable<any>;
-  publicCoinsDepositedLocation: string[] = [];
-  publicCoinsDepositedValues: string[] = [];
-
-  publicCoinColor1 = "#FBE889";
-  publicCoinColor2 = "#F5CC14";
-  currentPublicCoinColor = this.publicCoinColor1;
-  publicCoinChartColor:string[] = [];
-
-
-  //public crows on perch barchart options
-  public publicCoinsDepositedChartOptions = {
-    responsive: true,
-    scales: { 
-      xAxes: [{
-        scaleLabel: {
-          display:true,
-          labelString:'Location'
-        }
-      }], 
-    yAxes: [{
-      display:true,
-      ticks: {
-        beginAtZero: true, 
-        stepSize: 1,
-      },
-      maintainAspectRatio: false,
-      scaleLabel: {
-        display:true,
-        labelString:'Amount'
-      }    }] },
-    plugins: {
-      datalabels: {
-        anchor: 'end',
-        align: 'end',
-      }
-    }
-  };
-
-  public publicCoinsColor = [
-    {
-      backgroundColor:this.publicCoinChartColor
-    }
-  ]
-
-  public publicCoinsDepositedChartLabels = this.publicCoinsDepositedLocation;
-  public publicCoinsDepositedChartType = 'bar';
-  public publicCoinsDepositedChartLegend = true;
-
-  public publicCoinsDepositedChartData = [
-    { data: this.publicCoinsDepositedValues, label: "Number Of Coins Deposited" }
-  ];
-
-  /* ---------------------------------------------------- */
-
   /* CROWS ON PERCH OR COINS DEPOSITED DATA */
   showCoinsDeposited?:boolean;
 
@@ -317,7 +196,6 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    
   }
 
   ngOnInit(): void {
@@ -348,8 +226,6 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
   initialiseCharts() {
     this.getCrowOnPerchDataChildren()
     this.getCoinDepositedDataChildren();
-    this.getPublicCrowOnPerchData();
-    this.getPublicCoinsDepositedData();
 
     //if the array is empty, let the user know that they need to setup a crowbox
     if((this.coinsDepositedDate.length == 0) && (this.crowsOnPerchDate.length == 0)) {
@@ -504,78 +380,7 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
       this.currentCoinColor = this.coinColor1;
     }
   }
-  /* ---------------------------------------------------- */
 
-  /* PUBLIC DATA */
-  getPublicCrowOnPerchData() {
-    this.$childPublicCrowOnPerchSub = this.crowboxService
-    .getAllLocationData()
-    .stateChanges();
-
-    this.$childPublicCrowOnPerchSub
-    .subscribe(action => {
-      let indexOfKey = this.publicCrowsOnPerchLocation.indexOf(action.key);
-
-      if(indexOfKey == -1) {
-        this.publicCrowsOnPerchLocation.push(action.key);
-        this.publicCrowsOnPerchValues.push(action.payload.val().crows_landed_on_perch);
-
-        this.switchPublicCrowChartColor();
-        this.publicCrowChartColors.push(this.currentPublicCrowColor);
-      } else {
-        this.publicCrowsOnPerchValues[indexOfKey] = action.payload.val().crows_landed_on_perch;
-      }
-    });
-
-    this.publicCrowOnPerchChartLabels = this.publicCrowsOnPerchLocation;
-    this.publicCrowOnPerchChartData = [
-      { data: this.publicCrowsOnPerchValues, label: "Number Of Crows That Landed On The Perch" }
-    ];
-  }
-  
-  switchPublicCrowChartColor() {
-    if (this.currentPublicCrowColor === this.publicCrowColor1) {
-      this.currentPublicCrowColor = this.publicCrowColor2;
-    } else {
-      this.currentPublicCrowColor = this.publicCrowColor1;
-    }
-  }
-
-  
-
-  getPublicCoinsDepositedData() {
-    this.$childPublicCoinsDepositedSub = this.crowboxService
-    .getAllLocationData()
-    .stateChanges();
-
-    this.$childPublicCoinsDepositedSub
-    .subscribe(action => {
-      let indexOfKey = this.publicCoinsDepositedLocation.indexOf(action.key);
-
-      if (indexOfKey == -1) {
-        this.publicCoinsDepositedLocation.push(action.key);
-        this.publicCoinsDepositedValues.push(action.payload.val().coins_deposited);
-        this.switchPublicCoinsColors();
-        this.publicCoinChartColor.push(this.currentPublicCoinColor);
-      } else {
-        this.publicCoinsDepositedValues[indexOfKey] = action.payload.val().coins_deposited;
-      }
-    });
-
-    this.publicCoinsDepositedChartLabels = this.publicCoinsDepositedLocation;
-
-    this.publicCoinsDepositedChartData = [
-      { data: this.publicCoinsDepositedValues, label: "Number Of Coins Deposited" }
-    ];
-  }
-
-  switchPublicCoinsColors() {
-    if (this.currentPublicCoinColor === this.publicCoinColor1) {
-      this.currentPublicCoinColor = this.publicCoinColor2;
-    } else {
-      this.currentPublicCoinColor = this.publicCoinColor1;
-    }
-  }
   /* ---------------------------------------------------- */
 
   showPersonal() {
