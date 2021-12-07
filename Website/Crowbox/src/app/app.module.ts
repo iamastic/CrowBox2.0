@@ -48,6 +48,8 @@ import { MatCardModule } from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { MatSelectModule} from '@angular/material/select';
+import {MatToolbarModule} from '@angular/material/toolbar';
+
 
 
 import { FormsModule,ReactiveFormsModule  } from '@angular/forms';
@@ -57,6 +59,8 @@ import { LoginComponent } from './home/login/login.component';
 import { WorldviewComponent } from './public/worldview/worldview.component';
 import { PublicComponent } from './public/public/public.component';
 
+//For Styling
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 
 @NgModule({
@@ -106,6 +110,8 @@ import { PublicComponent } from './public/public/public.component';
     MatIconModule,
     MatButtonToggleModule,
     MatSelectModule,
+    MatToolbarModule,
+    FlexLayoutModule,
 
   ],
   providers: [HandleAuthService,DatePipe,AngularFireStorage],

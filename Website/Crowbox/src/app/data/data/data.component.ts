@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterContentInit } from '@angular/core';
+import { Component, OnInit, AfterContentInit, OnDestroy } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
@@ -26,7 +26,7 @@ interface dataObject {
   templateUrl: './data.component.html',
   styleUrls: ['./data.component.css']
 })
-export class DataComponent implements OnInit, AfterContentInit {
+export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
 
   /* OFFLINE RELATED */
   file:any;
@@ -308,12 +308,16 @@ export class DataComponent implements OnInit, AfterContentInit {
 
   /* ---------------------------------------------------- */
 
-  /* PERSONAL OR PUBLIC DATA */
+  /* CROWS ON PERCH OR COINS DEPOSITED DATA */
   showCoinsDeposited?:boolean;
 
   /* ---------------------------------------------------- */
   constructor(private handleAuth: HandleAuthService, private crowboxService: CrowboxdbService, public datepipe:DatePipe) {
 
+  }
+
+  ngOnDestroy() {
+    
   }
 
   ngOnInit(): void {

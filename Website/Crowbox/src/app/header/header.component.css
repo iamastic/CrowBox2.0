@@ -1,17 +1,24 @@
-#navContainer {
+.mat-toolbar{
+    background-color: #ededed; 
+    height: 6vh; 
+    width:100%;
+}
+
+.flex-item {
+
+}
+
+.headerTitle {
+    display: flex;
+    /* padding:1%; */
+    align-items: center;
     
-  /*    border-style: solid;
-    border-width: 5px;
-    border-radius: 5%;
-    border-color: black;   */
-     
-    position: absolute;
-    margin: auto; 
-    right: 0vh;
-    left: 0vh;
-    top:2vh;
-    height:5%;
-    width:38%;
+}
+
+.mat-icon {
+    vertical-align: text-bottom;
+    color: #25356a;
+    position: relative;
 }
 
 a {
@@ -19,17 +26,27 @@ a {
     text-decoration: none;
     font-weight: bold;
     letter-spacing: 7px;
-}
-
-.fontStyle{
-    /* color : #d44e4e; */
-    text-align: center;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-    font-size: 25pt;
+    font-size: 15pt;
     font-style: normal;
-    
 }
 
+.wrapper {
+    min-width: 1024px;
+    width: 100%;
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+#headerText {
+    padding:6%;
+}
+
+
+
+
+
+/* OLD CODE */
 
 .mat-divider.mat-divider-vertical {
     border-right-color: rgb(0, 0, 0);
@@ -38,6 +55,22 @@ a {
     position: absolute;
     height: 100%;
 } 
+
+#navContainer {
+    
+    /*    border-style: solid;
+      border-width: 5px;
+      border-radius: 5%;
+      border-color: black;   */
+       
+      position: absolute;
+      margin: auto; 
+      right: 0vh;
+      left: 0vh;
+      top:2vh;
+      height:5%;
+      width:38%;
+  }
 
 
 #home {
