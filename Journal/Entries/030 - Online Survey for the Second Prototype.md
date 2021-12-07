@@ -4,9 +4,12 @@ For the very [second prototype](https://github.com/iamastic/CrowBox2.0/blob/main
 
 ### For this page, please select the most suitable options: 
 
-![page 1](https://github.com/iamastic/CrowBox2.0/blob/main/Project%20Documentation/Ideation/Images/Second%20Prototype/Screen008.PNG).
+![page 1](https://github.com/iamastic/CrowBox2.0/blob/main/Project%20Documentation/Ideation/Images/Second%20Prototype/Screen008.PNG)
 
+![Q1](https://github.com/iamastic/CrowBox2.0/blob/main/Journal/Images/SurveyQs1.PNG)
 
 ### For this page, please select the most suitable options: 
 
 ![page 2](https://github.com/iamastic/CrowBox2.0/blob/main/Project%20Documentation/Ideation/Images/Second%20Prototype/Screen012.PNG)
+![Q2](https://github.com/iamastic/CrowBox2.0/blob/main/Journal/Images/SurveyQs1.PNG)
+
