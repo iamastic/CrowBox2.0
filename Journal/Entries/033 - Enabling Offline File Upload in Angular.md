@@ -8,15 +8,15 @@ Firstly, I needed to enable a file upload system so that the user may upload the
 ```html
 
 <div id = "offlineFile">
-    //The actual workings of the file system. By setting the input type to file, 
-    //when pressed, it will automatically ask the user to select a file from their folders. 
-    //Then, upon the file being selected, the function uploadFile($event) will be called.
+    <!-- The actual workings of the file system. By setting the input type to file, 
+        when pressed, it will automatically ask the user to select a file from their folders. 
+        Then, upon the file being selected, the function uploadFile($event) will be called. -->
     <input type="file" class="file-input"
        (change)="uploadFile($event)" #fileUpload>
 
-    //This div is just a wrapper div. Basically, due to the limited options 
-    //of styling for the file input, it is best to make that invisible
-    //and instead, use a wrapper button that can be designed however you like. 
+    <!--This div is just a wrapper div. Basically, due to the limited options 
+        of styling for the file input, it is best to make that invisible
+        and instead, use a wrapper button that can be designed however you like. -->
     <div class="file-upload">
         {{fileName || "No file uploaded yet."}}
 
@@ -26,9 +26,9 @@ Firstly, I needed to enable a file upload system so that the user may upload the
         </button>
     </div>
 
-    //Once the user has selected their file, they will hit the 
-    //upload button. This will parse the file and read it
-    //And then it will store the data in firebase.
+    <!-- Once the user has selected their file, they will hit the 
+        upload button. This will parse the file and read it
+        And then it will store the data in firebase. -->
     <div>
         <button (click)="readFile()">Upload</button>
     </div>
