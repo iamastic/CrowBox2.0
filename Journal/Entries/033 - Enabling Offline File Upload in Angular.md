@@ -116,3 +116,15 @@ uploadFile(event:any) {
 The final outcome looked like this: 
 
 ![file upload](https://github.com/iamastic/CrowBox2.0/blob/main/Journal/Images/Offline%20File%20Upload.PNG)
+
+And the text files were in this format: 
+
+**data.txt**
+
+```txt
+crows_landed_on_perch,2021-11-30,9
+crows_landed_on_perch,2021-11-30,14
+crows_landed_on_perch,2021-11-30,29
+crows_landed_on_perch,2021-12-01,2
+crows_landed_on_perch,2021-12-01,6
+```
