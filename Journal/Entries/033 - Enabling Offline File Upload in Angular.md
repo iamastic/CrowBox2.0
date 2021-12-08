@@ -112,3 +112,7 @@ uploadFile(event:any) {
   
   //The same is done for coins_deposited
 ```
+
+The final outcome looked like this: 
+
+![file upload](https://github.com/iamastic/CrowBox2.0/blob/main/Journal/Images/Offline%20File%20Upload.PNG)
