@@ -29,11 +29,11 @@ p {
     border-radius: 5%;
     border-color: 0x00ff00; */
 
-    position: absolute;
+    /* position: absolute; */
     height:50%;
     width: 50%;
-    top: 30vh;
-    left: 15vh;
+    /* top: 30vh; */
+    /* left: 15vh; */
 }
 
 #publicButton {

@@ -1,6 +1,7 @@
 <app-header></app-header>
 
-<div id = "publicButton">
+<!-- CROWS LANDED OR COINS DEPOSITED BUTTON -->
+<!-- <div id = "publicButton">
     <mat-button-toggle-group>
         <mat-button-toggle (click)="showPersonal()">
             CROWS LANDED ON PERCH
@@ -10,51 +11,45 @@
             COINS DEPOSITED
         </mat-button-toggle>
     </mat-button-toggle-group>
-
 </div>
+ -->
+<div class="wrapper" fxLayout="row" fxLayout.sm = "column" fxLayout.xs="column" fxLayoutAlign="space-evenly center">
+    <!-- CHARTS -->
+    <div id = "charts">
+        <!-- CROWS ON PERCH DATA SECTION -->
+        <div *ngIf="showCoinsDeposited === false"  >
+            <canvas baseChart
+                   [datasets]="crowOnPerchChartData"
+                   [labels]="crowOnPerchChartLabels"
+                   [options]="crowOnPerchChartOptions"
+                   [legend]="crowOnPerchChartLegend"
+                   [chartType]="crowOnPerchChartType"
+                   [colors]="crowOnPerchChartColor"
+                   >
+            </canvas>             
+        </div>
 
-<!-- PERSONAL DATA SECTION -->
-<div *ngIf="showCoinsDeposited === false" id = "charts" >
-    <canvas baseChart
-                    [datasets]="crowOnPerchChartData"
-                    [labels]="crowOnPerchChartLabels"
-                    [options]="crowOnPerchChartOptions"
-                    [legend]="crowOnPerchChartLegend"
-                    [chartType]="crowOnPerchChartType"
-                    [colors]="crowOnPerchChartColor"
-                    >
-    </canvas>             
-</div>
+        <!-- COINS DEPOSITED DATA SECTION -->
+        <div *ngIf="showCoinsDeposited === true" >
+            <canvas baseChart
+               [datasets]="coinsDepositedChartData"
+               [labels]="coinsDepositedChartLabels"
+               [options]="coinsDepositedChartOptions"
+               [legend]="coinsDepositedChartLegend"
+               [chartType]="coinsDepositedChartType"
+               [colors]="coinChartColor"
+               >
+            </canvas>
+        </div>
+    </div>
 
-<!-- PUBLIC DATA SECTION -->
-<div *ngIf="showCoinsDeposited === true" id = "charts">
-    
-        <canvas baseChart
-                [datasets]="coinsDepositedChartData"
-                [labels]="coinsDepositedChartLabels"
-                [options]="coinsDepositedChartOptions"
-                [legend]="coinsDepositedChartLegend"
-                [chartType]="coinsDepositedChartType"
-                [colors]="coinChartColor"
-                >
-        </canvas>
-</div>
-
-<div>
+    <!-- THE INFORMATION BOX -->
     <app-information [crowsOnPerch]="crownsOnPerchValues" [coinsDeposited]="coinsDepositedValues"></app-information>
+    
 </div>
 
-
-<div id="userId" *ngIf=(showUserId)>
-    <mat-card>
-        <p>
-            You currently do not have a crowbox set up. Please upload the code to your crowbox with your Email and Password
-        </p>
-    </mat-card>
- 
-</div>
-
-<div id = "offlineFile">
+<!-- OFFLINE MODE FILE UPLOAD -->
+<!-- <div id = "offlineFile">
     <input type="file" class="file-input"
        (change)="uploadFile($event)" #fileUpload>
 
@@ -70,4 +65,14 @@
     <div>
         <button (click)="readFile()">Upload</button>
     </div>
+</div>
+ -->
+
+<!-- NO CROWBOX MESSAGE BOX -->
+<div id="userId" *ngIf=(showUserId)>
+    <mat-card>
+        <p>
+            You currently do not have a crowbox set up. Please upload the code to your crowbox with your Email and Password
+        </p>
+    </mat-card>
 </div>

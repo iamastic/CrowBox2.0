@@ -5,13 +5,14 @@
 }
 
 .flex-item {
-
+    /* border: #25356a;
+    border-style: double; */
 }
 
 .headerTitle {
-    display: flex;
+    /* display: flex; */
     /* padding:1%; */
-    align-items: center;
+    /* align-items: center; */
     
 }
 
@@ -32,7 +33,7 @@ a {
 }
 
 .wrapper {
-    min-width: 1024px;
+    /* min-width: 1024px; */
     width: 100%;
     flex-shrink: 0;
     flex-grow: 0;

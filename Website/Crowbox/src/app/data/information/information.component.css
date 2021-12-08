@@ -1,6 +1,25 @@
+.mat-card-title {
+    color : #86b8fd;
+    font-size: medium;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+    text-align: center;
+}
+
+.mat-card-content {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: xx-large;
+    color: white;
+    font-weight:bolder;
+    text-align: center;
+}
+
 .mat-card {
     height:100%;
     background-color: #066025;
+
+    width: 75%;
+    height: 12%;
 }
 
 .mat-divider.mat-divider-vertical {
@@ -15,31 +34,6 @@
 
 } 
 
-h5 {
-    position: absolute;
-    top:1vh;
-    left: 0vh;
-    right: 0vh;
-    margin: auto;
-
-    color : #86b8fd;
-    font-size: medium;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-weight: bold;
-}
-
-h2 {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: xx-large;
-    color: white;
-
-    position: absolute;
-    top:3.5vh;
-    left: 0vh;
-    right: 0vh;
-    margin: auto;
-}
-
 h1 {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
@@ -48,107 +42,32 @@ h1 {
     font-weight: bolder;
 }
 
+
 /* INFO BOX RELATED */
 #dataInformation {
-    text-align: center;
-    /* border-style: inset;
+    /*  text-align: center; */
+    border-style: inset;
     border-width: 5px;
     border-radius: 5%;
-    border-color: 0x00ff00; */
+    border-color: 0x00ff00; 
 
-    position: absolute;
-    margin: auto; 
-    top: 15vh;
-    right: 20vh;
-    width: 30%;
-    height: 75%;
-}
-
-#Nickname {
-/*     border-style: inset;
-    border-width: 5px;
-    border-radius: 5%;
-    border-color: 0x00ff00; */
-
-    position: absolute;
-    margin: auto; 
-    right: 0vh;
-    left: 0vh;
-    top: 14vh;
-    width: 75%;
-    height: 12%;
-}
-
-
-#startDate {
-/*     border-style: inset;
-    border-width: 5px;
-    border-radius: 5%;
-    border-color: 0x00ff00;
- */
-    position: absolute;
-    margin: auto; 
-    right: 0vh;
-    left: 0vh;
-    top: 26vh;
-    width: 75%;
-    height: 12%;
-}
-
-
-#totalCoinsDeposited {
-/*     border-style: inset;
-    border-width: 5px;
-    border-radius: 5%;
-    border-color: 0x00ff00; */
-
-    position: absolute;
-    margin: auto; 
-    right: 0vh;
-    left: 0vh;
-    top: 38vh;
-    width: 75%;
-    height: 12%;
-}
-
-#numBirdsOnPerch {
-/*     border-style: inset;
-    border-width: 5px;
-    border-radius: 5%;
-    border-color: 0x00ff00; */
-
-    position: absolute;
-    margin: auto; 
-    right: 0vh;
-    left: 0vh;
-    top: 50vh;
-    width: 75%;
-    height: 12%;
-}
-
-
-#status {
-/*     border-style: inset;
-    border-width: 5px;
-    border-radius: 5%;
-    border-color: 0x00ff00; */
-    
-    position: absolute;
-    margin: auto; 
-    right: 0vh;
-    left: 0vh;
-    top: 62vh;
-    width: 75%;
-    height: 12%;
+    /* position: absolute; */
+    /* margin: auto;  */
+    /* top: 15vh; */
+    /* right: 20vh; */
+    /* width: 100%;
+    height: 100%; */
 }
 
 #boxStatusButton {
     background-color: transparent;
     border: none;
+    align-items: center;
+
 }
 
 #statusError {
-    position: absolute;
+/*     position: absolute;
     height:60%;
     width:90%;
     margin:auto;
@@ -156,7 +75,7 @@ h1 {
     bottom:0vh;
     right:0vh;
     left:0vh;
-    z-index: 100;
+    z-index: 100; */
 }
 
 #closeStatusError {
