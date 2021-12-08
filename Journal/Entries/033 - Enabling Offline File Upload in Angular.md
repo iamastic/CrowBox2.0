@@ -120,7 +120,9 @@ The final outcome looked like this:
 And the text files were in this format: 
 
 **data.txt**
+
 Label/Date/Value
+
 ```txt
 crows_landed_on_perch,2021-11-30,9
 crows_landed_on_perch,2021-11-30,14
