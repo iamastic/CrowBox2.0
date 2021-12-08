@@ -36,6 +36,9 @@ Firstly, I needed to enable a file upload system so that the user may upload the
 ```
 
 **The Typescript functions**
-```js
 
+```js
+uploadFile(event:any) {
+    this.file = event.target.files[0];    
+  }
 ```
