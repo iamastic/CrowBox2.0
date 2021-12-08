@@ -18,18 +18,37 @@
 /* MY WORK */
 #include <ESP32Servo.h>
 #include <WiFi.h> 
-#include <FirebaseESP32.h>
+//#include <FirebaseESP32.h>
+//new Updated firebase client 
+#include <Firebase_ESP_Client.h>
+
+
+#include <NTPClient.h>
+#include <WiFiUdp.h>
+
+#include <dht11.h>
+
+
 #define WIFI_SSID "Vodafone-72DA74"                                          
 #define WIFI_PASSWORD "t6vaHAN6bpy5z4qb"     
-#define FIREBASE_HOST "crowbox-37e57-default-rtdb.firebaseio.com"              // the project name address from firebase id
-#define FIREBASE_AUTH "pgwTyjv4NBcA8xZ2k0IkTjvsMxKiG6cSXmRSldS6"       // the secret key generated from firebase
+
+//the project name address from firebase id
+//the database url
+#define FIREBASE_HOST "crowbox-37e57-default-rtdb.firebaseio.com"            
+#define API_KEY "AIzaSyBxA1xYz2zbcuOw9f_Xi3OzCVLc_2OzMf8" 
+
+
+
 /* END MY WORK */
 
-// #include <Arduino.h>
+#include <Arduino.h>
 #include "cros_types.h"
 #include "cros_constants.h"
 
-//global variables
+//for the SD Card
+#include <SD.h>
+#include <SPI.h>
+
    
 
 //==========================================================
@@ -65,14 +84,64 @@ public:
     cros_time_t HowLongHasBirdBeenHere();
     cros_time_t HowLongHasBirdBeenGone();
 
+    /* MY WORK */
+    //for auth
+    FirebaseAuth auth;
+    //for configuration
+    FirebaseConfig config;
+
     int numberOfCrowsLanded;
     FirebaseData crowOnPerch;
     int numberOfCoinsDeposited;
     FirebaseData coinDeposit;
     FirebaseData trainingPhase;
-    String username;
+    FirebaseData trainingPhaseLoop;
+
+    // Variables to save date and time
+    String formattedDate;
+    String dayStamp;
+
+    //the UID, email and password of the user
+    String USER_ID; 
+    String USER_PASSWORD;
+    String USER_EMAIL;
+
+    unsigned long trainingPhaseTime;
+
+    /* PUBLIC DATA MANAGING */
+    int publicCrowOnPerchValue;
+    FirebaseData publicCrowOnPerchGet;
+    FirebaseData publicCrowOnPerchSet;
+    int publicCoinsDepositedValue;
+    FirebaseData publicCoinsDeposited;
+    FirebaseData location;
+    FirebaseData sharingPreference;
+
+    String toShare;
+    String userLocation;
+
+    /* TROUBLESHOOT */
+    unsigned long troubleshootTime;
+    //Food level 
+    bool isFoodThere;
+    FirebaseData foodData;
+
+    //Coins Level
+    bool isCoinsThere; 
+    FirebaseData coinsData;
+
+    //Humidity Level 
+    int newHumidityValue;
+    int previousHumidityValue;
+    FirebaseData humidity; 
+
+    /* FOR OFFLINE MODE */
+    File sdCardDataFile;
+    unsigned long offlineDay;
+    unsigned long offlineTime;
 
 
+    /* END MY WORK */
     
     bool  IsRewardBasketOpen() const    { return m_basketState == BASKET_STATE_OPEN; }
     
@@ -109,7 +178,8 @@ protected:
     void RunPhaseFourProtocol();
     void AdvanceCurrentTrainingPhase();
 
-    void CheckTrainingPhaseSwitch();
+    void CheckOnlineTrainingPhaseSwitch();
+    void CheckOfflineTrainingPhaseSwitch();
 
     //--------------------------------------
     // EEPROM Methods
@@ -118,6 +188,16 @@ protected:
     void  CreateEEPROMData();
     void  LoadCurrentTrainingPhaseFromEEPROM();
     void  WriteCurrentTrainingPhaseToEEPROM();
+    void  StoreCrowsOnPerchInEEPROM();
+    void  StoreCoinsDepositedInEEPROM();
+    void  LoadCrowsOnPerchFromEEPROM();
+    void  LoadCoinsDepositedFromEEPROM();
+    void  LoadCurrentOfflineDayFromEEPROM();  
+    void  WriteCurrentOfflineDayToEEPROM();
+    // void  LoadCurrentOfflineTimeFromEEPROM();
+    // void  WriteCurrentOfflineTimeToEEPROM();
+    void  CheckIfItIsNextDay();
+    void  WriteDataToSDCard(String type, int value);
 
     //--------------------------------------
     // Firebase Methods
@@ -128,6 +208,15 @@ protected:
     void LoadNumberOfCrowsLandedOnPerchFromFirebase();
     void WriteNumberOfCoinsDepositedToFirebase();
     void WriteNumberOfCrowsOnPerchToFirebase();
+    void GetSharingPreference();
+    void GetUserLocation();
+    void LoadPublicCrowOnPerchData();
+    void WritePublicCrowOnPerchData();
+    void LoadPublicCoinsDepositedData();
+    void WritePublicCoinsDepositedData();
+
+    //time methods
+    void GetCurrentDate();
 
     //--------------------------------------
     // Video
@@ -135,11 +224,21 @@ protected:
     void RecordVideo( cros_time_t duration );
     void StopRecordingVideo();
 
+    
+    //--------------------------------------
+    // Troubleshoot
+    //--------------------------------------
+    void TroubleShoot();
+    void CheckFoodLevel();
+    void CheckCoinsLevel();
+    void CheckHumidityLevel();
+
 private:
     cros_time_t m_uptimeWhenBirdLanded;
     cros_time_t m_uptimeWhenBirdDeparted;
     cros_time_t m_uptimeScheduledBasketClose;
-    cros_time_t m_uptimeLastCoinDetected;
+    //cros_time_t m_uptimeLastCoinDetected;
+    unsigned long m_uptimeLastCoinDetected;
     
     //--------------------------------------
     // This semaphore is used to begin recording video
