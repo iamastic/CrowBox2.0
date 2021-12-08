@@ -1,0 +1,62 @@
+/* CONNECT CROWBOX */
+
+#userId {
+    position: absolute;
+    margin: auto; 
+    left: 44vh;
+    bottom: 37vh;
+}
+
+.mat-card{
+    background-color: #ededed;
+    width:50%;
+}
+
+p {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #cd6413;
+    font-weight: normal;
+    font-size: 20px;
+    text-align: center;
+    line-height: 150%;
+}
+
+/* CHARTS RELATED */
+
+#charts {
+/*     border-style: inset;
+    border-width: 5px;
+    border-radius: 5%;
+    border-color: 0x00ff00; */
+
+    position: absolute;
+    height:50%;
+    width: 50%;
+    top: 30vh;
+    left: 15vh;
+}
+
+#publicButton {
+    position: absolute;
+    margin: auto; 
+    top: 25vh;
+    left: 55vh;
+}
+
+/* BUTTON RELATED */
+.mat-button-toggle {
+    color: aqua;
+}
+
+/* OFFLINE MODE */
+
+#offlineFile {
+    position: absolute;
+    margin: auto;
+    bottom: 10vh;
+    left:60vh;
+}
+
+.file-input {
+    display: none;
+  }

@@ -1,0 +1,16 @@
+<div id="userName">
+    {{userName}}
+</div>
+
+<div id = "changeImage">
+    <div>
+        <input type="file" (change)="uploadFile($event)" accept=".png, .jpg" />
+    </div>
+</div>
+
+<div id="imageContainer">
+    <img alt="Profile Picture" [src]="profileUrl | async" />     
+</div>
+
+
+<mat-divider vertical="true"> </mat-divider>
