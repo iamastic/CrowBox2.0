@@ -9,9 +9,11 @@
 // http://www.thecrowbox.com
 //==========================================================
 //   Except where otherwise noted, this work is licensed 
-//   under a Creative Commons Attribution-ShareAlike 4.0 
+
+//   under a Creative Commons Attribution-ShareAlike 4.0
 //   International License
 //==========================================================
+
 #include "cros_core.h"
 #include "cros_constants.h"
 #include "cros_types.h"
@@ -24,7 +26,7 @@
 // after a successful compile
 //======================================
 CCrowboxCore g_crOSCore;
-FirebaseData fireTrainingStage;
+//FirebaseData fireTrainingStage;
 
 //======================================
 // Called by the Arduino system one time,
@@ -36,24 +38,10 @@ void setup()
 {
     //MY WORK
     Serial.begin(115200);
-    delay(1000);  
-    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);                               
-    Serial.print("Connecting to ");
-    Serial.print(WIFI_SSID);
-    while (WiFi.status() != WL_CONNECTED) 
-    {
-      Serial.print(".");
-      delay(500);
-    }
-    Serial.println();
-    Serial.print("Connected to ");
-    Serial.println(WIFI_SSID);
-
-    Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);                  // connect to firebase
-    Firebase.reconnectWiFi(true); 
-    //Firebase.setString(fireTrainingStage, "crowbox/training_stage", "0"); 
-    //END MY WORK
     
+
+    //END MY WORK
+
     // Run-Once
     g_crOSCore.Setup(); 
 }

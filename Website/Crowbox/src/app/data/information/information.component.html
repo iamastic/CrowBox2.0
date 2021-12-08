@@ -1,0 +1,83 @@
+<mat-divider vertical="true"> </mat-divider>
+
+<div id = "dataInformation">  
+    <h1>CrowBox Information</h1>
+
+<!--     <div id="pendingProfile" *ngIf="pendingProfileDetails === true">
+        PLEASE FILL OUT YOUR PROFILE 
+    </div> -->
+    
+
+    <div id = "Nickname">
+        <mat-card>
+            <h5>NICKNAME</h5>
+            <h2>{{ crowboxNickname }}</h2>
+        </mat-card>
+    </div>
+
+    <div id = "startDate">
+
+        <mat-card>
+            <h5>START DATE</h5>
+            <h2>{{ informationBox.date_joined }}</h2>
+        </mat-card>
+
+    </div>
+    
+    <div id = "totalCoinsDeposited">
+        <mat-card>
+            <h5>TOTAL COINS DEPOSITED</h5>
+            <h2>{{ totalCoinsDeposited }}</h2>
+        </mat-card>
+
+    </div>
+    
+    <div id = "numBirdsOnPerch">
+        <mat-card>
+            <h5>NUMBER OF BIRDS ON PERCH</h5>
+            <h2>{{ totalCrowsLandedOnPerch }}</h2>
+        </mat-card>
+    </div>
+
+    <div id = "status">
+        <mat-card>
+            <h5>STATUS</h5>
+            
+            <!-- If not working, show button - Maybe Icon? -->
+            <button id="boxStatusButton" (click)="changeBoxStatus()">
+                <!-- Show Box's status -->
+                <h2>{{ status }}</h2>
+               <mat-icon *ngIf="isError" style="position: absolute; margin: auto; right: 12vh; color: red;">error</mat-icon> 
+            </button>
+            
+        </mat-card>
+    </div>
+
+    
+
+
+    <!-- DROP DOWN TO SELECT TRAINING STAGE -->
+    <div class="row">
+        <div class="col">
+            <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Current Training Stage: {{currentTrainingStage}}</button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button ngbDropdownItem (click)="phaseOne()">Training Phase 1</button>
+                    <button ngbDropdownItem (click)="phaseTwo()">Training Phase 2</button>
+                    <button ngbDropdownItem (click)="phaseThree()">Training Phase 3</button>
+                    <button ngbDropdownItem (click)="phaseFour()">Training Phase 4</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- This div will open when the button is pressed if 
+    there is an error -->
+    <div id ="statusError" *ngIf="showStatusBox">
+       <mat-card style="background-color: #ededed;">
+            <app-troubleshoot></app-troubleshoot>
+        </mat-card>
+
+        <button id="closeStatusError" mat-raised-button (click)="changeBoxStatus()">Close</button>
+    </div>

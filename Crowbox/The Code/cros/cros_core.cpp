@@ -13,6 +13,18 @@
 #include <EEPROM.h>
 #include "cros_core.h"
 
+// Provide the token generation process info.
+#include "addons/TokenHelper.h"
+// Provide the RTDB payload printing info and other helper functions.
+#include "addons/RTDBHelper.h"
+
+// Define NTP Client to get time
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP);
+
+//define the DHT object
+dht11 DHT;
+
 //==========================================================
 // Interrupt function called when the coin sensor is struck
 // by a coin, bringing the coin pin to LOW (switched to ground).
@@ -23,19 +35,8 @@
 //==========================================================
 void IRAM_ATTR Interrupt_CoinDeposit()
 {
-    //Serial.println("Entered interrupt");
-    //detach the interrupt temporarily
-    detachInterrupt(digitalPinToInterrupt(17));
-    //Serial.println("detached interrupt for coin sensor");
-
     g_crOSCore.EnqueueCoin();
 }
-
-//this function does absolutely nothing
-void IRAM_ATTR FlushOutInterrupts() {
-  Serial.println("Doing nothing");
-}
-
 
 //----------------------------------------------------------
 // Simple function to pipe the provided string to serial
@@ -100,80 +101,136 @@ CCrowboxCore::CCrowboxCore()
     // Initialize this to never for now. It will come to use 
     // later as birds come and go.
     m_uptimeScheduledBasketClose = TIME_NEVER;    
+
 }
 
 //----------------------------------------------------------
 //----------------------------------------------------------
 void CCrowboxCore::Setup()
 {
+
+  //memory at start
+  Serial.println("Memory At Setup ");
+  Serial.println(xPortGetFreeHeapSize());
+
 /* #if defined( CROS_USE_SERIAL_DEBUG )
     Serial.begin( CROS_SERIAL_BAUD_RATE ); 
 #endif *///CROS_USE_SERIAL_DEBUG
 
     DebugPrint( "Setup() method CALLED...\n" );
-    //start with 0 crows landed on perch
-    //this will need to change eventually, and it should ideally load
-    //in the data from the database (otherwise it will always
-    //start on 0, which is incorrect!)
-    //numberOfCrowsLanded = 0;
-    //start with 0 coins deposited
-    //numberOfCoinsDeposited = 0;
+  
+    //set the User's Email and Password
+    USER_EMAIL = "imhaq7@gmail.com";
+    USER_PASSWORD = "password";
 
-    username = "qureshiahamza";
-    Serial.println("Username Set: " + username);
 
-    // Start with no enqueued deposits
-    m_numEnqueuedDeposits = 0;
-       
-    // Set up the indicator LED pin, then turn the LED off to
-    // save that microscopic amount of power. 
-    pinMode( OUTPUT_PIN_LED, OUTPUT );
-    digitalWrite( OUTPUT_PIN_LED, LOW );
+//----------------------------------------------------------
+// This is if the OFFLINE_MODE has not been defined. 
+// Here, we will be using the online data storage
+// method: Firebase. 
+//----------------------------------------------------------
 
-    // Ensure that the stored EEPROM data is valid, then load
-    // the current training phase from storage there.
-    /* if( !ValidateEEPROMData() )
+    #ifndef OFFLINE_MODE
+    Serial.println("Setup: In ONLINE MODE");
+
+    //Connect to WiFi
+    delay(1000);  
+    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);                               
+    Serial.print("Connecting to ");
+    Serial.print(WIFI_SSID);
+    while (WiFi.status() != WL_CONNECTED) 
     {
-      // Oops! The EEPROM data is not valid. This probably just
-      // means that the Arduino board in use has not been used 
-      // to operate a crowbox before. So we'll create valid 
-      // EEPROM data that can be used henceforth. 
-      CreateEEPROMData();
+      Serial.print(".");
+      delay(500);
+    }
+    Serial.println();
+    Serial.print("Connected to ");
+    Serial.println(WIFI_SSID);
 
-      // Now that we've created EEPROM data for CrOS, let's be
-      // sure that it actually worked. If not, that's a fatal
-      // error that needs to be reported! 
-      if( !ValidateEEPROMData() )
-      {
-        ReportSystemError( kError_EEPROM );
-      }
-    } */
 
-    // If we reach this point, we're sure the EEPROM data is good
-    // so we'll retrieve the stored data there which tells use which
-    // phase of the training protocol is currently in use.
-    //LoadCurrentTrainingPhaseFromEEPROM();    
+    // Assign the api key (required)
+    config.api_key = API_KEY;
+
+    // Assign the user sign in credentials
+    auth.user.email = USER_EMAIL;
+    auth.user.password = USER_PASSWORD;
+
+    //assign the database url to config 
+    config.database_url = FIREBASE_HOST;
+
+
+    // Assign the callback function for the long running token generation task
+    config.token_status_callback = tokenStatusCallback; 
+    //see addons/TokenHelper.h
+
+    // Assign the maximum retry of token generation
+    config.max_token_generation_retry = 5;
+
+    // Initialize the library with the Firebase authen and config
+    Firebase.begin(&config, &auth);
+    Firebase.reconnectWiFi(true);
+    //optional - but good to allow firebase to retry any errors
+    Firebase.RTDB.setMaxRetry(&crowOnPerch, 3);
+    Firebase.RTDB.setMaxRetry(&coinDeposit, 3);
+    Firebase.RTDB.setMaxRetry(&trainingPhase, 3);
+    Firebase.RTDB.setMaxRetry(&publicCrowOnPerchGet, 3);
+    Firebase.RTDB.setMaxRetry(&publicCrowOnPerchSet, 3);
+    Firebase.RTDB.setMaxRetry(&publicCoinsDeposited, 3);
+    Firebase.RTDB.setMaxRetry(&location, 3);
+    Firebase.RTDB.setMaxRetry(&sharingPreference, 3);
+    Firebase.RTDB.setMaxRetry(&trainingPhaseLoop, 3);
+
+    //Optional, set number of error resumable queues
+    Firebase.RTDB.setMaxErrorQueue(&crowOnPerch, 30);
+    Firebase.RTDB.setMaxErrorQueue(&coinDeposit, 30);
+    Firebase.RTDB.setMaxErrorQueue(&trainingPhase, 30);
+    Firebase.RTDB.setMaxErrorQueue(&publicCrowOnPerchGet, 30);
+    Firebase.RTDB.setMaxErrorQueue(&publicCrowOnPerchSet, 30);
+    Firebase.RTDB.setMaxErrorQueue(&publicCoinsDeposited, 30);
+    Firebase.RTDB.setMaxErrorQueue(&location, 30);
+    Firebase.RTDB.setMaxErrorQueue(&sharingPreference, 30);
+    Firebase.RTDB.setMaxErrorQueue(&trainingPhaseLoop, 30);
+
+
+    //min size is 1024
+    crowOnPerch.setResponseSize(8192);
+    coinDeposit.setResponseSize(8192);
+    trainingPhase.setResponseSize(8192);
+    publicCrowOnPerchGet.setResponseSize(8192);
+    publicCrowOnPerchSet.setResponseSize(8192);
+    publicCoinsDeposited.setResponseSize(8192);
+    location.setResponseSize(8192);
+    sharingPreference.setResponseSize(8192);
+    trainingPhaseLoop.setResponseSize(8192);
+
+    // Getting the user UID might take a few seconds
+    Serial.println("Getting User UID");
+    while ((auth.token.uid) == "") {
+      Serial.print('.');
+      delay(1000);
+    }
+    // Print user UID
+    USER_ID = auth.token.uid.c_str();
+    Serial.print("User UID: ");
+    Serial.println(USER_ID);
+
+    //set the user's current location to
+    userLocation = "null";
+
+    //set the public crows on perch value to 0
+    publicCrowOnPerchValue = 0;
+
+    //set the humidity value to -1
+    previousHumidityValue = -1;
+
+    // Initialize a NTPClient to get time and date
+    timeClient.begin();
+    timeClient.setTimeOffset(3600);
 
     //initiate the main variables from firebase
     LoadCurrentTrainingPhaseFromFirebase();
-    LoadNumberOfCoinsDepositedFromFirebase();
-    LoadNumberOfCrowsLandedOnPerchFromFirebase();
 
-
-
-    /* switch( m_currentTrainingPhase )
-    {
-      case PHASE_ONE:   DebugPrint("Loaded PHASE ONE from EEPROM\n" );    break;
-      case PHASE_TWO:   DebugPrint("Loaded PHASE TWO from EEPROM\n" );    break;
-      case PHASE_THREE: DebugPrint("Loaded PHASE THREE from EEPROM\n" );  break;
-      case PHASE_FOUR:  DebugPrint("Loaded PHASE FOUR from EEPROM\n" );   break;
-      default:
-        DebugPrint("Loaded garbage training phase from EEPROM!");
-        ReportSystemError( kError_BadTrainingPhase );
-        break;
-    } */
-
-    switch( m_currentTrainingPhase )
+        switch( m_currentTrainingPhase )
     {
       case PHASE_ONE:   DebugPrint("Loaded PHASE ONE from Firebase\n" );    break;
       case PHASE_TWO:   DebugPrint("Loaded PHASE TWO from Firebase\n" );    break;
@@ -184,6 +241,118 @@ void CCrowboxCore::Setup()
         ReportSystemError( kError_BadTrainingPhase );
         break;
     }
+
+    /* MOVED FROM BELOW TO UP HERE */
+    // Set up the Food Level Sensor 
+    pinMode(INPUT_FOOD_SENSOR, INPUT);
+    // Initialise the "detected" variable for the food level
+    // i.e. is there food in the basket? Starts with "false"
+    isFoodThere = false;
+
+    pinMode(INPUT_COINSLEVEL_SENSOR, INPUT);
+    isCoinsThere = false;
+    
+    //set the current time for training phase
+    trainingPhaseTime = millis();
+    //set the current time for the troubleshoot period
+    troubleshootTime = millis();
+    #endif //OFFLINE_MODE
+
+
+//----------------------------------------------------------
+// This is if the OFFLINE_MODE has been defined. 
+// Here, we will not be using any online data storage
+// such as Firebase. Instead, we will be storing the data in 
+// an SD card. Everything will be manually controlled. 
+// For example, to change the training stage we need use the
+// physical switch. Essentially, everything will be very 
+// similar to the original Crowbox OS.
+//----------------------------------------------------------
+
+    #ifdef OFFLINE_MODE
+    Serial.println("Setup: In OFFLINE MODE");
+
+    //Create the EEPROM if it does not exist
+    // Ensure that the stored EEPROM data is valid, then load
+    // the current training phase from storage there.
+    if( !ValidateEEPROMData() )
+    {
+      // Oops! The EEPROM data is not valid. This probably just
+      // means that the Arduino board in use has not been used 
+      // to operate a crowbox before. So we'll create valid 
+      // EEPROM data that can be used henceforth. 
+      CreateEEPROMData();
+
+      //initialise the Offline Data Variables
+      offlineDay = 1;
+      //store this data within the EEPROM
+      WriteCurrentOfflineDayToEEPROM();
+
+      numberOfCrowsLanded = 0;
+      StoreCrowsOnPerchInEEPROM();
+      numberOfCoinsDeposited = 0;
+      StoreCoinsDepositedInEEPROM();
+
+
+      // Now that we've created EEPROM data for CrOS, let's be
+      // sure that it actually worked. If not, that's a fatal
+      // error that needs to be reported! 
+      if( !ValidateEEPROMData() )
+      {
+        ReportSystemError( kError_EEPROM );
+      }
+    }
+
+    //Load the training Phase from EEPROM
+    // If we reach this point, we're sure the EEPROM data is good
+    // so we'll retrieve the stored data there which tells use which
+    // phase of the training protocol is currently in use.
+    LoadCurrentTrainingPhaseFromEEPROM();    
+
+    //Load the current day and time for SD card storage
+    // LoadCurrentOfflineTimeFromEEPROM();
+    LoadCurrentOfflineDayFromEEPROM();
+    // offlineTime = 0;
+
+    LoadCrowsOnPerchFromEEPROM();
+    LoadCoinsDepositedFromEEPROM();
+
+    //Switch the training phase top print out
+    switch( m_currentTrainingPhase )
+    {
+      case PHASE_ONE:   DebugPrint("Loaded PHASE ONE from EEPROM\n" );    break;
+      case PHASE_TWO:   DebugPrint("Loaded PHASE TWO from EEPROM\n" );    break;
+      case PHASE_THREE: DebugPrint("Loaded PHASE THREE from EEPROM\n" );  break;
+      case PHASE_FOUR:  DebugPrint("Loaded PHASE FOUR from EEPROM\n" );   break;
+      default:
+        DebugPrint("Loaded garbage training phase from EEPROM!");
+        ReportSystemError( kError_BadTrainingPhase );
+        break;
+    }
+
+    // Initialise the SD card
+    pinMode(OUTPUT_PIN_SD_CARD, OUTPUT);
+
+      // SD Card Initialization
+    if (SD.begin()) {
+      Serial.println("SD card is ready to use.");
+    } else {
+        Serial.println("SD card initialization failed");
+        return;
+    }
+
+    #endif//OFFLINE_MODE
+
+
+
+    // Start with no enqueued deposits
+    m_numEnqueuedDeposits = 0;
+
+         
+    // Set up the indicator LED pin, then turn the LED off to
+    // save that microscopic amount of power. 
+    pinMode( OUTPUT_PIN_LED, OUTPUT );
+    digitalWrite( OUTPUT_PIN_LED, LOW );
 
     // Set up the pin that is attached to the pushbutton
     // which is used to cycle the training phase
@@ -213,11 +382,11 @@ void CCrowboxCore::Setup()
 
     // Set the sentinel that protects us from contact bounce on coin deposits.
     // Do this by setting it to the current time plus a little bit of slop.
-    m_uptimeLastCoinDetected = GetUptimeSeconds() + 0.1f;
+    m_uptimeLastCoinDetected = millis() + 100;
 
     // Ensure video is not being recorded
     StopRecordingVideo();
-
+    
     // Ensure everything has settled out before proceeding. 
     delay( 1000 );
 
@@ -273,22 +442,36 @@ void CCrowboxCore::Loop()
       break;
     }  
 
-    // FOR FUTURE EXPANSION:
-    // Run the logic for video recording. Note that the way this logic 
-    // is arranged, calling RecordVideo() while the system is already 
-    // recording video will magically extend the duration  
-    if( m_isRecordingVideo )
-    {
-        // Should we turn off?
-        if( GetUptimeSeconds() >= m_uptimeStopRecordingVideo )
-        {
-            StopRecordingVideo();
-        }
+    
+    #ifndef OFFLINE_MODE
+    //Ensure the date and time client updates
+    while(!timeClient.update()) {
+      timeClient.forceUpdate();
     }
 
-    // Poll to see if the human operator has pressed the switch which is
-    // used to change the selected training phase.
-    CheckTrainingPhaseSwitch();
+    //check the current training stage every 1 minute to avoid 
+    //too many requests to firebase database
+    if((millis() - trainingPhaseTime) >= 60000) {
+      Serial.println("1 Minute is up, checking training phase");
+      trainingPhaseTime = millis();
+      CheckOnlineTrainingPhaseSwitch();
+      trainingPhaseLoop.clear();
+    }
+
+    //Check the Troubleshoot setup every 30 minutes 
+    //CHANGE TO 30 MINS!! 1800000
+    if((millis() - troubleshootTime) >= 1800000) {
+      Serial.println("10 seconds over, checking box status in troubleshoot");
+      troubleshootTime = millis();
+      TroubleShoot();
+    }
+    #endif //OFFLINE_MODE
+
+
+    #ifdef OFFLINE_MODE 
+      //Check the offline training phase switch
+      CheckOfflineTrainingPhaseSwitch();
+    #endif //OFFLINE_MODE
 
     // Now we do some time arithmetic to figure out how long this loop took to
     // execute. If it's less than IDEAL_LOOP_MS, then we make the system 
@@ -388,30 +571,8 @@ cros_time_t CCrowboxCore::HowLongHasBirdBeenGone()
 //----------------------------------------------------------
 bool CCrowboxCore::EnqueueCoin()              
 {
-    Serial.println("Entered Enqueue Coin");
+    //Serial.println("Entered Enqueue Coin");
 
-/*     Serial.println(GetUptimeSeconds());
-    Serial.println(m_uptimeLastCoinDetected);
-    Serial.println("Printed getuptime and lasttime"); */
-
-    /* cros_time_t n = GetUptimeSeconds();
-    Serial.println(n);
-    Serial.println("Printed n");
-
-    cros_time_t m = m_uptimeLastCoinDetected;
-    Serial.println(m);
-    Serial.println("Printed m");
-
-    cros_time_t x = n - m;
-    Serial.println(x);
-    Serial.println("Printed x");  */
-
-   /*  if (x < 1.0) {
-      Serial.println("Returning false");
-      
-      return false;
-    } */
-    //This function is causing the core dump to fail in the esp32
    /*  if( GetUptimeSeconds() - m_uptimeLastCoinDetected < 1.0f )
     {
         // We must only accept one coin deposit per second. Because of the
@@ -428,15 +589,19 @@ bool CCrowboxCore::EnqueueCoin()
 
         return false;
     } */
-    Serial.println("Increasing the coin deposit");
+
+    if ((millis() - m_uptimeLastCoinDetected) < 1000) {
+      return false;
+    }
+    //Serial.println("Increasing the coin deposit");
 
     m_numEnqueuedDeposits++;    
     
-    Serial.println("Done increasing coin deposit");
+    //Serial.println("Done increasing coin deposit");
 
-    m_uptimeLastCoinDetected = GetUptimeSeconds();
+    m_uptimeLastCoinDetected = millis();
 
-    Serial.println("Returning true from Enqueue Coin");
+    //Serial.println("Returning true from Enqueue Coin");
     return true;
 }
 
@@ -703,7 +868,6 @@ void CCrowboxCore::RunPhaseOneProtocol()
 //----------------------------------------------------------
 void CCrowboxCore::RunPhaseTwoProtocol()
 {
-
   // If a bird is on the perch, logically speaking- This means
   // more than knowing if the perch is depressed, it's about 
   // having internal state that indicates that a bird is truly present.
@@ -730,11 +894,7 @@ void CCrowboxCore::RunPhaseTwoProtocol()
     {
       // EDGE CASE: A new bird has arrived!
       DebugPrint( "A customer has landed on the perch!\n" );
-      numberOfCrowsLanded++;
-      /* Firebase.setInt(crowOnPerch, "crowbox/crow_on_perch", 
-      numberOfCrowsLanded); */
-
-      WriteNumberOfCrowsOnPerchToFirebase(); 
+      
 
       m_uptimeWhenBirdLanded = GetUptimeSeconds();
 
@@ -748,6 +908,64 @@ void CCrowboxCore::RunPhaseTwoProtocol()
       // unlimited time to remove unlimited food from the basket and throw
       // it somewhere else for later retrieval.
       ScheduleBasketCloseWithDelay( BASKET_REMAIN_OPEN_DURATION );
+       
+      Serial.println("Memory Remaining At Start of Phase 2: ");
+      Serial.println(xPortGetFreeHeapSize());
+
+      /* ONLINE MODE */
+      #ifndef OFFLINE_MODE
+      Serial.println("Training Stage 2 perch pressed - ONLINE MODE!");
+
+      //for private data
+      GetCurrentDate();
+      LoadNumberOfCrowsLandedOnPerchFromFirebase();
+      Serial.println("Memory Remaining After Loading Num Crows Landed On Perch of Phase 2: ");
+      Serial.println(xPortGetFreeHeapSize());      
+
+      WriteNumberOfCrowsOnPerchToFirebase(); 
+      Serial.println("Memory Remaining After Writing num crows on perch in Phase 2: ");
+      Serial.println(xPortGetFreeHeapSize());
+      //clear memory used by this firebase object
+      crowOnPerch.clear();
+
+      //for public data
+      GetSharingPreference();
+      Serial.println("Memory Remaining After getting sharing preference in Phase 2: ");
+      Serial.println(xPortGetFreeHeapSize());
+      sharingPreference.clear();
+
+      GetUserLocation();   
+      location.clear();
+
+      LoadPublicCrowOnPerchData();
+      publicCrowOnPerchGet.clear();
+
+
+      WritePublicCrowOnPerchData();
+      publicCrowOnPerchSet.clear();
+      #endif //OFFLINE_MODE
+
+      
+      /* FOR OFFLINE MODE */
+      //SD Card Logic goes here to store the data
+      #ifdef OFFLINE_MODE
+      Serial.println("Training Stage 2 perch pressed - OFFLINE MODE!");
+
+      //Have we progressed to the next day? If so, 
+      //change the day to be stored.
+      CheckIfItIsNextDay();
+      Serial.println(offlineDay);
+
+      StoreCrowsOnPerchInEEPROM();
+
+      WriteDataToSDCard("crows_landed_on_perch", numberOfCrowsLanded);
+
+      #endif //OFFLINE_MODE
+
+  
+      
+      Serial.println("Memory Remaining At End of Phase 2: ");
+      Serial.println(xPortGetFreeHeapSize());
     }
   }
 }      
@@ -772,25 +990,6 @@ void CCrowboxCore::RunPhaseThreeProtocol()
   if( m_numEnqueuedDeposits > 0 && !IsRewardBasketOpen() )
   {
     Serial.println("Coin has been deteced");
-    //EIFR = 0x01;
-
-    //add delay to avoid coin contact bounce
-    delay(500);
-    //reattach interrupt to coin sensor but send to blank function to 
-    //flush out the pending interrupts
-    attachInterrupt( digitalPinToInterrupt(INPUT_PIN_COIN), FlushOutInterrupts, FALLING );
-
-    //add another delay
-    delay(500);
-    //detach the interrupt again
-    detachInterrupt(digitalPinToInterrupt(17));
-   
-    //add another delay
-    delay(500);
-    //reattach the interrupt to the correct function
-    attachInterrupt( digitalPinToInterrupt(INPUT_PIN_COIN), Interrupt_CoinDeposit, FALLING );
-
-    Serial.println("Reattached interrupt for coin sensor");
 
     RemoveEnqueuedCoin();// Un-count this deposit since we're paying it off now.
 
@@ -799,9 +998,60 @@ void CCrowboxCore::RunPhaseThreeProtocol()
     // Set it up to close.
     ScheduleBasketCloseWithDelay( BASKET_REMAIN_OPEN_DURATION );
 
-    numberOfCoinsDeposited++;
-    /* Firebase.setInt(coinDeposit, "crowbox/coins_deposited", numberOfCoinsDeposited); */ 
+    
+    /* ONLINE MODE */
+    #ifndef OFFLINE_MODE
+    Serial.println("Training Stage 3 Coin deposited - ONLINE MODE!");
+    GetCurrentDate();
+    //now, we need to check if this date and its data exists
+    //in the firebase database. We need to load it and also 
+    //increment it within this function
+    LoadNumberOfCoinsDepositedFromFirebase();
+    coinDeposit.clear();
+
+    //then, we need to write this data back to firebase
     WriteNumberOfCoinsDepositedToFirebase();
+    coinDeposit.clear();
+
+    //for public data
+    GetSharingPreference();
+    Serial.println("Memory Remaining After getting sharing preference in Phase 3: ");
+    Serial.println(xPortGetFreeHeapSize());
+    sharingPreference.clear();
+
+    GetUserLocation();
+    location.clear();
+
+    LoadPublicCoinsDepositedData();
+    publicCoinsDeposited.clear();
+
+    WritePublicCoinsDepositedData();
+    publicCoinsDeposited.clear();
+    #endif //OFFLINE_MODE
+
+   
+    /* FOR OFFLINE MODE */
+    //SD Card Logic goes here to store the data
+    #ifdef OFFLINE_MODE
+    Serial.println("Training Stage 3 Coin deposited - OFFLINE MODE!");
+
+    //Have we progressed to the next day? If so, 
+    //change the day to be stored.
+    CheckIfItIsNextDay();
+    Serial.println(offlineDay);
+
+    //Either the value has been incremented,
+    //or it has been reset to 1 (if it is a new day)
+    //Nonetheless, we store this in the EEPROM for future use
+    StoreCoinsDepositedInEEPROM();
+    //Then, we write the data to the SD Card
+    WriteDataToSDCard("coins_deposited", numberOfCoinsDeposited);
+
+    #endif //OFFLINE_MODE
+          
+    Serial.println("Memory Remaining At End of Phase 3: ");
+    Serial.println(xPortGetFreeHeapSize());
+
   }
 }
 
@@ -839,7 +1089,7 @@ void CCrowboxCore::RunPhaseFourProtocol()
 // so we need to check to see if it's pulled to ground. If 
 // yes, the physical switch is pressed.
 //----------------------------------------------------------
-void CCrowboxCore::CheckTrainingPhaseSwitch()
+void CCrowboxCore::CheckOnlineTrainingPhaseSwitch()
 {
   /* if( digitalRead( INPUT_PIN_PHASE_SELECT ) != LOW )
   {
@@ -863,25 +1113,63 @@ void CCrowboxCore::CheckTrainingPhaseSwitch()
   //Write it to Firebase Database
   //WriteCurrentTrainingPhaseToFirebase();
 
+    
+      Serial.println("Memory Remaining At Start of Check Training Switch: ");
+      Serial.println(xPortGetFreeHeapSize());
+
   int newTrainingStage = 0;
 
-  if (Firebase.getInt(trainingPhase, "Users/"+username+"/Crowbox/current_training_stage")) {  
+  if (Firebase.RTDB.getInt(&trainingPhaseLoop, "Users/"+USER_ID+"/Crowbox/current_training_stage")) {  
+    newTrainingStage = trainingPhaseLoop.to<int>();
+   
+    Serial.println("Got Training Stage");
+        Serial.println("Memory Remaining At End of Check Training Switch: ");
+      Serial.println(xPortGetFreeHeapSize());
     
-    newTrainingStage = trainingPhase.to<int>();
   } else {
-    Serial.println("Error retreiving data from Firebase");
+      Serial.println("FAILED to receive Training Phase from Firebase");
+      Serial.println("REASON: " + trainingPhaseLoop.errorReason());
+      Serial.println("------------------------------------");
+      Serial.println();
   }
 
-  
   if ((newTrainingStage >=1) && (newTrainingStage <=4)) {
     if (newTrainingStage != m_currentTrainingPhase) {
-    //restart esp32
-    ESP.restart();
-  }
+      
+      Serial.println("Memory Remaining At End of Check Training Switch: ");
+      Serial.println(xPortGetFreeHeapSize());
+      //restart esp32
+      ESP.restart();
+    }
   } else {
-    Serial.println("New training stage is outside valid range");
+      Serial.println("Memory Remaining At End of Check Training Switch: ");
+      Serial.println(xPortGetFreeHeapSize());
+      Serial.println("New training stage is outside valid range");
   }
 }
+
+void CCrowboxCore::CheckOfflineTrainingPhaseSwitch() {
+  if( digitalRead( INPUT_PIN_PHASE_SELECT ) != LOW )
+  {
+    // Button not depressed- do nothing more.
+    return;
+  }
+
+  DebugPrint(" Training switch pressed!\n" ); 
+
+  while( digitalRead( INPUT_PIN_PHASE_SELECT ) == LOW )
+  {
+    // Waste time until the person releases the switch.
+    delay( 10 );
+  };
+  
+  AdvanceCurrentTrainingPhase();
+  ReportCurrentTrainingPhase();
+
+  // Write it to the PROM now.
+  WriteCurrentTrainingPhaseToEEPROM();
+}
+
 
 //----------------------------------------------------------
 // Push ahead to the next training phase. If we pass phase
@@ -922,20 +1210,6 @@ bool CCrowboxCore::ValidateEEPROMData()
     pHeaderCharacter++;
   }
   /* END MY ADDITION */
-
-  /* for( int addr = 0 ; addr < 4 ; ++addr )
-  {
-    if( *pHeaderCharacter != EEPROM[ addr ] )
-    {
-      // We found a character in the EEPROM data which does
-      // not match the CrOS header. 
-      DebugPrint( "EEPROM data header is invalid\n" );
-      return false;
-    }
-
-    // On to the next character
-    pHeaderCharacter++;
-  } */
   
   // Data header is in order
   DebugPrint( "EEPROM Header Validated\n" );
@@ -970,25 +1244,6 @@ void CCrowboxCore::CreateEEPROMData()
   /* END MY ADDITION */
 
   DebugPrint( "...Done!\n" );
-
-//----------------------------------------------------------
-
-  /* const char *pHeaderCharacter = CROS_EEPROM_HEADER_STRING;
-
-  for( int addr = 0 ; addr < 4 ; ++addr )
-  {
-    EEPROM[ addr ] = *pHeaderCharacter;
-
-    // On to the next character
-    pHeaderCharacter++;
-  } */
-
-  // Immediately after the header we write out a byte with a 
-  // value of 1 so that the default for a brand-new Crowbox
-  // would be to start in training phase one.
- /*  EEPROM[ CROS_EEPROM_ADDRESS_TRAINING_PHASE ] = PHASE_ONE;
-
-  DebugPrint( "...Done!\n" ); */
 }
 
 //----------------------------------------------------------
@@ -1026,40 +1281,213 @@ void CCrowboxCore::WriteCurrentTrainingPhaseToEEPROM()
   DebugPrint(" EEPROM Updated!\n" );
 }
 
+void CCrowboxCore::StoreCrowsOnPerchInEEPROM() {
+  EEPROM.begin(512);
+
+  EEPROM.put(CROS_EEPROM_CROWS_ON_PERCH , numberOfCrowsLanded >> 8);
+  EEPROM.put(CROS_EEPROM_CROWS_ON_PERCH + 1, numberOfCrowsLanded & 0xFF);    
+  EEPROM.commit();
+
+  Serial.println("Successfully Written Crows On perch data to EEPROM");
+}
+
+void CCrowboxCore::LoadCrowsOnPerchFromEEPROM(){
+  EEPROM.begin(512);
+  numberOfCrowsLanded = 
+  (EEPROM.read(CROS_EEPROM_CROWS_ON_PERCH) << 8) + EEPROM.read(CROS_EEPROM_CROWS_ON_PERCH + 1);
+
+  
+  Serial.println("Successfully Loaded Crows Deposited from EEPROM");
+  Serial.println(numberOfCrowsLanded);
+
+}
+
+void CCrowboxCore::StoreCoinsDepositedInEEPROM() {
+  EEPROM.begin(512);
+
+  EEPROM.put(CROS_EEPROM_COINS_DEPOSITED , numberOfCoinsDeposited >> 8);
+  EEPROM.put(CROS_EEPROM_COINS_DEPOSITED + 1, numberOfCoinsDeposited & 0xFF);  
+  EEPROM.commit();
+
+  Serial.println("Successfully Written Coins Deposited data to EEPROM");
+}
+
+void CCrowboxCore::LoadCoinsDepositedFromEEPROM() {
+  EEPROM.begin(512);
+  numberOfCoinsDeposited = 
+  (EEPROM.read(CROS_EEPROM_COINS_DEPOSITED) << 8) + EEPROM.read(CROS_EEPROM_COINS_DEPOSITED + 1);
+
+  Serial.println("Successfully Loaded coins deposited from EEPROM");
+  Serial.println(numberOfCoinsDeposited);
+}
+
+void CCrowboxCore::LoadCurrentOfflineDayFromEEPROM() {
+  EEPROM.begin(512);
+  
+  offlineDay = 
+    ((unsigned long)EEPROM.read(CROS_EEPROM_ADDRESS_CURRENT_DAY) << 24) 
+  + ((unsigned long)EEPROM.read(CROS_EEPROM_ADDRESS_CURRENT_DAY + 1) << 16) 
+  + ((unsigned long)EEPROM.read(CROS_EEPROM_ADDRESS_CURRENT_DAY + 2) << 8) 
+  + ((unsigned long)EEPROM.read(CROS_EEPROM_ADDRESS_CURRENT_DAY + 3));
+
+  Serial.println("Successfully loaded Offline Day from EEPROM");
+  Serial.println(offlineDay);
+}
+
+void CCrowboxCore::WriteCurrentOfflineDayToEEPROM() {
+  //initiate the EEPROM
+  EEPROM.begin(512);
+
+  //Break the time down into 4 bytes
+  EEPROM.put(CROS_EEPROM_ADDRESS_CURRENT_DAY, (offlineDay >> 24) & 0xFF);
+  EEPROM.put(CROS_EEPROM_ADDRESS_CURRENT_DAY + 1, (offlineDay >> 16) & 0xFF);
+  EEPROM.put(CROS_EEPROM_ADDRESS_CURRENT_DAY + 2, (offlineDay >> 8) & 0xFF);
+  EEPROM.put(CROS_EEPROM_ADDRESS_CURRENT_DAY + 3, offlineDay & 0xFF);
+  
+  EEPROM.commit();
+  Serial.println("Successfully Written Offline Day to EEPROM");
+}
+
+/* 
+void CCrowboxCore::LoadCurrentOfflineTimeFromEEPROM() {
+  EEPROM.begin(512);
+
+  offlineTime = 
+    ((unsigned long)EEPROM.read(CROS_EEPROM_ADDRESS_TIME) << 24) 
+  + ((unsigned long)EEPROM.read(CROS_EEPROM_ADDRESS_TIME + 1) << 16) 
+  + ((unsigned long)EEPROM.read(CROS_EEPROM_ADDRESS_TIME + 2) << 8) 
+  + ((unsigned long)EEPROM.read(CROS_EEPROM_ADDRESS_TIME + 3));
+
+  // offlineTime += millis();wa
+
+  Serial.println("Successfully loaded Offline Time from EEPROM");
+  Serial.println(offlineTime);
+  
+} */
+/* 
+void CCrowboxCore::WriteCurrentOfflineTimeToEEPROM() {
+  //initiate the EEPROM
+  EEPROM.begin(512);
+
+  //Break the time down into 4 bytes
+
+  EEPROM.put(CROS_EEPROM_ADDRESS_TIME, (offlineTime >> 24) & 0xFF);
+  EEPROM.put(CROS_EEPROM_ADDRESS_TIME + 1, (offlineTime >> 16) & 0xFF);
+  EEPROM.put(CROS_EEPROM_ADDRESS_TIME + 2, (offlineTime >> 8) & 0xFF);
+  EEPROM.put(CROS_EEPROM_ADDRESS_TIME + 3, offlineTime & 0xFF);
+  
+  EEPROM.commit();
+  Serial.println("Successfully Written Offline Time to EEPROM");
+} */
+
+void CCrowboxCore::CheckIfItIsNextDay() {
+  if (millis() - offlineTime > OFFLINE_TIME) {
+    offlineDay++;
+    offlineTime = millis();
+
+    //reset this value since it is a new day
+    numberOfCrowsLanded = 1;
+    numberOfCoinsDeposited = 1;
+    WriteCurrentOfflineDayToEEPROM();
+  } else {
+      numberOfCrowsLanded++;
+      numberOfCoinsDeposited++;
+  }
+} 
+
+void CCrowboxCore::WriteDataToSDCard(String type, int value) {
+  sdCardDataFile = SD.open("/data.txt", FILE_APPEND);
+  String line = type;
+  line += ',';
+  line += String(offlineDay);
+  line += ',';
+  line += String(value);
+
+  if (sdCardDataFile) {
+    Serial.println("Sending Data to File");
+    sdCardDataFile.println(line);
+    sdCardDataFile.close();
+    Serial.println("Done Sending Data");
+  } else {
+    Serial.println("Error in opening data file when writing");
+    
+  }
+
+  //Print out what is in the SD card to see
+  //This is just a test, delete after
+  sdCardDataFile = SD.open("/data.txt");
+  if (sdCardDataFile) {
+    Serial.println("Reading Data From File");
+
+    while(sdCardDataFile.available()){
+      Serial.write(sdCardDataFile.read());
+    }
+    
+    sdCardDataFile.close();
+    Serial.println("Done Reading Data");
+  } else {
+    Serial.println("Error in opening data file when reading");
+  }
+}
+
+
+
+
+
+
+
+
+
 
 void CCrowboxCore::WriteCurrentTrainingPhaseToFirebase()
 {
   Serial.println("Writing Training Phase to Firebase");
-  Firebase.setInt(trainingPhase,"Users/"+username+"/Crowbox/current_training_stage", m_currentTrainingPhase);
+  Firebase.RTDB.setInt(&trainingPhase,"Users/"+USER_ID+"/Crowbox/current_training_stage", m_currentTrainingPhase);
 }
 
 
 void CCrowboxCore::LoadCurrentTrainingPhaseFromFirebase()
 {
-  if (Firebase.getInt(trainingPhase, "Users/"+username+"/Crowbox/current_training_stage")) {  
+  if (Firebase.RTDB.getInt(&trainingPhase, "Users/"+USER_ID+"/Crowbox/current_training_stage")) {  
     
     m_currentTrainingPhase = trainingPhase.to<int>();
     Serial.println("Successfully got training stage");
     Serial.println(m_currentTrainingPhase);
     
   } else {
-    Serial.println("Error retreiving data from Firebase");
+    Serial.println("FAILED to receive Training Phase from Firebase");
+    Serial.println("REASON: " + trainingPhase.errorReason());
+    Serial.println("------------------------------------");
+    Serial.println();
   }
 }
 
 void CCrowboxCore::WriteNumberOfCoinsDepositedToFirebase()
 {
   Serial.println("Writing Number of Coins Deposited to Firebase");
-  Firebase.setInt(coinDeposit,"Users/"+username+"/Crowbox/coins_deposited", numberOfCoinsDeposited);
+  /* Firebase.setInt(coinDeposit,"Users/"+username+"/Crowbox/coins_deposited", numberOfCoinsDeposited); */
+  Firebase.RTDB.setInt(&coinDeposit,"Users/"+USER_ID+"/Crowbox/coins_deposited/"+dayStamp+"/value", numberOfCoinsDeposited);
 }
-
+ 
 void CCrowboxCore::LoadNumberOfCoinsDepositedFromFirebase(){
+  Serial.println("Loading Number of Coins Deposited From Firebase");
 
-  if (Firebase.getInt(coinDeposit, "Users/"+username+"/Crowbox/coins_deposited")) {  
+  if (Firebase.RTDB.getInt(&coinDeposit, "Users/"+USER_ID+"/Crowbox/coins_deposited/"+dayStamp+"/value")){
     
+    //get the number of coins
     numberOfCoinsDeposited = coinDeposit.to<int>();
     Serial.println("Successfully got Number of Coins");
-    Serial.println(numberOfCoinsDeposited);
+
+    //check if it is a number? not sure if this will work
+    if (numberOfCoinsDeposited == NULL) {
+      //set it to 1 
+      Serial.println("Number of Coins Deposited is Null");
+      numberOfCoinsDeposited = 1;
+    } else {
+      Serial.println("Number of Coins deposited is not null, incrementing");
+      numberOfCoinsDeposited++;
+      Serial.println(numberOfCoinsDeposited);
+    }
   } else {
     Serial.println("Error retreiving data from Firebase");
   }
@@ -1068,21 +1496,155 @@ void CCrowboxCore::LoadNumberOfCoinsDepositedFromFirebase(){
 void CCrowboxCore::WriteNumberOfCrowsOnPerchToFirebase()
 {
   Serial.println("Writing Number of Crows landed on perch to Firebase");
-  Firebase.setInt(crowOnPerch,"Users/"+username+"/Crowbox/crows_landed_on_perch", numberOfCrowsLanded);
+
+ Firebase.RTDB.setInt(&crowOnPerch, "Users/"+USER_ID+"/Crowbox/crows_landed_on_perch/"+dayStamp+"/value", numberOfCrowsLanded);
 }
 
 void CCrowboxCore::LoadNumberOfCrowsLandedOnPerchFromFirebase(){
 
-    if (Firebase.getInt(crowOnPerch, "Users/"+username+"/Crowbox/crows_landed_on_perch")) {  
-    
+  if(Firebase.RTDB.getInt(&crowOnPerch, "Users/"+USER_ID+"/Crowbox/crows_landed_on_perch/"+dayStamp+"/value")) {
     numberOfCrowsLanded = crowOnPerch.to<int>();
-    Serial.println("Successfully got Number of Crows landed on Perch");
-    Serial.println(numberOfCrowsLanded);
-  } else {
-    Serial.println("Error retreiving data from Firebase");
-  }
+    Serial.println("Successfully got Number of Crows landed on perch");
 
+    //check if it is a number or null? 
+    if(numberOfCrowsLanded == NULL) {
+      //if it is null, then set it to 1
+      Serial.println("Number of crows landed on perch is null");
+      numberOfCrowsLanded = 1;
+    } else {
+      Serial.println("Number of crows landed on perch is not null, incrementing");
+      numberOfCrowsLanded++;
+      Serial.println(numberOfCrowsLanded);
+    }
+  } else {
+      Serial.println("Error retreiving data from Firebase");
+  }
 }
+
+void CCrowboxCore::GetSharingPreference() {
+  //get the sharing preferences to set the string
+  if(Firebase.RTDB.getString(&sharingPreference,"Users/"+USER_ID+"/sharing_preference")) {
+    toShare = sharingPreference.to<String>();
+    Serial.println("Successfully got Sharing Preference");
+    Serial.println(toShare);
+  } else {
+      Serial.println("Error in retrieving sharing preferences");
+      Serial.println("REASON: " + sharingPreference.errorReason());
+      Serial.println("------------------------------------");
+      Serial.println();
+  }
+}
+
+void CCrowboxCore::GetUserLocation() {
+
+  /* if sharing is turned on  */
+  if(toShare == "PUBLIC") {
+    /* then get the location of the user */
+    if(Firebase.RTDB.getString(&location, "Users/"+USER_ID+"/location")) {
+      userLocation = location.to<String>();
+      Serial.println("Successfully got Location");
+      Serial.println(userLocation);
+    } else {
+        Serial.println("Error in retrieving location");
+        Serial.println("REASON: " + location.errorReason());
+        Serial.println("------------------------------------");
+        Serial.println();
+    }
+  } else {
+    Serial.println("Error - Sharing Preferences is OFF");
+    Serial.println(toShare);
+    userLocation = "null";
+  }
+}
+
+void CCrowboxCore::LoadPublicCrowOnPerchData() {
+  /* if the user has indeed entered their current location */
+  if(userLocation != "null") {
+    Serial.println("User location is not null");
+    Serial.println(userLocation);
+    
+    /* Then fetch its data from firebase rtdb */  
+    if(Firebase.RTDB.getInt(&publicCrowOnPerchGet,"Public/Countries/"+userLocation+"/crows_landed_on_perch")) {
+      publicCrowOnPerchValue = publicCrowOnPerchGet.to<int>();
+      //increment this value
+      publicCrowOnPerchValue++;
+      Serial.println(publicCrowOnPerchValue);
+    } else {
+      Serial.println("Error in getting public crow on perch data from firebase");
+      Serial.println("REASON: " + publicCrowOnPerchGet.errorReason());
+      Serial.println("------------------------------------");
+      Serial.println();
+    }
+  } else {
+    Serial.println("User location is null");
+    publicCrowOnPerchValue = 0;
+  }
+}
+
+void CCrowboxCore::WritePublicCrowOnPerchData() {
+  Serial.println("Writing public crows on perch to firebase");
+  //write the public value to firebase
+  if (publicCrowOnPerchValue != 0) {
+    Firebase.RTDB.setInt(&publicCrowOnPerchSet,"Public/Countries/"+userLocation+"/crows_landed_on_perch", publicCrowOnPerchValue);
+  }
+}
+
+void CCrowboxCore::LoadPublicCoinsDepositedData() {
+    /* if the user has indeed entered their current location */
+    if(userLocation != "null") {
+      Serial.println("User location is not null");
+      Serial.println(userLocation);
+
+      /* Then fetch its data from firebase rtdb */  
+      if(Firebase.RTDB.getInt(&publicCoinsDeposited,"Public/Countries/"+userLocation+"/coins_deposited")) {
+        publicCoinsDepositedValue = publicCoinsDeposited.to<int>();
+        //increment this value
+        publicCoinsDepositedValue++;
+        Serial.println(publicCoinsDepositedValue);
+
+      } else {
+          Serial.println("Error in loading public coins deposited data to firebase");
+          Serial.println("REASON: " + publicCoinsDeposited.errorReason());
+          Serial.println("------------------------------------");
+          Serial.println();
+      }
+    } else {
+        Serial.println("User location is null");
+        publicCoinsDepositedValue = 0;
+      }
+}
+
+void CCrowboxCore::WritePublicCoinsDepositedData(){
+  
+  Serial.println("Writing public coins deposited to firebase");
+  //write public value to firebase
+  if(publicCoinsDepositedValue != 0) {
+    if (Firebase.RTDB.setInt(&publicCoinsDeposited,"Public/Countries/"+userLocation+"/coins_deposited", publicCoinsDepositedValue)) {
+      Serial.println("Sucessfully wrote public coins deposited to firebase");
+    } else {
+        Serial.println("Error in writing public coins deposited data to firebase");
+        Serial.println("REASON: " + publicCoinsDeposited.errorReason());
+        Serial.println("------------------------------------");
+        Serial.println();
+    }
+  } else {
+    Serial.println("Public coins deposited is 0?");
+    Serial.println(publicCoinsDepositedValue);
+  }
+}
+
+void CCrowboxCore::GetCurrentDate(){
+  //get the current date 
+  formattedDate = timeClient.getFormattedDate();
+  Serial.println(formattedDate);
+
+  int splitT = formattedDate.indexOf("T");
+  dayStamp = formattedDate.substring(0, splitT);
+  Serial.println("DATE: ");
+  Serial.println(dayStamp);
+}
+
+
 
 //----------------------------------------------------------
 // The report the training phase, the LED blinks one time to
@@ -1135,3 +1697,109 @@ void CCrowboxCore::StopRecordingVideo()
   // a serial communication message.
 }
 
+/* SENSOR TROUBLESHOOT HANDLING */
+
+//This function is a wrapper function for 
+//all other troubleshoot related functions
+void CCrowboxCore::TroubleShoot() {
+  CheckFoodLevel();
+  CheckCoinsLevel();
+  CheckHumidityLevel();
+}
+
+void CCrowboxCore::CheckFoodLevel() {
+  int foodLevel = !digitalRead(INPUT_FOOD_SENSOR);
+
+  if(foodLevel) {
+    if (!isFoodThere) {
+      //We have a new input i.e. new food has been added
+      isFoodThere = true;
+      Serial.println("Food has been added - Back to working order");
+      //Update the value in firebase to "WORKING"
+      Firebase.RTDB.setString(&foodData, "Users/"+USER_ID+"/Crowbox/Status/food", "WORKING");
+    } else {
+        //Food is still present, nothing has changed since 
+        //the last time we checked and everything is working
+        Serial.println("Food is present in the basket");
+        //We do not need to update anything in firebase here
+    }
+  } else {
+      //There is no/low food in the basket
+      //Needs to be refilled
+      if (isFoodThere) {isFoodThere = false;}   
+        Serial.println("Food basket needs to be refilled");
+        Firebase.RTDB.setString(&foodData, "Users/"+USER_ID+"/Crowbox/Status/food", "LOW");
+  }
+
+  //clear the data to make space!
+  foodData.clear();
+
+}
+
+void CCrowboxCore::CheckCoinsLevel() {
+int coinsLevel = !digitalRead(INPUT_COINSLEVEL_SENSOR);
+
+  if(coinsLevel) {
+    if (!isCoinsThere) {
+      //We have a new input i.e. new food has been added
+      isCoinsThere = true;
+      Serial.println("Coins have been added - Back to working order");
+      //Update the value in firebase to "WORKING"
+      Firebase.RTDB.setString(&coinsData, "Users/"+USER_ID+"/Crowbox/Status/coins", "WORKING");
+    } else {
+      //Food is still present, nothing has changed since 
+      //the last time we checked and everything is working
+      Serial.println("Coins are present in the dispenser");
+      //We do not need to update anything in firebase here
+    }
+  } else {
+      //There is no/low food in the basket
+      //Needs to be refilled
+      if (isCoinsThere) {isCoinsThere = false;} 
+      
+      Serial.println("Coins Dispenser needs to be refilled");
+      Firebase.RTDB.setString(&coinsData, "Users/"+USER_ID+"/Crowbox/Status/coins", "LOW");
+  }
+
+  //clear the data to make space!
+  coinsData.clear();
+
+}
+
+void CCrowboxCore::CheckHumidityLevel() {
+  //initialise the DHT value and pin
+  DHT.read(INPUT_PIN_HUMIDITY);
+  
+  newHumidityValue = DHT.humidity; 
+  Serial.println("Printing Humidity Value");
+  Serial.println(newHumidityValue);
+
+  //Initially, before any values are read
+  if(previousHumidityValue < 0) {
+    Serial.println("Setting initial humidity to WORKING");
+    Firebase.RTDB.setString(&humidity, "Users/"+USER_ID+"/Crowbox/Status/humidity", "WORKING");
+  }
+
+  //is the value we just received greater than the threshold? 
+  if(newHumidityValue >= HUMIDITY_THRESHOLD) {
+    //is the previous value less than the threshold? If it is, then
+    //and only then should we update firebase. 
+    //This is to avoid sending too many requests, one is enough. 
+    if (previousHumidityValue < HUMIDITY_THRESHOLD) {
+      Serial.println("Setting WET for humidity");
+      Firebase.RTDB.setString(&humidity, "Users/"+USER_ID+"/Crowbox/Status/humidity", "WET");
+    }
+  } else {
+    //If not, then perhaps we need to reset it back to working. 
+    //First check if the previous value was greater than the threshold
+    //If it is greater, then that means we are going from WET to WORKING
+      if (previousHumidityValue >= HUMIDITY_THRESHOLD) {
+        Serial.println("Setting WORKING for humidity");
+        Firebase.RTDB.setString(&humidity, "Users/"+USER_ID+"/Crowbox/Status/humidity", "WORKING");
+      }
+  }
+
+  //Update the previous value
+  previousHumidityValue = newHumidityValue;
+  humidity.clear();
+}

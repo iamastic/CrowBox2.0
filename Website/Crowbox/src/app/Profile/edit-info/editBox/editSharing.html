@@ -1,0 +1,21 @@
+<div mat-dialog-content >
+    <p>Change Your {{data.text}}</p>
+    <mat-form-field appearance="fill">
+<!--         <input matInput placeholder="{{data.text}}" [(ngModel)]=data.property>
+ -->        
+        <mat-select [(ngModel)]="data.property" placeholder="Sharing Preference">
+            <mat-option value="PUBLIC">
+              PUBLIC
+            </mat-option>
+            <mat-option value="PRIVATE">
+                PRIVATE
+            </mat-option>
+          </mat-select>
+
+    </mat-form-field>
+</div>
+
+<div mat-dialog-actions>
+    <button mat-button (click)="cancelChange()">Cancel</button>
+    <button mat-button [mat-dialog-close]="data.property">Enter</button>
+</div>
