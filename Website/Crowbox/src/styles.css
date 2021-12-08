@@ -1,0 +1,35 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
+body {
+    background-color: #cee6b2;
+}
+
+
+/* to remove "slide 1 of 2" from charts carousel */
+.carousel-inner .sr-only {
+    display: none;
+ }
+ 
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* 
+.mat-divider {
+    border-top-color: red;
+    border-width: 50px;
+    position: absolute;
+    margin: auto;
+
+    top:50vh;
+
+    width:100%; 
+} */
+/* 
+.mat-divider.mat-divider-vertical {
+    border-top-color: red;
+    border-right-width: 4px;
+
+    left:10vh;
+    height: 100%;
+} */

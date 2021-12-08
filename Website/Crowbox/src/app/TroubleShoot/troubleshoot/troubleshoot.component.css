@@ -1,0 +1,99 @@
+.fontStyle {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* TOP HALF */
+#food {
+    position: absolute;
+    width: 22%;
+    height:30%;
+    top:10vh;
+    left: 15vh;
+
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+}
+
+#coin {
+    position: absolute;
+    width: 22%;
+    height:30%;
+    top: 10vh;
+    margin: auto;
+    left: 0vh;
+    right: 0vh;
+}
+
+
+#lid {
+    position: absolute;
+    width: 22%;
+    height:30%;
+    top: 10vh;
+    right:15vh
+}
+
+/* BOTTOM HALF */
+
+#perch {
+    position: absolute;
+    width: 22%;
+    height:30%;
+    bottom: 10vh;
+    left: 15vh;
+}
+
+
+#water {
+    position: absolute;
+    width: 22%;
+    height:30%;
+    bottom: 10vh;
+    margin: auto;
+    left: 43vh;
+}
+
+
+#wifi {
+    position: absolute;
+    width: 22%;
+    height:30%;
+    bottom: 10vh;
+    right:43vh
+}
+
+/* BOX REPORT */
+#box {
+    position: absolute;
+    width: 22%;
+    height:12%;
+    top: 10vh;
+    margin: auto;
+    left: 0vh;
+    right: 0vh;
+}
+
+/* MATERIALS */
+.mat-card {
+    height: 100%;
+    background-color: #afd0fe;
+}
+
+.mat-card .mat-card-title{
+    text-align: center;
+    color: #cd6413;
+    font-weight: 650;
+
+}
+
+.mat-card .mat-card-content {
+    text-align: center;
+
+    position: absolute;
+    bottom: 6vh;
+    left:0vh;
+    right:0vh;
+    color: #25356a;
+    font-size:70px;
+    font-weight: 550;
+}

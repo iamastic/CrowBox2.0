@@ -1,0 +1,17 @@
+<p>auth-component works!</p>
+<div *ngIf="auth.user | async as user; else showLogin">
+    <h1>Hello {{ user.displayName }}!</h1>
+    <button (click)="logout()">Logout</button>
+  </div>
+  <ng-template #showLogin>
+    <p>Please login.</p>
+    <button (click)="login()">Login with Google</button>
+  </ng-template>
+
+  <button (click)="printUserId()"> Print Current User </button>
+
+  <h1>User Id is: {{userId}}</h1>
+
+
+  <button (click)="sendUserData()"> Send Current User </button>
+

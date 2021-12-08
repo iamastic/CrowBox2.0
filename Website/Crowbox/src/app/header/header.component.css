@@ -1,0 +1,151 @@
+.mat-toolbar{
+    background-color: #ededed; 
+    height: 6vh; 
+    width:100%;
+}
+
+.flex-item {
+
+}
+
+.headerTitle {
+    display: flex;
+    /* padding:1%; */
+    align-items: center;
+    
+}
+
+.mat-icon {
+    vertical-align: text-bottom;
+    color: #25356a;
+    position: relative;
+}
+
+a {
+    color: #25356a;
+    text-decoration: none;
+    font-weight: bold;
+    letter-spacing: 7px;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    font-size: 15pt;
+    font-style: normal;
+}
+
+.wrapper {
+    min-width: 1024px;
+    width: 100%;
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+#headerText {
+    padding:6%;
+}
+
+
+
+
+
+/* OLD CODE */
+
+.mat-divider.mat-divider-vertical {
+    border-right-color: rgb(0, 0, 0);
+    border-right-width: 2px;
+  
+    position: absolute;
+    height: 100%;
+} 
+
+#navContainer {
+    
+    /*    border-style: solid;
+      border-width: 5px;
+      border-radius: 5%;
+      border-color: black;   */
+       
+      position: absolute;
+      margin: auto; 
+      right: 0vh;
+      left: 0vh;
+      top:2vh;
+      height:5%;
+      width:38%;
+  }
+
+
+#home {
+
+/*     border-style: solid;
+    border-width: 5px;
+    border-radius: 5%;
+    border-color: black; 
+ */
+
+    /* margin-left: 0%; */
+    left:0vh;
+    position: absolute;
+/*     margin: auto; */    
+    width: fit-content;
+    height: 100%;
+}
+
+#public {
+    /*     border-style: solid;
+    border-width: 5px;
+    border-radius: 5%;
+    border-color: black;  */
+
+    position: absolute;
+    /* margin-left: 35.5%; */
+    left: 19vh;
+    width: fit-content;
+    height: 100%;
+
+}
+
+#data {
+/*  border-style: solid;
+    border-width: 5px;
+    border-radius: 5%;
+    border-color: black;   */
+
+
+    position: absolute;
+    /* margin-left: %; */
+    
+    right: 24.5vh;
+    width: fit-content;
+    height: 100%;
+
+}
+
+#troubleshoot {
+
+    
+/*     border-style: solid;
+    border-width: 5px;
+    border-radius: 5%;
+    border-color: black;  */
+
+    position: absolute;
+    margin-left: 44.4%;
+    width: 20%;
+    height: 100%;
+
+}
+
+
+
+#profile {
+    
+/*     border-style: solid;
+    border-width: 5px;
+    border-radius: 5%;
+    border-color: black; 
+     */
+    position: absolute;
+    right: 0vh;
+    width: fit-content;
+    height: 100%;
+
+}

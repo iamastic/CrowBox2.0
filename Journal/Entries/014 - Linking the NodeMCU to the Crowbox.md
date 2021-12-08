@@ -124,4 +124,26 @@ bool CCrowboxCore::EnqueueCoin()
 }
 ```
 
-The function `GetUptimeSeconds()` returns a float and `m_uptimeLastCoinDetected` is also a float. If the time is between the two is below 1 second, this means that some contact bounce has been recorded. In order to avoid counting the same coin more than once, a 1 second buffer was provided i.e. if the last time the sensor recorded a coin was less than 1 second ago, then it is the same coin, so do nothing. In the ESP32, it is not possible to work with floats. 
+The function `GetUptimeSeconds()` returns a float and `m_uptimeLastCoinDetected` is also a float. If the time is between the two is below 1 second, this means that some contact bounce has been recorded. In order to avoid counting the same coin more than once, a 1 second buffer was provided i.e. if the last time the sensor recorded a coin was less than 1 second ago, then it is the same coin, so do nothing. In the ESP32, it is not possible to work with floats within the Interrupt Function. The reason behind this is the time complexity it takes for the function to complete exceeds the maxmimum time and space when using calculations to do with floats. To solve this problem, instead of measuring the time since the last coin collision (to ensure that the same coin is not counted more than once due to contact bounce), I detached the interrupt within the interrupt function. 
+
+This logic runs as follows: 
+* The coin colliding with the two copper plates invokes the interrupt function. 
+* Within the interrupt function, I first detach the interrupt. This is done to ensure that the contact bounce does not result in another interrupt being called.
+
+The code is now: 
+
+```c++
+void IRAM_ATTR Interrupt_CoinDeposit()
+{
+    //detach the interrupt temporarily
+    detachInterrupt(digitalPinToInterrupt(17));
+    g_crOSCore.EnqueueCoin();
+}
+```
+* Then, in `g_crOSCore.EnqueueCoin()`, I simply increase the number of coins deposited and return true. 
+
+In the `RunPhaseThreeProtocol()`, when the Crowbox is in Stage 3, the logic for handling the coin being deposited is run. In this code, the number of coins deposited is checked and if it is greater than 0, then that means that there is a surplus of coins, and as a result, the food basket needs to open. In this function, if there is a surplus of coins deposited, I set a brief delay and then reattach the original Interrupt. I then subtract from the number of coins deposited (to bring it back to 0) and open the food basket for roughly 20 seconds before shutting it. 
+
+Initially, this code worked fine. By detaching the interrupt from the original contact, I expected all the remaining contacts due to contact bounce to not be registered. Then, once everything had been registered and we have returned from the interrupt function, I reattach the interrupt to begin seeking for the next coin's contact. This, however, did not work. I learnt that when you reattach an interrupt to the same GPIO pin, all the pending interrupts are executed even if the interrupt has been detached. As a result, upon reattaching the interrupt, the box would immediately fire off and the food lid would open a couple more times due to the contact bounce being registered as pending interrupts.  
+
+To solve this problem, I decided to create a blank function called `FlushOutInterrupts()`. When I reattached the interrupt, I set the aforementioned function as the ISR. This works by allowing the pending interrupts to run, but they essentially do nothing. After this, I detach and reattach the interrupt to the correct function. As there are no longer any pending interrupts, this works seamlessly. This is, however, not the ideal solution to the problem. After writing about this issue on the ESP32 forum as well as the Arduino Forum, I have been advised to attempt using `unsigned long` instead of `floats` as they are more precise and are commonly used to handle time variables in Arduinos. 
