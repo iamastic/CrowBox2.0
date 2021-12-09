@@ -21,33 +21,11 @@ p {
     line-height: 150%;
 }
 
-.wrapper {
-   /*  border: #cd6413;
-    border-style: double; */
 
-    /* width: 100%; */
-    /* flex-shrink: 1;
-    flex-grow: 1; */
-}
-
-/* CHARTS RELATED */
-
-#charts {
-   /*  border-style: double;
-    border-color: yellow; */
-
-    /* position: absolute; */
-    /* height:50%;
-    width: 50%; */
-    /* top: 30vh; */
-    /* left: 15vh; */
-}
-
-#publicButton {
- /*    position: absolute;
-    margin: auto; 
-    top: 25vh;
-    left: 55vh; */
+br {
+    display: block;
+    content: "";
+    margin-top: 0px;
 }
 
 /* BUTTON RELATED */
@@ -56,13 +34,6 @@ p {
 }
 
 /* OFFLINE MODE */
-
-#offlineFile {
-/*     position: absolute;
-    margin: auto;
-    bottom: 10vh;
-    left:60vh; */
-}
 
 .file-input {
     display: none;
