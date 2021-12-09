@@ -1,51 +1,70 @@
-<app-header></app-header>
+ <!-- fxFlex="50" fxFlex.xs="100" fxFlex.sm="100" -->
 
-<!-- CROWS LANDED OR COINS DEPOSITED BUTTON -->
-<!-- <div id = "publicButton">
-    <mat-button-toggle-group>
-        <mat-button-toggle (click)="showPersonal()">
-            CROWS LANDED ON PERCH
-        </mat-button-toggle>
+<!-- DATA RELATED -->
+<div id = "charts" fxLayout="column" fxLayoutAlign="space-evenly center" fxLayoutGap="3%">
 
-        <mat-button-toggle (click)="showPublic()">
-            COINS DEPOSITED
-        </mat-button-toggle>
-    </mat-button-toggle-group>
-</div>
- -->
-<div class="wrapper" fxLayout="row" fxLayout.sm = "column" fxLayout.xs="column" fxLayoutAlign="space-evenly center">
+    <!-- CROWS LANDED OR COINS DEPOSITED BUTTON -->
+    <div >
+        <mat-button-toggle-group >
+            <mat-button-toggle (click)="showPersonal()" >
+                CROWS LANDED ON PERCH
+            </mat-button-toggle>
+    
+            <mat-button-toggle (click)="showPublic()">
+                COINS DEPOSITED
+            </mat-button-toggle>
+        </mat-button-toggle-group>
+    </div>
+
     <!-- CHARTS -->
-    <div id = "charts">
-        <!-- CROWS ON PERCH DATA SECTION -->
-        <div *ngIf="showCoinsDeposited === false"  >
+    <div style="width: 90%; background-color: #ededed; border-radius: 3%;">
+            <!-- CROWS ON PERCH DATA SECTION -->
+        <div *ngIf="showCoinsDeposited === false">
             <canvas baseChart
-                   [datasets]="crowOnPerchChartData"
-                   [labels]="crowOnPerchChartLabels"
-                   [options]="crowOnPerchChartOptions"
-                   [legend]="crowOnPerchChartLegend"
-                   [chartType]="crowOnPerchChartType"
-                   [colors]="crowOnPerchChartColor"
-                   >
+               [datasets]="crowOnPerchChartData"
+               [labels]="crowOnPerchChartLabels"
+               [options]="crowOnPerchChartOptions"
+               [legend]="crowOnPerchChartLegend"
+               [chartType]="crowOnPerchChartType"
+               [colors]="crowOnPerchChartColor"
+            >
             </canvas>             
         </div>
 
         <!-- COINS DEPOSITED DATA SECTION -->
         <div *ngIf="showCoinsDeposited === true" >
             <canvas baseChart
-               [datasets]="coinsDepositedChartData"
-               [labels]="coinsDepositedChartLabels"
-               [options]="coinsDepositedChartOptions"
-               [legend]="coinsDepositedChartLegend"
-               [chartType]="coinsDepositedChartType"
-               [colors]="coinChartColor"
-               >
+                [datasets]="coinsDepositedChartData"
+                [labels]="coinsDepositedChartLabels"
+                [options]="coinsDepositedChartOptions"
+                [legend]="coinsDepositedChartLegend"
+                [chartType]="coinsDepositedChartType"
+                [colors]="coinChartColor"
+            >
             </canvas>
         </div>
     </div>
 
-    <!-- THE INFORMATION BOX -->
-    <app-information [crowsOnPerch]="crownsOnPerchValues" [coinsDeposited]="coinsDepositedValues"></app-information>
+    <!-- OFFLINE MODE FILE UPLOAD -->
+
+    <div id = "offlineFile">
+        <input type="file" class="file-input"
+           (change)="uploadFile($event)" #fileUpload>
     
+        <div class="file-upload">
+            {{fileName || "No file uploaded yet."}}
+    
+            <button mat-mini-fab color="primary" class="upload-btn"
+                (click)="fileUpload.click()">
+                <mat-icon>attach_file</mat-icon>
+            </button>
+        </div>
+    
+        <div>
+            <button (click)="readFile()">Upload</button>
+        </div>
+    </div>
+
 </div>
 
 <!-- OFFLINE MODE FILE UPLOAD -->
@@ -69,10 +88,11 @@
  -->
 
 <!-- NO CROWBOX MESSAGE BOX -->
-<div id="userId" *ngIf=(showUserId)>
+<!-- <div id="userId" *ngIf=(showUserId)>
     <mat-card>
         <p>
             You currently do not have a crowbox set up. Please upload the code to your crowbox with your Email and Password
         </p>
     </mat-card>
 </div>
+ -->

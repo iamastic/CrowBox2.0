@@ -61,6 +61,7 @@ import { PublicComponent } from './public/public/public.component';
 
 //For Styling
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { PrivateComponent } from './data/private/private.component';
 
 
 @NgModule({
@@ -88,6 +89,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     EditNotificationComponent,
     EditSharingComponent,
     EditBoxComponent,
+    PrivateComponent,
 
   ],
   imports: [

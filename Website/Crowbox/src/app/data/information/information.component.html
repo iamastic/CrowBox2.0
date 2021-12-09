@@ -1,6 +1,6 @@
 <!-- <mat-divider vertical="true"> </mat-divider> -->
 
-<div id = "dataInformation" fxLayout="column" fxLayoutAlign="space-evenly center"> 
+<div id = "dataInformation" fxLayout="column" fxLayoutAlign="space-evenly center" fxLayoutGap="5%"> 
     <h1>CrowBox Information</h1>
 
     <!-- DROP DOWN TO SELECT TRAINING STAGE -->
@@ -44,8 +44,8 @@
         <mat-card-content>{{ status }}</mat-card-content>
         
         <!-- If not working, show button - Then show Icon -->
-        <button id="boxStatusButton" (click)="changeBoxStatus()">
-           <mat-icon *ngIf="isError">error</mat-icon> 
+        <button id="boxStatusButton" (click)="changeBoxStatus()" *ngIf="isError">
+           <mat-icon >error</mat-icon> 
         </button>
     </mat-card>
 </div>

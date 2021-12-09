@@ -1,0 +1,21 @@
+<app-header></app-header>
+
+<div class="wrapper" fxLayout="row" fxLayout.xs="column" fxLayout.sm="column" fxLayoutAlign="center center" >
+
+    <!-- THE CHARTS -->
+    <div fxFlex="60">
+        <app-data (crowsOnPerchOutput)="receiveCrowsOnPerchOutput($event)" 
+        (coinsDepositedOutput)="receiveCoinsDepositedOutput($event)"></app-data>
+    </div>
+
+    <div fxFlex="5" fxHide.xs fxHide.sm  >
+        <mat-divider vertical="true"> </mat-divider>
+    </div>
+
+    <!-- THE INFORMATION BOX -->
+    <div fxFlex="27" fxFlex.xs="27" fxFlex.sm="27" fxFlexOrder.xs="1" fxFlexOrder.sm="1" >
+        <app-information [crowsOnPerch]="crownsOnPerchValues" [coinsDeposited]="coinsDepositedValues"></app-information>
+    </div>
+   
+    
+</div>

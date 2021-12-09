@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterContentInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterContentInit, OnDestroy, EventEmitter, Output } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
@@ -26,6 +26,18 @@ interface dataObject {
   styleUrls: ['./data.component.css']
 })
 export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
+
+  /* SENDING DATA TO PRIVATE.COMPONENT.TS */
+  @Output() crowsOnPerchOutput = new EventEmitter<any>();
+  @Output() coinsDepositedOutput = new EventEmitter<any>();
+
+  sendCrowsOnPerchToParent() {
+    this.crowsOnPerchOutput.emit(this.crownsOnPerchValues);
+  }
+
+  sendCoinsDepositedToParent() {
+    this.coinsDepositedOutput.emit(this.coinsDepositedValues);
+  }
 
   /* OFFLINE RELATED */
   file:any;
@@ -316,6 +328,9 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
       this.crowOnPerchChartData = [
         { data: this.crownsOnPerchValues, label: "Number Of Crows That Landed On The Perch" }
       ];
+
+      //Emit this data to the parent
+      this.sendCrowsOnPerchToParent();
     });
   }
 
@@ -369,6 +384,9 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
       this.coinsDepositedChartData = [
         { data: this.coinsDepositedValues, label: "Number of Coins Deposited" }
       ];
+
+      //Emit this data to the parent
+      this.sendCoinsDepositedToParent();
     });
   }
 
@@ -393,7 +411,6 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
   /* OFFLINE MODE */
 
   //Get the file
-  
   uploadFile(event:any) {
     this.file = event.target.files[0];    
   }
