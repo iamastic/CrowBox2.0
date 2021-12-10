@@ -138,8 +138,8 @@
 #define HUMIDITY_THRESHOLD      70
 
 //FOR OFFLINE MODE
-// #undef OFFLINE_MODE
-#define OFFLINE_MODE
+#undef OFFLINE_MODE
+// #define OFFLINE_MODE
 
 
  /* END MY WORK */

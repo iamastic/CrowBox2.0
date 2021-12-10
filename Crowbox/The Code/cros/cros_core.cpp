@@ -460,7 +460,7 @@ void CCrowboxCore::Loop()
 
     //Check the Troubleshoot setup every 30 minutes 
     //CHANGE TO 30 MINS!! 1800000
-    if((millis() - troubleshootTime) >= 1800000) {
+    if((millis() - troubleshootTime) >= 10000) {
       Serial.println("10 seconds over, checking box status in troubleshoot");
       troubleshootTime = millis();
       TroubleShoot();
@@ -1644,6 +1644,15 @@ void CCrowboxCore::GetCurrentDate(){
   Serial.println(dayStamp);
 }
 
+void CCrowboxCore::GetCurrentTime() {
+  Serial.println("Getting current time for WiFi");
+  formattedDate = timeClient.getFormattedDate();
+
+  int splitT = formattedDate.indexOf("T");
+  ntpTime = formattedDate.substring(splitT+1, formattedDate.length()-1);
+  Serial.println(ntpTime);
+}
+
 
 
 //----------------------------------------------------------
@@ -1705,6 +1714,7 @@ void CCrowboxCore::TroubleShoot() {
   CheckFoodLevel();
   CheckCoinsLevel();
   CheckHumidityLevel();
+  SendWifiTime();
 }
 
 void CCrowboxCore::CheckFoodLevel() {
@@ -1802,4 +1812,15 @@ void CCrowboxCore::CheckHumidityLevel() {
   //Update the previous value
   previousHumidityValue = newHumidityValue;
   humidity.clear();
+}
+
+
+void CCrowboxCore::SendWifiTime() {
+
+  GetCurrentTime();
+  
+  Serial.println("Sending Wifi Current Time");
+  Firebase.RTDB.setString(&wifiConnection, "Users/"+USER_ID+"/Crowbox/Status/currentWifiTime", ntpTime);
+
+  wifiConnection.clear();
 }

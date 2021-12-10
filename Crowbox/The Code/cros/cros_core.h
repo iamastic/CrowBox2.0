@@ -97,7 +97,7 @@ public:
     FirebaseData trainingPhase;
     FirebaseData trainingPhaseLoop;
 
-    // Variables to save date and time
+    // Variables to save date
     String formattedDate;
     String dayStamp;
 
@@ -125,6 +125,10 @@ public:
     //Food level 
     bool isFoodThere;
     FirebaseData foodData;
+
+    //Wifi Connection
+    String ntpTime;
+    FirebaseData wifiConnection;
 
     //Coins Level
     bool isCoinsThere; 
@@ -217,6 +221,7 @@ protected:
 
     //time methods
     void GetCurrentDate();
+    void GetCurrentTime();
 
     //--------------------------------------
     // Video
@@ -232,6 +237,7 @@ protected:
     void CheckFoodLevel();
     void CheckCoinsLevel();
     void CheckHumidityLevel();
+    void SendWifiTime();
 
 private:
     cros_time_t m_uptimeWhenBirdLanded;
