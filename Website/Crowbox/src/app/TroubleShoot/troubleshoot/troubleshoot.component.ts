@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { interval, Observable, Subscription, timer } from 'rxjs';
 import { CrowboxdbService } from 'src/app/services/crowbox/crowboxdb.service';
 import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
 
@@ -22,6 +23,7 @@ export class TroubleshootComponent implements OnInit {
     .subscribe(user => {
       this.getTroubleshootInfo();
     });
+
   }
 
   getTroubleshootInfo() {
@@ -32,6 +34,8 @@ export class TroubleshootComponent implements OnInit {
       this.coinsRemaining = result.payload.val().coins;
       this.foodLevel = result.payload.val().food;
       this.water = result.payload.val().humidity;
+      this.wifi = result.payload.val().wifi;
+      this.servo = result.payload.val().servo;
     });
   }
 

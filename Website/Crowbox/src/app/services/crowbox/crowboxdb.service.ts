@@ -198,15 +198,24 @@ export class CrowboxdbService {
     return this.locationReference;
   }
 
+ 
+  /* TROUBLESHOOT RELATED */
+  getStatusData():AngularFireObject<any>{
+    return this.statusReference;
+  }
+
+  updatePreviousWifiTime(time:String) {
+    this.statusReference.update({prevWifiTime:time});
+  }
+
+  updateWifiStatus(status:String) {
+    this.statusReference.update({wifi:status});
+  }
+
   /* SITE RELATED */
 
   getAllSiteData(): AngularFireList<any>{
     return this.siteReference;
-  }
-
-  /* TROUBLESHOOT RELATED */
-  getStatusData():AngularFireObject<any>{
-    return this.statusReference;
   }
 
   /* OFFLINE RELATED */

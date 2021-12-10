@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterContentInit, OnDestroy, EventEmitter, Output } from '@angular/core';
 
-import { Observable } from 'rxjs';
+import { interval, Observable, Subscription, timer } from 'rxjs';
 
 //import the auth service
 import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
@@ -203,14 +203,64 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
   showCoinsDeposited?:boolean;
 
   /* ---------------------------------------------------- */
-  constructor(private handleAuth: HandleAuthService, private crowboxService: CrowboxdbService, public datepipe:DatePipe) {
 
-  }
+  /* HANDLING WIFI TROUBLESHOOT */
+  wifiCheckTimer$ = interval(10000);
+  wifiSub?:Subscription;
+
+  constructor(private handleAuth: HandleAuthService, private crowboxService: CrowboxdbService, public datepipe:DatePipe) {}
 
   ngOnDestroy() {
+
+    this.wifiSub?.unsubscribe();
+  }
+
+  checkIfWifiConnection() {
+    //In here, I want to check the two times that have been set
+    //in the Status object in firebase 
+
+    //First, get both the times - Only take the first and then 
+    //unsubscribe. This will anyway be resubscribed in the next 
+    //interval
+    this.crowboxService
+    .getStatusData()
+    .snapshotChanges()
+    .pipe(first())
+    .subscribe(result => {
+      let previoustTime = result.payload.val().prevWifiTime;
+      let currentTime = result.payload.val().currentWifiTime;
+      let oldStatus = result.payload.val().wifi;
+      
+      //Then, we compare the two times 
+      if (previoustTime === currentTime) {
+        //If they are equal, that means the WiFi is not connected 
+        //Set the error message
+        console.log("Times are Equal");
+        if (oldStatus === "WORKING") {
+          this.crowboxService.updateWifiStatus("DISCONNECTED");
+        }
+
+      } else {
+          //If they are not equal, that means the WiFi is connected
+          //Set it to Working and update value of prevWiFiTime
+          console.log("Times are NOT equal");
+          if(oldStatus !== "WORKING") {
+            this.crowboxService.updateWifiStatus("WORKING");
+            this.crowboxService.updatePreviousWifiTime(currentTime);
+          }
+      }
+
+    });
   }
 
   ngOnInit(): void {
+
+    this.wifiSub = this.wifiCheckTimer$.subscribe(r => {
+      console.log(r);
+      this.checkIfWifiConnection();
+      
+    })
+
     //upon the view rendering, get the User Id - don't need to do this anymore
     //this.currentUserId = this.authService.currentUserState?.uid;
 
@@ -341,8 +391,6 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
       this.currentCrowColor = this.crowColor1;
     }
   }
-
-  
 
   getCoinDepositedDataChildren() {
     //get snapshot of child added 
