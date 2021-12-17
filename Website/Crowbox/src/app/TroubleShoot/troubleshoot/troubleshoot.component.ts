@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { interval, Observable, Subscription, timer } from 'rxjs';
+import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { CrowboxdbService } from 'src/app/services/crowbox/crowboxdb.service';
 import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
 
@@ -8,7 +8,7 @@ import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
   templateUrl: './troubleshoot.component.html',
   styleUrls: ['./troubleshoot.component.css']
 })
-export class TroubleshootComponent implements OnInit {
+export class TroubleshootComponent implements OnInit, OnDestroy {
 
   coinsRemaining = "EMPTY";
   foodLevel = "EMPTY";
@@ -16,7 +16,24 @@ export class TroubleshootComponent implements OnInit {
   servo = "EMPTY";
   wifi = "EMPTY";
 
+  /* HANDLE SUBSCRIPTIONS */
+  $handleUserAuthSub?:Subscription;
+  $troubleshootInfo?:Subscription;
+
+  showStatusBox:boolean = false;
+  
+  @Output() showStatusBoxEmit = new EventEmitter<any>();
+  sendShowStatusBoxValueToParent() {
+    this.showStatusBoxEmit.emit(this.showStatusBox);
+  }
+
   constructor(private handleAuth:HandleAuthService, private crowboxService:CrowboxdbService) { }
+
+  ngOnDestroy(): void {
+      this.$handleUserAuthSub?.unsubscribe();
+      this.$troubleshootInfo?.unsubscribe();
+  }
+
 
   ngOnInit(): void {
     this.handleAuth.currentUser$
@@ -27,7 +44,7 @@ export class TroubleshootComponent implements OnInit {
   }
 
   getTroubleshootInfo() {
-    this.crowboxService
+    this.$troubleshootInfo = this.crowboxService
     .getStatusData()
     .snapshotChanges()
     .subscribe(result => {

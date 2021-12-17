@@ -13,7 +13,22 @@
     height: 600px;
     position: relative;
     margin: auto;
-    right: 5vh;
-
-    
+    right: 5vh;    
 } 
+
+#troubleshoot{
+    /* border: #cd6413;
+    border-style: double; */
+
+    position: absolute;
+    margin: auto;
+    top:0vh;
+    bottom: 0vh;
+    left: 0vh;
+    right: 0vh;
+    
+    width: 90%;
+    height: fit-content;
+
+    z-index: 100;
+}

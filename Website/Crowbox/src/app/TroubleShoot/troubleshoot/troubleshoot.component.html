@@ -1,50 +1,47 @@
 
+<mat-card class="wrapper" fxLayout="row wrap" fxLayoutAlign="space-around center" fxLayout.xs="column" fxLayout.sm="column" style="background-color: #494949
+;">
+    <div id = "food" fxFlex="30">
+        <mat-card>
+            <mat-card-title>food level</mat-card-title>
+            <mat-card-content>{{foodLevel}}</mat-card-content>
+        </mat-card>
+    </div>
+    
+    <div id = "coin" fxFlex="30">
+        <mat-card>
+            <mat-card-title>coin dispenser</mat-card-title>
+            <mat-card-content>{{coinsRemaining}}</mat-card-content>
+        </mat-card>
+    </div>
+    
+    
+    <div id = "lid" fxFlex="30">
+        <mat-card>
+            <mat-card-title>sliding lid</mat-card-title>
+            <mat-card-content>{{servo}}</mat-card-content>
+        </mat-card>
+    </div>
+    
+    
+    <div id = "water" fxFlex="30">
+        <mat-card>
+            <mat-card-title>water/humidity</mat-card-title>
+            <mat-card-content>{{water}}</mat-card-content>
+        </mat-card>
+    </div>
+    
+    
+    <div id = "wifi" fxFlex="30">
+        <mat-card>
+            <mat-card-title>wifi</mat-card-title>
+            <mat-card-content>{{wifi}}</mat-card-content>
+        </mat-card>
+    </div>
+</mat-card>
 
-<div id = "food">
-    <mat-card>
-        <mat-card-title>food level</mat-card-title>
-        <mat-card-content>{{foodLevel}}</mat-card-content>
 
-    </mat-card>
+<div id = "closeButton" (click)="sendShowStatusBoxValueToParent()" fxLayout="column" fxLayoutAlign="end center">
+    <button mat-raised-button>Close</button>
 </div>
-
-<div id = "coin">
-    <mat-card>
-        <mat-card-title>coin dispenser</mat-card-title>
-        <mat-card-content>{{coinsRemaining}}</mat-card-content>
-    </mat-card>
-</div>
-
-
-<div id = "lid">
-    <mat-card>
-        <mat-card-title>sliding lid</mat-card-title>
-        <mat-card-content>{{servo}}</mat-card-content>
-    </mat-card>
-</div>
-
-<!-- 
-<div id = "perch">
-    <mat-card>
-        <mat-card-title>perch switches</mat-card-title>
-        <mat-card-content>WORKING</mat-card-content>
-    </mat-card>
-</div> -->
-
-
-<div id = "water">
-    <mat-card>
-        <mat-card-title>water/humidity</mat-card-title>
-        <mat-card-content>{{water}}</mat-card-content>
-    </mat-card>
-</div>
-
-
-<div id = "wifi">
-    <mat-card>
-        <mat-card-title>WiFi</mat-card-title>
-        <mat-card-content>{{wifi}}</mat-card-content>
-    </mat-card>
-</div>
-
 

@@ -10,6 +10,8 @@ export class PrivateComponent implements OnInit {
   crownsOnPerchValues: number[] = [];
   coinsDepositedValues: number[] = [];
 
+  showStatusBox:boolean = false;
+
 
   constructor() { }
 
@@ -22,6 +24,15 @@ export class PrivateComponent implements OnInit {
 
   receiveCoinsDepositedOutput($event: number[]) {
     this.coinsDepositedValues = $event;
+  }
+
+  receiveOpenTroubleshootButton($event: boolean) {
+    console.log("Receiving troubleshoot boolean in Private component");
+    this.showStatusBox = $event;
+  }
+
+  receiveCloseTroubleshootButton($event: boolean) {
+    this.showStatusBox = $event;
   }
 
 }

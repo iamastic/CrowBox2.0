@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { CrowboxdbService } from 'src/app/services/crowbox/crowboxdb.service';
 import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
 
@@ -7,7 +8,7 @@ import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
   templateUrl: './profilebox.component.html',
   styleUrls: ['./profilebox.component.css']
 })
-export class ProfileboxComponent implements OnInit {
+export class ProfileboxComponent implements OnInit, OnDestroy {
 
   //object to hold the user's profile data
   profileData = {
@@ -21,12 +22,22 @@ export class ProfileboxComponent implements OnInit {
     totalCrowsLanded:0
   };
 
+  /* HANDLE SUBSCRIPTIONS */
+  $handleUserAuthSub?:Subscription;
+  $getUserInfoSub?:Subscription;
+
   constructor(private crowboxService:CrowboxdbService, private handleAuth: HandleAuthService) { }
+
+  ngOnDestroy(): void {
+    this.$handleUserAuthSub?.unsubscribe();
+    this.$getUserInfoSub?.unsubscribe();
+      
+  }
 
   ngOnInit(): void {
     //Subscribe to the user auth state observable and wait 
     //to get the UID to proceed
-    this.handleAuth.currentUser$
+    this.$handleUserAuthSub = this.handleAuth.currentUser$
     .subscribe(user => {
       this.getUserInformation();
     });
@@ -35,7 +46,7 @@ export class ProfileboxComponent implements OnInit {
   /* fill the profile data object with data from 
   firebase */
   getUserInformation() {
-    this.crowboxService.getUser()
+    this.$getUserInfoSub = this.crowboxService.getUser()
     .snapshotChanges()
     .subscribe(result => {
       this.profileData = {

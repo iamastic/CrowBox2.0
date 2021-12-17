@@ -19,17 +19,6 @@
     width: 75%;
 }
 
-.mat-divider.mat-divider-vertical {
-    border-right-color: rgb(0, 0, 0);
-    border-right-width: 2px;
-  
-    position: absolute;
-    right:80vh;
-    
-    top:13vh;
-    height: 715px;
-} 
-
 h1 {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
@@ -39,28 +28,9 @@ h1 {
     text-align: center;
 }
 
-
-/* INFO BOX RELATED */
-#dataInformation {
-
-}
-
 #boxStatusButton {
     background-color: transparent;
+    color: white;
     border: none;
-    align-items: center;
-
 }
 
-#statusError {
-
-}
-
-#closeStatusError {
-    position:absolute;
-    margin: auto;
-  
-    right: 87.5vh;
-    
-    bottom: 1vh;
-}

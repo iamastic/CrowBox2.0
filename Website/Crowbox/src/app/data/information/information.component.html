@@ -41,23 +41,13 @@
     <mat-card>
         <mat-card-title>STATUS</mat-card-title>        
         <!-- Show Box's status -->
-        <mat-card-content>{{ status }}</mat-card-content>
+        <mat-card-content>{{ status }}
+            <!-- If not working, show button/icon -->
+        <button id="boxStatusButton" (click)="sendShowStatusBoxValueToParent()" *ngIf="isError">
+            <mat-icon >error</mat-icon> 
+         </button>
+        </mat-card-content>
         
-        <!-- If not working, show button - Then show Icon -->
-        <button id="boxStatusButton" (click)="changeBoxStatus()" *ngIf="isError">
-           <mat-icon >error</mat-icon> 
-        </button>
-    </mat-card>
-</div>
 
-<!-- This div will open when the button is pressed if 
-    there is an error -->
-<div id ="statusError" *ngIf="showStatusBox">
-    <mat-card style="background-color: #ededed;">
-        <app-troubleshoot></app-troubleshoot>
     </mat-card>
-
-    <button id="closeStatusError" mat-raised-button (click)="changeBoxStatus()">
-        Close
-    </button>
 </div>

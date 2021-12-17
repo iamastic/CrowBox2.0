@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, ElementRef, HostListener, Host } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, ViewChild, ElementRef, HostListener, OnDestroy } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { PublicService } from 'src/app/services/public/public.service';
 import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
@@ -11,7 +11,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
   templateUrl: './worldview.component.html',
   styleUrls: ['./worldview.component.css']
 })
-export class WorldviewComponent implements OnInit {
+export class WorldviewComponent implements OnInit, OnDestroy {
   showHeader!:boolean;
 
   countries$?:Observable<any>;
@@ -41,6 +41,9 @@ export class WorldviewComponent implements OnInit {
   
   raycaster!: THREE.Raycaster;
   mouse! : THREE.Vector2;
+
+  /* HANDLE SUBSCRIPTIONS */
+  $countriesSub?:Subscription;
 
     
   private get aspectRatio(): number {
@@ -73,6 +76,10 @@ export class WorldviewComponent implements OnInit {
 
   }
 
+  ngOnDestroy(): void {
+      this.$countriesSub?.unsubscribe();
+  }
+
   ngOnInit(): void {
 
     if(this.isLoggedIn()){
@@ -90,7 +97,7 @@ export class WorldviewComponent implements OnInit {
         )))
     );
 
-    this.countries$.pipe(first())
+    this.$countriesSub = this.countries$.pipe(first())
     .subscribe(result => {
       console.log(result);
       this.listOfCountries = result;
