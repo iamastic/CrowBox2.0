@@ -2,20 +2,31 @@
 <div id = "charts" fxLayout="column" fxLayoutAlign="space-evenly center" fxLayoutGap="3%">
 
     <!-- CROWS LANDED OR COINS DEPOSITED BUTTON -->
-    <div>
+    <div *ngIf=(!showUserId)>
         <mat-button-toggle-group >
-            <mat-button-toggle (click)="showPersonal()" >
+            <mat-button-toggle (click)="showPersonal()" class="buttonText">
                 CROWS LANDED ON PERCH
             </mat-button-toggle>
     
-            <mat-button-toggle (click)="showPublic()">
+            <mat-button-toggle (click)="showPublic()" class="buttonText">
                 COINS DEPOSITED
             </mat-button-toggle>
         </mat-button-toggle-group>
     </div>
 
+        <!-- NO CROWBOX MESSAGE BOX -->
+    <div *ngIf=(showUserId)>
+        <mat-card style="left: 0vh; right:0vh; margin: auto; display: flex;">
+            <mat-card-content style="color: black;">
+                You currently do not have a crowbox set up. Please upload the code to your crowbox with your Email and Password.  
+                <br>
+                Alternatively, use the offline mode below and upload your data file. 
+            </mat-card-content>
+        </mat-card>
+    </div>
+
     <!-- CHARTS -->
-    <div style="width: 90%; background-color: #ededed; border-radius: 3%;">
+    <div style="width: 90%; background-color: #ededed; border-radius: 3%;" *ngIf=(!showUserId)>
             <!-- CROWS ON PERCH DATA SECTION -->
         <div *ngIf="showCoinsDeposited === false">
             <canvas baseChart
@@ -43,34 +54,32 @@
         </div>
     </div>
 
-    <!-- OFFLINE MODE FILE UPLOAD -->
 
-    <div id = "offlineFile">
+
+    <!-- OFFLINE MODE FILE UPLOAD FROM https://blog.angular-university.io/angular-file-upload/-->
+
+    <div id = "offlineFile" *ngIf="uploaded !== true" >
         <input type="file" class="file-input"
-           (change)="uploadFile($event)" #fileUpload>
+           (change)="uploadFile($event)" #fileUpload >
+
+           <div>
+               <p style="font-weight: bolder;">Offline Section</p>
+            </div>
     
-        <div class="file-upload">
-            {{fileName || "No file uploaded yet."}}
+        <div class="file-upload" class="buttonText">
+            {{fileName || "No file uploaded yet"}}
     
-            <button mat-mini-fab color="primary" class="upload-btn"
+            <button mat-mini-fab color="black" class="upload-btn"
                 (click)="fileUpload.click()">
-                <mat-icon>attach_file</mat-icon>
+                <mat-icon style="color: aqua;">attach_file</mat-icon>
             </button>
         </div>
     
         <div>
-            <button (click)="readFile()">Upload</button>
+            <button mat-raised-button (click)="readFile()" *ngIf="fileName" class="buttonText">Upload</button>
         </div>
     </div>
-
 </div>
 
-<!-- NO CROWBOX MESSAGE BOX -->
-<!-- <div id="userId" *ngIf=(showUserId)>
-    <mat-card>
-        <p>
-            You currently do not have a crowbox set up. Please upload the code to your crowbox with your Email and Password
-        </p>
-    </mat-card>
-</div>
- -->
+
+ 

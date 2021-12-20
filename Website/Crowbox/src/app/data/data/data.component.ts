@@ -42,6 +42,8 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
   /* OFFLINE RELATED */
   file:any;
   fileName:any;
+  uploaded:boolean = false; 
+
   //For crows
   offlineCrowData:dataObject[] = [];
   offlineCurrentCrowDate:any = "null";
@@ -472,6 +474,7 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
   //Get the file
   uploadFile(event:any) {
     this.file = event.target.files[0];    
+    this.fileName = this.file.name;
   }
 
   readFile() {
@@ -507,6 +510,8 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
       this.offlineCoinData.forEach(data => {
         this.crowboxService.updateOfflineCoinsDeposited(data.date,data.value);
       })
+
+      this.uploaded = true;
     };
   }
 
