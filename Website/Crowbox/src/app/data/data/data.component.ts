@@ -423,7 +423,6 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
       //array
       if (indexOfKey == -1) {
         this.coinsDepositedDate.push(action.key);
-        //this.coinsDepositedValues.push(action.payload.val().value);
         this.coinsDepositedValues = [
           ...this.coinsDepositedValues, action.payload.val().value
         ];
