@@ -1348,38 +1348,6 @@ void CCrowboxCore::WriteCurrentOfflineDayToEEPROM() {
   Serial.println("Successfully Written Offline Day to EEPROM");
 }
 
-/* 
-void CCrowboxCore::LoadCurrentOfflineTimeFromEEPROM() {
-  EEPROM.begin(512);
-
-  offlineTime = 
-    ((unsigned long)EEPROM.read(CROS_EEPROM_ADDRESS_TIME) << 24) 
-  + ((unsigned long)EEPROM.read(CROS_EEPROM_ADDRESS_TIME + 1) << 16) 
-  + ((unsigned long)EEPROM.read(CROS_EEPROM_ADDRESS_TIME + 2) << 8) 
-  + ((unsigned long)EEPROM.read(CROS_EEPROM_ADDRESS_TIME + 3));
-
-  // offlineTime += millis();wa
-
-  Serial.println("Successfully loaded Offline Time from EEPROM");
-  Serial.println(offlineTime);
-  
-} */
-/* 
-void CCrowboxCore::WriteCurrentOfflineTimeToEEPROM() {
-  //initiate the EEPROM
-  EEPROM.begin(512);
-
-  //Break the time down into 4 bytes
-
-  EEPROM.put(CROS_EEPROM_ADDRESS_TIME, (offlineTime >> 24) & 0xFF);
-  EEPROM.put(CROS_EEPROM_ADDRESS_TIME + 1, (offlineTime >> 16) & 0xFF);
-  EEPROM.put(CROS_EEPROM_ADDRESS_TIME + 2, (offlineTime >> 8) & 0xFF);
-  EEPROM.put(CROS_EEPROM_ADDRESS_TIME + 3, offlineTime & 0xFF);
-  
-  EEPROM.commit();
-  Serial.println("Successfully Written Offline Time to EEPROM");
-} */
-
 void CCrowboxCore::CheckIfItIsNextDay() {
   if (millis() - offlineTime > OFFLINE_TIME) {
     offlineDay++;
