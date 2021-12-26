@@ -1,111 +1,83 @@
-<div id="mainContainer">
+<div id = "mainContainer" fxLayout="column" fxLayoutAlign="space-evenly none" fxLayoutGap="2%">
 
-    <div id = "name">
-
-        <mat-card>
-            <div id = "left">
-                Name
-            </div>
-    
-            <div id="right">
-                {{profileData.name}}
-            </div>            
+    <div fxLayout="row" fxLayoutAlign="center center" >
+        <mat-card id="left" fxFlex="50">
+            Name
         </mat-card>
 
+        <mat-card id = "right" fxFlex="50">
+            {{profileData.name}}
+        </mat-card>
     </div>
 
-    <div id = "location">
-
-        <mat-card>
-                   <div id="left">
-            <p>Location</p>    
-        </div>
-
-        <div id="right">
-            <p>{{profileData.location}}</p>
-        </div> 
+    <div fxLayout="row" fxLayoutAlign="center center">
+        <mat-card id="left" fxFlex="50">
+            Location
         </mat-card>
 
+        <mat-card id = "right" fxFlex="50">
+            {{profileData.location}}
+        </mat-card>
     </div>
 
-    <div id = "email">
-
-        <mat-card>
-            <div id="left">
-                <p>E-mail Address</p>    
-            </div>
-    
-            <div id="right">
-                <p>{{profileData.email}}</p>
-            </div>
+    <div fxLayout="row" fxLayoutAlign="center center" >
+        <mat-card id="left" fxFlex="50">
+            E-mail Address
         </mat-card>
 
+        <mat-card id = "right" fxFlex="50">
+            {{profileData.email}}
+        </mat-card>
     </div>
 
-    <div id = "notification">
-
-        <mat-card>
-            <div id="left">
-                <p>Notifications</p>    
-            </div>
-    
-            <div id="right">
-                <p>{{profileData.notification}}</p>
-            </div>
+    <div fxLayout="row" fxLayoutAlign="center center" >
+        <mat-card id="left" fxFlex="50">
+            Notifications
         </mat-card>
 
+        <mat-card id = "right" fxFlex="50">
+            {{profileData.notification}}
+        </mat-card>
     </div>
 
-    <div id = "sharing">
-        <mat-card>
-            <div id="left">
-                <p>Sharing</p>    
-            </div>
-    
-            <div id="right">
-                <p>{{profileData.sharing}}</p>
-            </div>
+    <div fxLayout="row" fxLayoutAlign="center center" >
+        <mat-card id="left" fxFlex="50">
+            Sharing
         </mat-card>
 
+        <mat-card id = "right" fxFlex="50">
+            {{profileData.sharing}}
+        </mat-card>
     </div>
 
-    <div id = "numBoxes">
-        <mat-card>
-            <div id="left">
-                <p>Number of Crow Boxes</p>    
-            </div>
-    
-            <div id="right">
-                <p>{{profileData.numCrowBoxes}}</p>
-            </div>
+    <div fxLayout="row" fxLayoutAlign="center center" >
+        <mat-card id="left" fxFlex="50">
+            Number of Crow Boxes
         </mat-card>
 
+        <mat-card id = "right" fxFlex="50">
+            {{profileData.numCrowBoxes}}
+        </mat-card>
     </div>
 
-    <div id = "numCoins">
-        <mat-card>
-            <div id="left">
-                <p>Total Number Of Coins</p>    
-            </div>
-    
-            <div id="right">
-                <p>{{profileData.totalCoins}}</p>
-            </div>
+    <div fxLayout="row" fxLayoutAlign="center center" >
+        <mat-card id="left" fxFlex="50">
+            Total Number Of Coins
         </mat-card>
 
+        <mat-card id = "right" fxFlex="50">
+            {{profileData.totalCoins}}
+        </mat-card>
     </div>
 
-    
-    <div id = "numCrows">
-        <mat-card >
-            <div id="left">
-                <p>Total Number Of Crows Landed On Perch</p>    
-            </div>
-    
-            <div id="right">
-                <p>{{profileData.totalCrowsLanded}}</p>
-            </div>
+    <div fxLayout="row" fxLayoutAlign="center center" >
+        <mat-card id="left" fxFlex="50">
+            Total Number Of Crows Landed On Perch
         </mat-card>
 
+        <mat-card id = "right" fxFlex="50">
+            {{profileData.totalCrowsLanded}}
+        </mat-card>
     </div>
-</div>
+
+ </div>

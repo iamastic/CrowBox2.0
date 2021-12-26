@@ -1,18 +1,5 @@
-<!-- CUSTOM HEADER SHOWING ONLY "HOME" -->
-<div id = "header" class="fontStyle" *ngIf = "showHeader===false">
-    <div id = "home" class = "fontStyle">
-        <nav>
-            <a routerLink = "/home"> HOME </a>
-        </nav>
-    </div>
-    
-    <mat-divider vertical="true" style="margin-left:45%; top:-1vh;"> </mat-divider>
-
-    <div id = public class = "fontStyle">
-        <nav>
-            <a routerLink = "/public"> WORLD </a>
-        </nav>
-    </div>
+<div *ngIf = "showHeader===false">    
+    <app-subheader></app-subheader>
 
 </div>
 
@@ -21,8 +8,33 @@
     <app-header></app-header>
 </div>
 
+
+<div class="wrapper" fxLayout="column" fxLayoutAlign="start none">
+
+    <div fxFlex="35" fxLayout="column" fxLayoutAlign="center center">
+        <app-welcome style="width:100%"></app-welcome>
+    </div>
+
+    <div fxFlex="27" fxLayout="column" fxLayoutAlign="center center">
+        <div>
+            How it Works
+        </div>
+        <app-infobox ></app-infobox>
+    </div>
+
+
+    <div fxFlex="50" fxLayout="column" fxLayoutAlign="center center">
+        <div>
+            Getting Started
+        </div>
+        <app-getting-started></app-getting-started>
+    </div>
+     
+ </div>
+
+
 <!-- WELCOME TEXT -->
-<div id = "welcome">
+<!-- <div id = "welcome">
     <div id="welcome1"> 
         <h2>Welcome to...</h2> 
     </div>
@@ -49,9 +61,11 @@
 <div id = "image2">
     <img style="border-radius: 5%;" src="../../../assets/images/CrowboxImage2.jpg" alt="Crowbox Image 2">
 </div>
-   
-   
+ -->
 
+
+   
+<!-- 
 <div id = "about">
     <div id="aboutTitle">
         <h3>ABOUT</h3>
@@ -124,3 +138,4 @@
 </div>
 
 
+ -->

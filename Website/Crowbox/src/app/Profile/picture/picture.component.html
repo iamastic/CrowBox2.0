@@ -1,16 +1,32 @@
-<div id="userName">
-    {{userName}}
+<div class= "container3">
+    <mat-card>
+        <mat-card-title>
+            {{userName}}
+        </mat-card-title>
+
+        <mat-card-content>
+            <img src="https://via.placeholder.com/100" alt="Profile Picture" class="imageContainer">
+        </mat-card-content>
+    
+        <mat-card-content>
+            <input type="file" (change)="uploadFile($event)" accept=".png, .jpg" />
+        </mat-card-content>
+    </mat-card>
 </div>
 
-<div id = "changeImage">
-    <div>
-        <input type="file" (change)="uploadFile($event)" accept=".png, .jpg" />
+<!-- 
+
+        <div id="userName">
+        {{userName}}
     </div>
-</div>
-
-<div id="imageContainer">
-    <img alt="Profile Picture" [src]="profileUrl | async" />     
-</div>
-
-
-<mat-divider vertical="true"> </mat-divider>
+    
+    <div id = "changeImage">
+        <div>
+            <input type="file" (change)="uploadFile($event)" accept=".png, .jpg" />
+        </div>
+    </div>
+    
+    <div id="imageContainer">
+        <img alt="Profile Picture" [src]="profileUrl | async" />     
+    </div>
+ -->

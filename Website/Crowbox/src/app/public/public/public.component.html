@@ -1,1 +1,31 @@
-<app-worldview></app-worldview>
+<!-- CUSTOM HEADER SHOWING ONLY "HOME and WORLD" -->
+<!-- <div id = "header" class="fontStyle" *ngIf = "showHeader===false">
+    <div id = "home" class = "fontStyle">
+        <nav>
+            <a routerLink = "/home"> HOME </a>
+        </nav>
+    </div>
+    
+    <mat-divider vertical="true" style="margin-left:45%; top:-1vh;"> </mat-divider>
+
+    <div id = public class = "fontStyle">
+        <nav>
+            <a routerLink = "/public"> WORLD </a>
+        </nav>
+    </div>
+
+</div> -->
+
+<div *ngIf = "showHeader === false">
+    <app-subheader></app-subheader>
+</div>
+
+<!-- ORIGINAL HEADER -->
+<div *ngIf = "showHeader === true">
+    <app-header ></app-header>
+</div> 
+
+<div>
+    <app-worldview ></app-worldview>
+</div>
+

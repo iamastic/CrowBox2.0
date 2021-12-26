@@ -1,43 +1,37 @@
+.container3 {
+
+}
+
+.mat-card{
+    background-color: transparent;
+    align-items: center;
+}
+
+.mat-card-title{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #25356a;
+    text-align: center;
+}
+
+.mat-card-content{
+    align-items: center;
+    text-align: center;
+}
+
+
 #userName {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size:  30px;
     font-weight:bold;
-
-    position: absolute;
-    top:15vh;
-    left:61vh;
     color: #25356a;
 }
 
-#changeImage {
-    position: absolute;
-    top:38vh;
-    left:62vh;
-}
-
-#imageContainer{
-    border-style: solid;
-    border-width: 1px;
+.imageContainer{
     border-radius: 50%;
-    border-color: 0x00ff00;
-
-    width:9%;
-    height:17%;
-
-    position: absolute;
-    margin: auto;
-    top: 20vh;
-    left: 63vh;
 }
 
-.mat-divider.mat-divider-vertical {
-    border-right-color: rgb(0, 0, 0);
-    border-right-width: 2px;
-  
-    position: absolute;
-    right:113vh;
-    
-    top:13vh;
-    height: 715px;
 
-} 
+#changeImage {
+
+}
+

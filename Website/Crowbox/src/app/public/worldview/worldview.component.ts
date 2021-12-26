@@ -99,9 +99,9 @@ export class WorldviewComponent implements OnInit, OnDestroy {
 
     this.$countriesSub = this.countries$.pipe(first())
     .subscribe(result => {
-      console.log(result);
+      // console.log(result);
       this.listOfCountries = result;
-      console.log(this.listOfCountries);
+      // console.log(this.listOfCountries);
       this.initGlobe();
     });
 
@@ -239,7 +239,7 @@ export class WorldviewComponent implements OnInit, OnDestroy {
     let y = Math.cos(globeLatRads) * Math.sin(globeLongRads) * radius;
     let z = Math.sin(globeLatRads) * radius;
 
-    console.log(x,y,z);
+    // console.log(x,y,z);
     
     //credit: https://stackoverflow.com/questions/51800598/threejs-make-meshes-perpendicular-to-the-sphere-face-its-sitting-on
     //for cylinder barchart of COINS DEPOSITED
@@ -282,7 +282,7 @@ setAllPoints() {
 
   for (let i = 0; i < this.listOfCountries.length; i++) {
 
-    console.log(this.listOfCountries[i].key, this.listOfCountries[i].latitude, this.listOfCountries[i].longitude, this.listOfCountries[i].coins_deposited);
+    // console.log(this.listOfCountries[i].key, this.listOfCountries[i].latitude, this.listOfCountries[i].longitude, this.listOfCountries[i].coins_deposited);
 
 
     this.addCoordinatePoint(this.listOfCountries[i].key, this.listOfCountries[i].latitude, this.listOfCountries[i].longitude, this.listOfCountries[i].coins_deposited, this.listOfCountries[i].crows_landed_on_perch);       
@@ -307,7 +307,7 @@ onMouseClick(event : any) {
   }
 
   for (let i = 0; i < intersects.length; i++) {
-    console.log(intersects[0]);
+    // console.log(intersects[0]);
 
     //show the textbox
     this.displayType = "flex";

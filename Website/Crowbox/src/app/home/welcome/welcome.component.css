@@ -1,0 +1,41 @@
+.welcomeMessage {
+    /* width: fit-content; */
+}
+
+h1 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #cd6413;
+    font-weight: bold;
+    font-size: 100px;
+}
+
+h2 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #25356a;
+    font-weight: normal;
+    font-size: 30px;
+}
+
+/* STACKED IMAGES: https://bricampgomez.com/blog/how-to-overlap-images-in-css/ */
+.image-stack {
+  display: grid;
+  position: relative; 
+  grid-template-columns: repeat(15, 1fr); /* 12, 1fr */
+}
+
+.image-stack__item--bottom {
+  grid-column: 6 / -1; /* 5 / -1 */
+  grid-row: 1;
+}
+
+.image-stack__item--top {
+  grid-row: 1;
+  grid-column: 1 / span 12;
+  padding-top: 55%; 
+  z-index: 1; 
+}
+
+img {
+  width: 100%;
+  display: block;
+}

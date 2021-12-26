@@ -1,3 +1,13 @@
+.wrapper {
+/*     border: yellow;
+    border-style: double; */
+
+    position: relative;
+    /* top:5%; */
+
+    height: 270%;
+}
+
 /* FOR THE TWO HEADERS */
 #header {
 /*     border-style: solid;
