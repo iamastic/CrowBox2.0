@@ -1,21 +1,5 @@
-.signUp .mat-form-field {
-    width: 90%;
-    margin-left: 8px;
-    margin-right: 8px;
-    margin-top: 8px;
-  }
-
 .mat-card {
-  position: absolute;
-  margin: auto;
-
   background-color: #25356a;
-
-  width:17%;
-  height:45%;
-  top:20vh;
-  left: 0vh;
-  right: 0vh;
 }
 
 .mat-card .mat-card-title {
@@ -26,10 +10,4 @@
 
 .mat-raised-button {
   background-color:#54659b;
-  position: relative;
-  margin-top: 8px;
-  width: 100%;
-
-  left: 0vh;
-  right: 0vh;
 }

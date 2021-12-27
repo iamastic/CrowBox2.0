@@ -12,6 +12,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
   styleUrls: ['./worldview.component.css']
 })
 export class WorldviewComponent implements OnInit, OnDestroy {
+  
   showHeader!:boolean;
 
   countries$?:Observable<any>;
@@ -63,7 +64,7 @@ export class WorldviewComponent implements OnInit, OnDestroy {
     this.windowHeight = window.innerHeight;
 
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(50, this.windowWidth/this.windowHeight, 0.1, 1000);
+    this.camera = new THREE.PerspectiveCamera(45, this.windowWidth/this.windowHeight, 0.1, 1000);
 
     this.raycaster = new THREE.Raycaster();
     this.mouse = new THREE.Vector2();
@@ -294,21 +295,25 @@ setAllPoints() {
 onMouseClick(event : any) {
   event.preventDefault();
 
+  console.log("Mouse clicked!");
+
   this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+  console.log(this.renderer.getPixelRatio()); 
 
   this.raycaster.setFromCamera(this.mouse, this.camera);
 
   const intersects = this.raycaster.intersectObjects(this.globe.children);
 
   if (intersects.length == 0) {
+    console.log("Nothing intersected :(");
     this.displayType = "none";
     this.countryName = null;
   }
 
   for (let i = 0; i < intersects.length; i++) {
-    // console.log(intersects[0]);
-
+    console.log("Something was intersected!");
     //show the textbox
     this.displayType = "flex";
     //position the textbox

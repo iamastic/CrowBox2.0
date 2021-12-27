@@ -67,6 +67,7 @@ import { SubheaderComponent } from './header/subheader/subheader.component';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { GettingStartedComponent } from './home/getting-started/getting-started.component';
 import { WelcomeComponent } from './home/welcome/welcome.component';
+import { IntromessageComponent } from './public/intromessage/intromessage.component';
 
 
 
@@ -99,6 +100,7 @@ import { WelcomeComponent } from './home/welcome/welcome.component';
     SubheaderComponent,
     GettingStartedComponent,
     WelcomeComponent,
+    IntromessageComponent,
 
   ],
   imports: [
