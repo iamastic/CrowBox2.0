@@ -12,12 +12,9 @@ import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
   templateUrl: './picture.component.html',
   styleUrls: ['./picture.component.css']
 })
-export class PictureComponent implements OnInit, OnChanges, OnDestroy {
-  
-  /* NEW */
-  downloadURL?: Observable<string>;
+export class PictureComponent implements OnInit, OnDestroy {
 
-  /* OLD */
+  downloadURL?: Observable<string>;
   userName?:string;
   userId?:string;
   profileUrl?:String;
@@ -64,8 +61,6 @@ export class PictureComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  ngOnChanges() {
-  }
 
   uploadFile(event:any) {
     const file = event.target.files[0];
@@ -90,19 +85,6 @@ export class PictureComponent implements OnInit, OnChanges, OnDestroy {
         })
       }))
     .subscribe();
-  }
-
-  // This function retrieves the profile picture 
-  // by getting the download url from the user's 
-  // database node
-  getProfilePicture() {
-    this.crowboxService.getUser()
-    .snapshotChanges()
-    .subscribe(result => {
-      // Obtain the profile picture's url 
-      this.profileUrl = result.payload.val().profilePicture; 
-      console.log(this.profileUrl);
-    })
   }
 
 }

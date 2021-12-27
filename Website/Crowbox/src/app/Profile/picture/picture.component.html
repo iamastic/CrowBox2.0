@@ -8,31 +8,20 @@
             <img src="{{profileUrl}}" alt="Profile Picture" class="imageContainer">
         </mat-card-content>
     
+
         <mat-card-content>
-            <input type="file" (change)="uploadFile($event)" accept=".png, .jpg" />
+
+            <input class="profileInput" type="file" (change)="uploadFile($event)" accept=".png, .jpg" #profileUpload/>
+
+
+            <button class="upload_button" (click)="profileUpload.click()" mat-raised-button>Edit 
+                <mat-icon>add_a_photo</mat-icon>
+            </button>
+
         </mat-card-content>
+
+
+
     </mat-card>
 </div>
 
-<!-- <div>
-    {{ profileUrl }}
-https://via.placeholder.com/100
-    <img src="{{profileUrl}}" alt="Image of something">
-</div>
- -->
-<!-- 
-
-        <div id="userName">
-        {{userName}}
-    </div>
-    
-    <div id = "changeImage">
-        <div>
-            <input type="file" (change)="uploadFile($event)" accept=".png, .jpg" />
-        </div>
-    </div>
-    
-    <div id="imageContainer">
-        <img alt="Profile Picture" [src]="profileUrl | async" />     
-    </div>
- -->
