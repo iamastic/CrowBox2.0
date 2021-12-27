@@ -29,6 +29,7 @@
           <mat-label>Enter a Password</mat-label>
           <input matInput [type]="hide ? 'password' : 'text'"
           [formControl]="userPassword" required>
+          <!-- FROM: https://material.angular.io/components/form-field/overview -->
           <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
               <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>

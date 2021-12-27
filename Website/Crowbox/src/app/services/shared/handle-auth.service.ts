@@ -1,3 +1,5 @@
+/* CODE GUIDED BY AND ADAPTED FROM: https://remotestack.io/angular-firebase-authentication-example-tutorial/ */
+
 import { Injectable, NgZone } from '@angular/core';
 
 //firebase

@@ -348,7 +348,6 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
     } else {
       console.log("COINS and CROWS array have now been filled");
     }
-
   }
 
   /* Check if the user already has a profile in the 
@@ -511,6 +510,7 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
 
   /* OFFLINE MODE */
 
+  /* Upload file Code adapted from: https://blog.angular-university.io/angular-file-upload/ */
   //Get the file
   uploadFile(event:any) {
     this.file = event.target.files[0];    
