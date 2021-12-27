@@ -103,7 +103,7 @@ export class CrowboxdbService {
   }
 
 
-  /* these functions simply return the reference. 
+  /* These functions simply return the reference. 
   The reference will be used to further obtain the 
   individual pieces of data from the various nodes */
   getUser(): AngularFireObject<any> {
@@ -117,6 +117,13 @@ export class CrowboxdbService {
   getCoinDepositedData():AngularFireList<any> {
     return this.coinsDepositedReference;
   }
+
+  /* USER RELATED */
+  updateProfilePictureURL(url:string){
+    this.userReference.update({profilePicture:url});
+  }
+
+
 
   /* CROWBOX OBJECT RELATED */
   getUserCrowbox() : AngularFireObject<any> {
@@ -232,5 +239,7 @@ export class CrowboxdbService {
     let offlineReference = this.db.object(path);
     offlineReference.update({value:coins});
   }
+
+
 
 }

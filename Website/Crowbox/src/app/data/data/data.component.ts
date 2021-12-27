@@ -347,6 +347,8 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
               this.crowboxService.updateDateJoined(this.currentDate);        
             }
             this.crowboxService.updateUserName(this.handleAuth.userName);
+
+            this.crowboxService.updateProfilePictureURL("https://via.placeholder.com/100");
           }
         });
   }
