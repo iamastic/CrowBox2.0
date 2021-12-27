@@ -92,6 +92,7 @@ export class InformationComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     this.crowboxService.updateCrowboxCrowsOnPerch(this.totalCrowsLandedOnPerch);
+    this.crowboxService.updateTotalCrowsOnPerchValueFromAllBoxes(this.totalCrowsLandedOnPerch);
   }
 
   /* ADD UP ALL THE VALUES IN THE COINS DEPOSITED ARRAY */
@@ -102,6 +103,8 @@ export class InformationComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     this.crowboxService.updateCrowboxTotalCoinsDeposited(this.totalCoinsDeposited);
+    this.crowboxService.updateTotalCoinsDepositedFromAllBoxes(this.totalCoinsDeposited);
+
   }
   
   /* ---------------------------------------------------- */

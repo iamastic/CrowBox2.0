@@ -19,6 +19,10 @@
     line-height: 150%;
 }
 
+.mat-raised-button {
+    color: aqua;
+}
+
 p {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #25356a;

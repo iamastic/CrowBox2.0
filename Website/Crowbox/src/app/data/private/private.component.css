@@ -7,7 +7,7 @@
 }
 
 .mat-divider.mat-divider-vertical {
-    border-right-color: rgb(0, 0, 0);
+    border-right-color: #25356a;
     border-right-width: 2px;
 
     height: 600px;

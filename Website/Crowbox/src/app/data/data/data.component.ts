@@ -102,6 +102,9 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
         scaleLabel: {
           display:true,
           labelString:'Amount'
+        },
+        gridLines: {
+          display:false
         }
 
       }], 
@@ -109,6 +112,9 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
         scaleLabel: {
           display:true,
           labelString:'Date'
+        },
+        gridLines: {
+          display:false
         }
       }]
     },
@@ -162,6 +168,9 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
         scaleLabel: {
           display:true,
           labelString:'Date'
+        },
+        gridLines: {
+          display:false
         }
       }], 
     yAxes: [{
@@ -174,6 +183,9 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
       scaleLabel: {
         display:true,
         labelString:'Amount'
+      },
+      gridLines: {
+        display:false
       }
 
     }] },
@@ -215,6 +227,33 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
   $userDataSub?:Subscription;
   $childCrowOnPerch?:Subscription;
   $childCoinsDeposited?:Subscription;
+
+  /* CHART TYPES FOR CROW ON PERCH */
+  switchCrowToLineChart() {
+    this.crowOnPerchChartType = "line";
+  }
+
+  switchCrowToBarChart() {
+    this.crowOnPerchChartType = "bar";
+  }
+
+  switchCrowToHorizontalBarChart() {
+    this.crowOnPerchChartType = "horizontalBar";
+  }
+
+  /* CHART TYPES FOR COINS DEPOSITED */
+  switchCoinToLineChart() {
+    this.coinsDepositedChartType = "line";
+  }
+ 
+  switchCoinToBarChart() {
+    this.coinsDepositedChartType = "bar";
+  }
+
+  
+  switchCoinToHorizontalBarChart() {
+    this.coinsDepositedChartType = "horizontalBar";
+  }
 
 
   constructor(private handleAuth: HandleAuthService, private crowboxService: CrowboxdbService, public datepipe:DatePipe) {}

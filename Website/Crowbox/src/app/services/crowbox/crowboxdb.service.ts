@@ -123,6 +123,13 @@ export class CrowboxdbService {
     this.userReference.update({profilePicture:url});
   }
 
+  updateTotalCrowsOnPerchValueFromAllBoxes(value:number) {
+    this.userReference.update({total_crows_landed_on_perch:value})
+  }
+
+  updateTotalCoinsDepositedFromAllBoxes(value:number) {
+    this.userReference.update({total_coins_deposited:value})
+  }
 
 
   /* CROWBOX OBJECT RELATED */

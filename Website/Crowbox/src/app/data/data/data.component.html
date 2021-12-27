@@ -14,6 +14,10 @@
         </mat-button-toggle-group>
     </div>
 
+ <!--    <button (click)="switchCoinToLineChart()">Line</button>
+    <button (click)="switchCoinToBarChart()">Bar</button> -->
+
+
         <!-- NO CROWBOX MESSAGE BOX -->
     <div *ngIf=(showUserId)>
         <mat-card style="left: 0vh; right:0vh; margin: auto; display: flex;">
@@ -26,7 +30,41 @@
     </div>
 
     <!-- CHARTS -->
-    <div style="width: 90%; background-color: #ededed; border-radius: 3%;" *ngIf=(!showUserId)>
+
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="1%" style="width: 100%;">
+
+        <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10%" *ngIf="showCoinsDeposited === false">
+            <button mat-raised-button (click)="switchCrowToBarChart()">
+                <mat-icon>bar_chart</mat-icon>
+            </button>
+            
+            <button mat-raised-button (click)="switchCrowToLineChart()">
+                <mat-icon>show_chart</mat-icon>
+            </button>
+          
+            <button mat-raised-button (click)="switchCrowToHorizontalBarChart()">
+                <mat-icon style="transform: rotate(90deg)">bar_chart</mat-icon>
+            </button>
+
+        </div>
+
+        <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10%" *ngIf="showCoinsDeposited === true">
+            <button mat-raised-button (click)="switchCoinToBarChart()">
+                <mat-icon>bar_chart</mat-icon>
+            </button>
+            
+            <button mat-raised-button (click)=" switchCoinToLineChart()">
+                <mat-icon>show_chart</mat-icon>
+            </button>
+          
+            <button mat-raised-button (click)="switchCoinToHorizontalBarChart()">
+                <mat-icon style="transform: rotate(90deg)">bar_chart</mat-icon>
+            </button>
+
+        </div>
+
+
+    <div style="width: 90%; background-color: #ededed; border-radius: 3%;" *ngIf=(!showUserId) fxFlex="100">
             <!-- CROWS ON PERCH DATA SECTION -->
         <div *ngIf="showCoinsDeposited === false">
             <canvas baseChart
@@ -52,6 +90,9 @@
             >
             </canvas>
         </div>
+    </div>
+
+
     </div>
 
 
