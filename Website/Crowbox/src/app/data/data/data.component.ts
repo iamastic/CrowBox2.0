@@ -1,6 +1,6 @@
-import { Component, OnInit, AfterContentInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterContentInit, OnDestroy, EventEmitter, Output } from '@angular/core';
 
-import { Observable } from 'rxjs';
+import { interval, Observable, Subscription } from 'rxjs';
 
 //import the auth service
 import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
@@ -27,9 +27,23 @@ interface dataObject {
 })
 export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
 
+  /* SENDING DATA TO PRIVATE.COMPONENT.TS */
+  @Output() crowsOnPerchOutput = new EventEmitter<any>();
+  @Output() coinsDepositedOutput = new EventEmitter<any>();
+
+  sendCrowsOnPerchToParent() {
+    this.crowsOnPerchOutput.emit(this.crownsOnPerchValues);
+  }
+
+  sendCoinsDepositedToParent() {
+    this.coinsDepositedOutput.emit(this.coinsDepositedValues);
+  }
+
   /* OFFLINE RELATED */
   file:any;
   fileName:any;
+  uploaded:boolean = false; 
+
   //For crows
   offlineCrowData:dataObject[] = [];
   offlineCurrentCrowDate:any = "null";
@@ -60,7 +74,7 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
   //observable to initialise the data set
   $initialCrowOnPerchSub?: Observable<any>;
   //observable to get the new child of the data set
-  $childCrowOnPerchSub?:Observable<any>;
+  childCrowOnPerchSub$?:Observable<any>;
   //y axis data
   crowsOnPerchDate: string[] = [];
   //x axis data
@@ -88,6 +102,9 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
         scaleLabel: {
           display:true,
           labelString:'Amount'
+        },
+        gridLines: {
+          display:false
         }
 
       }], 
@@ -95,6 +112,9 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
         scaleLabel: {
           display:true,
           labelString:'Date'
+        },
+        gridLines: {
+          display:false
         }
       }]
     },
@@ -125,7 +145,7 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
 
   /* PERSONAL COINS DEPOSITED RELATED */
   //observable to initialise and get child values of data set
-  $childCoinsDepositedSub?: Observable<any>;
+  childCoinsDepositedSub$?: Observable<any>;
   //y axis data
   coinsDepositedDate: string[] = [];
   //x axis data
@@ -148,6 +168,9 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
         scaleLabel: {
           display:true,
           labelString:'Date'
+        },
+        gridLines: {
+          display:false
         }
       }], 
     yAxes: [{
@@ -160,6 +183,9 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
       scaleLabel: {
         display:true,
         labelString:'Amount'
+      },
+      gridLines: {
+        display:false
       }
 
     }] },
@@ -191,31 +217,119 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
   showCoinsDeposited?:boolean;
 
   /* ---------------------------------------------------- */
-  constructor(private handleAuth: HandleAuthService, private crowboxService: CrowboxdbService, public datepipe:DatePipe) {
 
+  /* HANDLING WIFI TROUBLESHOOT */
+  wifiCheckTimer$ = interval(10000);
+  $wifiSub?:Subscription;
+
+  /* OTHER SUBSCRIPTIONS - To handle unsubscribing */
+  $handleUserAuth?:Subscription;
+  $userDataSub?:Subscription;
+  $childCrowOnPerch?:Subscription;
+  $childCoinsDeposited?:Subscription;
+
+  /* CHART TYPES FOR CROW ON PERCH */
+  switchCrowToLineChart() {
+    this.crowOnPerchChartType = "line";
   }
 
+  switchCrowToBarChart() {
+    this.crowOnPerchChartType = "bar";
+  }
+
+  switchCrowToHorizontalBarChart() {
+    this.crowOnPerchChartType = "horizontalBar";
+  }
+
+  /* CHART TYPES FOR COINS DEPOSITED */
+  switchCoinToLineChart() {
+    this.coinsDepositedChartType = "line";
+  }
+ 
+  switchCoinToBarChart() {
+    this.coinsDepositedChartType = "bar";
+  }
+
+  
+  switchCoinToHorizontalBarChart() {
+    this.coinsDepositedChartType = "horizontalBar";
+  }
+
+
+  constructor(private handleAuth: HandleAuthService, private crowboxService: CrowboxdbService, public datepipe:DatePipe) {}
+
   ngOnDestroy() {
+
+    this.$wifiSub?.unsubscribe();
+    this.$handleUserAuth?.unsubscribe();
+    this.$userDataSub?.unsubscribe();
+    this.$childCrowOnPerch?.unsubscribe();
+    this.$childCoinsDeposited?.unsubscribe();
+  }
+
+  checkIfWifiConnection() {
+    //In here, I want to check the two times that have been set
+    //in the Status object in firebase 
+
+    //First, get both the times - Only take the first and then 
+    //unsubscribe. This will anyway be resubscribed in the next 
+    //interval
+    this.crowboxService
+    .getStatusData()
+    .snapshotChanges()
+    .pipe(first())
+    .subscribe(result => {
+      let previoustTime = result.payload.val().prevWifiTime;
+      let currentTime = result.payload.val().currentWifiTime;
+      let oldStatus = result.payload.val().wifi;
+      
+      //Then, we compare the two times 
+      if (previoustTime === currentTime) {
+        //If they are equal, that means the WiFi is not connected 
+        //Set the error message
+        // console.log("Times are Equal");
+        if (oldStatus === "WORKING") {
+          this.crowboxService.updateWifiStatus("DISCONNECTED");
+        }
+
+      } else {
+          //If they are not equal, that means the WiFi is connected
+          //Set it to Working and update value of prevWiFiTime
+          // console.log("Times are NOT equal");
+          if(oldStatus !== "WORKING") {
+            this.crowboxService.updateWifiStatus("WORKING");
+            this.crowboxService.updatePreviousWifiTime(currentTime);
+          }
+      }
+
+    });
   }
 
   ngOnInit(): void {
+
+    this.$wifiSub = this.wifiCheckTimer$.subscribe(r => {
+      // console.log(r);
+      this.checkIfWifiConnection();
+      
+    })
+
     //upon the view rendering, get the User Id - don't need to do this anymore
     //this.currentUserId = this.authService.currentUserState?.uid;
 
     //Subscribe to the user auth state observable and wait 
     //to get the UID to proceed
-    this.handleAuth.currentUser$
-    .pipe(first())
-    .subscribe(user => {
-      this.currentUserId = user.uid;
-      this.handleAuth.isLoggedIn;
+    this.$handleUserAuth = this.handleAuth.currentUser$
+        .pipe(first())
+        .subscribe(user => {
+          this.currentUserId = user.uid;
+          this.handleAuth.isLoggedIn;
 
-      console.log("Current User Id is " );
-      console.log(this.currentUserId);
-  
-      this.checkIfUserExists();
-      this.initialiseCharts();
-    });
+          console.log("Current User Id is " );
+          console.log(this.currentUserId);
+      
+          this.checkIfUserExists();
+          this.initialiseCharts();
+        });
   }
 
   ngAfterContentInit() {
@@ -234,7 +348,6 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
     } else {
       console.log("COINS and CROWS array have now been filled");
     }
-
   }
 
   /* Check if the user already has a profile in the 
@@ -245,35 +358,37 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
     console.log("checkIfUserExists() called");
     this.userData$ = this.crowboxService.getUser().snapshotChanges();
 
-    this.userData$
-    .pipe(first())
-    .subscribe(action => {
-      if(action.key){
-        console.log("User is in the database");
-        console.log(action.key);
-      } else { 
-        console.log("In data component, no such user found");
-        console.log("Creating user");
-        //create the user and initialise their respective data slots here
-        //get the current date
-        this.currentDate = this.datepipe.transform((new Date), 'yyyy/dd/MM');
-        this.currentTrainingStage = 1;
-        if(this.currentTrainingStage) {
-          this.crowboxService.updateTrainingStage(this.currentTrainingStage);
-        }
-        this.crowboxService.updateNotifcationSettings("ON");
-        this.crowboxService.updateSharingPreferences("PUBLIC");
-        this.crowboxService.updateTotalCoinsDeposited(0);
-        this.crowboxService.updateTotalCrowsLandedOnPerch(0);
-        this.crowboxService.setUserEmail();
-        this.crowboxService.updateCrowboxNickname("null");
-        this.crowboxService.updateUserLocation(this.handleAuth.userLocation);
-        if(this.currentDate) {
-          this.crowboxService.updateDateJoined(this.currentDate);        
-        }
-        this.crowboxService.updateUserName(this.handleAuth.userName);
-      }
-    });
+    this.$userDataSub = this.userData$
+        .pipe(first())
+        .subscribe(action => {
+          if(action.key){
+            console.log("User is in the database");
+            console.log(action.key);
+          } else { 
+            console.log("In data component, no such user found");
+            console.log("Creating user");
+            //create the user and initialise their respective data slots here
+            //get the current date
+            this.currentDate = this.datepipe.transform((new Date), 'yyyy/dd/MM');
+            this.currentTrainingStage = 1;
+            if(this.currentTrainingStage) {
+              this.crowboxService.updateTrainingStage(this.currentTrainingStage);
+            }
+            this.crowboxService.updateNotifcationSettings("ON");
+            this.crowboxService.updateSharingPreferences("PUBLIC");
+            this.crowboxService.updateTotalCoinsDeposited(0);
+            this.crowboxService.updateTotalCrowsLandedOnPerch(0);
+            this.crowboxService.setUserEmail();
+            this.crowboxService.updateCrowboxNickname("null");
+            this.crowboxService.updateUserLocation(this.handleAuth.userLocation);
+            if(this.currentDate) {
+              this.crowboxService.updateDateJoined(this.currentDate);        
+            }
+            this.crowboxService.updateUserName(this.handleAuth.userName);
+
+            this.crowboxService.updateProfilePictureURL("https://via.placeholder.com/100");
+          }
+        });
   }
 
   /* ---------------------------------------------------- */
@@ -281,42 +396,45 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
   /* PERSONAL DATA */
   getCrowOnPerchDataChildren() {
     //get a snapshot of the child added
-    this.$childCrowOnPerchSub = this.crowboxService
+    this.childCrowOnPerchSub$ = this.crowboxService
     .getCrowOnPerchData()
     .stateChanges();
 
-    this.$childCrowOnPerchSub
-    .subscribe(action => {
-      //set the showUserId to false as the user has already set up the crowbox
-      this.showUserId = false;
-      //get the index of the key from the date array
-      let indexOfKey = this.crowsOnPerchDate.indexOf(action.key);
-      //if the index is -1, then the date does not currently exist
-      //this means that it is a new date, so we push it onto the array
-      //since it is a new date, we also push on the value onto the value
-      //array
-      if (indexOfKey == -1) {
-        this.crowsOnPerchDate.push(action.key);
-        //this.crownsOnPerchValues.push(action.payload.val().value);
-        this.crownsOnPerchValues = [
-          ...this.crownsOnPerchValues, action.payload.val().value
-        ];
-        this.switchCrowChartColor();
-        this.crowBarChartColors.push(this.currentCrowColor);
-      } else {
-        //if it does exist, then we don't need to add the new date
-        //simply replace the existing data value with the new data value
-        //for the same date 
-        this.crownsOnPerchValues[indexOfKey] = action.payload.val().value;
-        this.crownsOnPerchValues = [...this.crownsOnPerchValues];
-      }
+    this.$childCrowOnPerch = this.childCrowOnPerchSub$
+        .subscribe(action => {
+          //set the showUserId to false as the user has already set up the crowbox
+          this.showUserId = false;
+          //get the index of the key from the date array
+          let indexOfKey = this.crowsOnPerchDate.indexOf(action.key);
+          //if the index is -1, then the date does not currently exist
+          //this means that it is a new date, so we push it onto the array
+          //since it is a new date, we also push on the value onto the value
+          //array
+          if (indexOfKey == -1) {
+            this.crowsOnPerchDate.push(action.key);
+            //this.crownsOnPerchValues.push(action.payload.val().value);
+            this.crownsOnPerchValues = [
+              ...this.crownsOnPerchValues, action.payload.val().value
+            ];
+            this.switchCrowChartColor();
+            this.crowBarChartColors.push(this.currentCrowColor);
+          } else {
+            //if it does exist, then we don't need to add the new date
+            //simply replace the existing data value with the new data value
+            //for the same date 
+            this.crownsOnPerchValues[indexOfKey] = action.payload.val().value;
+            this.crownsOnPerchValues = [...this.crownsOnPerchValues];
+          }
 
-      //reset the bar charts data as well as labels
-      this.crowOnPerchChartLabels = this.crowsOnPerchDate;
-      this.crowOnPerchChartData = [
-        { data: this.crownsOnPerchValues, label: "Number Of Crows That Landed On The Perch" }
-      ];
-    });
+          //reset the bar charts data as well as labels
+          this.crowOnPerchChartLabels = this.crowsOnPerchDate;
+          this.crowOnPerchChartData = [
+            { data: this.crownsOnPerchValues, label: "Number Of Crows That Landed On The Perch" }
+          ];
+
+          //Emit this data to the parent
+          this.sendCrowsOnPerchToParent();
+        });
   }
 
   switchCrowChartColor() {
@@ -327,15 +445,13 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
     }
   }
 
-  
-
   getCoinDepositedDataChildren() {
     //get snapshot of child added 
-    this.$childCoinsDepositedSub = this.crowboxService
+    this.childCoinsDepositedSub$ = this.crowboxService
     .getCoinDepositedData()
     .stateChanges();
 
-    this.$childCoinsDepositedSub
+    this.$childCoinsDeposited = this.childCoinsDepositedSub$
     .subscribe(action => {
       //set the showUserId to false as the user has already set up the crowbox
       this.showUserId = false;
@@ -347,7 +463,6 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
       //array
       if (indexOfKey == -1) {
         this.coinsDepositedDate.push(action.key);
-        //this.coinsDepositedValues.push(action.payload.val().value);
         this.coinsDepositedValues = [
           ...this.coinsDepositedValues, action.payload.val().value
         ];
@@ -369,6 +484,9 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
       this.coinsDepositedChartData = [
         { data: this.coinsDepositedValues, label: "Number of Coins Deposited" }
       ];
+
+      //Emit this data to the parent
+      this.sendCoinsDepositedToParent();
     });
   }
 
@@ -392,10 +510,11 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
 
   /* OFFLINE MODE */
 
+  /* Upload file Code adapted from: https://blog.angular-university.io/angular-file-upload/ */
   //Get the file
-  
   uploadFile(event:any) {
     this.file = event.target.files[0];    
+    this.fileName = this.file.name;
   }
 
   readFile() {
@@ -431,6 +550,8 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
       this.offlineCoinData.forEach(data => {
         this.crowboxService.updateOfflineCoinsDeposited(data.date,data.value);
       })
+
+      this.uploaded = true;
     };
   }
 

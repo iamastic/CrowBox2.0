@@ -1,63 +1,6 @@
-<!-- CUSTOM HEADER SHOWING ONLY "HOME and WORLD" -->
-<div id = "header" class="fontStyle" *ngIf = "showHeader===false">
-    <div id = "home" class = "fontStyle">
-        <nav>
-            <a routerLink = "/home"> HOME </a>
-        </nav>
-    </div>
-    
-    <mat-divider vertical="true" style="margin-left:45%; top:-1vh;"> </mat-divider>
-
-    <div id = public class = "fontStyle">
-        <nav>
-            <a routerLink = "/public"> WORLD </a>
-        </nav>
-    </div>
-
-</div>
-
-<!-- ORIGINAL HEADER -->
-<div *ngIf = "showHeader === true">
-    <app-header></app-header>
-</div>
-
-
-
 <canvas #globeCanvas (window:resize)="onWindowResize()"></canvas>
 
-<div id = "welcome">
-    <div id= "welcome1">
-        <h1>The  World <br style="display: block;
-            content: '';
-            margin-top: 70px;"> View</h1>
-    </div>
-
-    <div id="welcome2">
-        <h2>
-            Spin the Globe... <br style="display: block;
-            content: '';
-            margin-top: 10px;">
-            Click on the Bar Charts... <br style="display: block;
-            content: '';
-            margin-top: 10px;">
-            Check out the Data...
-        </h2>
-    </div>
- 
-</div>
-
 <div id = "info" [style.display]= "displayType" [style.top] = "top"  [style.left] = "left">
-<!--     <div id = "displayCountryName">
-        <b>Country :</b>   {{countryName}}
-
-        <div *ngIf="coinsDeposited">
-            <b>Number of Coins Deposited by Crows: </b> {{coinsDeposited}}
-        </div>
-        <div *ngIf="crowsLandedOnPerch">
-            <b>Number of Crows that Landed On the Perch: </b> {{crowsLandedOnPerch}}
-        </div>
-    </div> -->
-    
     <mat-card>
         <mat-card-title>
             {{countryName}}

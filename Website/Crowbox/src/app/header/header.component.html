@@ -1,10 +1,10 @@
-<div class = "wrapper">
-    <mat-toolbar fxLayout="row" fxLayoutAlign="space-evenly center">
+<div class = "wrapper" >
+    <mat-toolbar fxLayout="row" fxLayoutAlign="space-evenly center" >
         <div class="headerTitle flex-item">
             <nav>
                 <a routerLink = "/home"> 
                     <mat-icon>home</mat-icon>
-                    <span id="headerText" *ngIf="(isDeviceXS ===false)">HOME</span>     
+                    <span id="headerText" fxHide.xs fxHide.sm>HOME</span>     
                 </a>
             </nav>
         </div>
@@ -13,7 +13,7 @@
             <nav>
                 <a routerLink = "/public"> 
                     <mat-icon>public</mat-icon>
-                    <span id="headerText" *ngIf="(isDeviceXS ===false)">WORLD</span> 
+                    <span id="headerText" fxHide.xs fxHide.sm>WORLD</span> 
                 </a>
             </nav>
         </div>
@@ -22,7 +22,7 @@
             <nav>
                 <a routerLink = "/data"> 
                     <mat-icon>bar_chart</mat-icon>
-                    <span id="headerText" *ngIf="(isDeviceXS ===false)">DATA</span> 
+                    <span id="headerText" fxHide.xs fxHide.sm>DATA</span> 
                      
                 </a>
             </nav>
@@ -32,52 +32,10 @@
             <nav>
                 <a routerLink = "/profile"> 
                     <mat-icon>person_pin</mat-icon>
-                    <span id="headerText" *ngIf="(isDeviceXS ===false)">PROFILE</span> 
+                    <span id="headerText" fxHide.xs fxHide.sm>PROFILE</span> 
                  
                 </a>
             </nav>
         </div>
     </mat-toolbar>
 </div>
-
-
-<!-- 
-<div id="wrapper">
-
-    <div id = "navContainer">
-        <div id = "home" class = "fontStyle">
-            <nav>
-                <a routerLink = "/home"> HOME </a>
-            </nav>
-        </div>
-    
-        <mat-divider vertical="true" style="margin-left:20.5%; top:-1vh;"> </mat-divider>
-    
-        <div id = public class = "fontStyle">
-            <nav>
-                <a routerLink = "/public"> WORLD </a>
-            </nav>
-        </div>
-    
-    
-        <mat-divider vertical="true" style="margin-left: 49%; top:-1vh;"> </mat-divider>
-     
-        <div id = data class = "fontStyle">
-            <nav>
-                <a routerLink = "/data"> DATA </a>
-            </nav>
-        </div>
-    
-        <mat-divider vertical="true" style="margin-left: 71%; top:-1vh;"> </mat-divider>
-    
-    
-        <div id = profile class = "fontStyle">
-            <nav>
-                <a routerLink = "/profile"> PROFILE </a>
-            </nav>
-        </div>
-    </div>
-    
-</div>
-
-  -->

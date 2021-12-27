@@ -61,6 +61,14 @@ import { PublicComponent } from './public/public/public.component';
 
 //For Styling
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { PrivateComponent } from './data/private/private.component';
+import { SubheaderComponent } from './header/subheader/subheader.component';
+
+import { CarouselModule } from 'ngx-bootstrap/carousel';
+import { GettingStartedComponent } from './home/getting-started/getting-started.component';
+import { WelcomeComponent } from './home/welcome/welcome.component';
+import { IntromessageComponent } from './public/intromessage/intromessage.component';
+
 
 
 @NgModule({
@@ -88,6 +96,11 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     EditNotificationComponent,
     EditSharingComponent,
     EditBoxComponent,
+    PrivateComponent,
+    SubheaderComponent,
+    GettingStartedComponent,
+    WelcomeComponent,
+    IntromessageComponent,
 
   ],
   imports: [
@@ -112,6 +125,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatSelectModule,
     MatToolbarModule,
     FlexLayoutModule,
+    CarouselModule.forRoot(),
 
   ],
   providers: [HandleAuthService,DatePipe,AngularFireStorage],

@@ -1,43 +1,46 @@
+.container3 {
+
+}
+
+.mat-card{
+    background-color:#25356a;
+    align-items: center;
+}
+
+.mat-card-title{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #ededed;
+    text-align: center;
+}
+
+.mat-card-content{
+    align-items: center;
+    text-align: center;
+}
+
+
 #userName {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size:  30px;
     font-weight:bold;
-
-    position: absolute;
-    top:15vh;
-    left:61vh;
     color: #25356a;
 }
 
-#changeImage {
-    position: absolute;
-    top:38vh;
-    left:62vh;
-}
+.imageContainer{
+    width: 150px;
+    height: 150px;
 
-#imageContainer{
-    border-style: solid;
-    border-width: 1px;
     border-radius: 50%;
-    border-color: 0x00ff00;
-
-    width:9%;
-    height:17%;
-
-    position: absolute;
-    margin: auto;
-    top: 20vh;
-    left: 63vh;
 }
 
-.mat-divider.mat-divider-vertical {
-    border-right-color: rgb(0, 0, 0);
-    border-right-width: 2px;
-  
-    position: absolute;
-    right:113vh;
-    
-    top:13vh;
-    height: 715px;
+.profileInput {
+    display: none;
+}
 
-} 
+.upload_button {
+    background-color:#ededed;
+    color: #25356a;
+    font-size:  14px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+}

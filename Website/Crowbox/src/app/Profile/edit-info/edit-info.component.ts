@@ -1,10 +1,10 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
 
 import {DialogRole, MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { CrowboxdbService } from 'src/app/services/crowbox/crowboxdb.service';
 import { PublicService } from 'src/app/services/public/public.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 
 
@@ -13,7 +13,7 @@ import { first, map } from 'rxjs/operators';
   templateUrl: './edit-info.component.html',
   styleUrls: ['./edit-info.component.css']
 })
-export class EditInfoComponent implements OnInit {
+export class EditInfoComponent implements OnInit, OnDestroy {
 
   constructor(private handleAuth:HandleAuthService, public dialog:MatDialog, private crowboxService:CrowboxdbService ) { }
 
@@ -22,6 +22,21 @@ export class EditInfoComponent implements OnInit {
   newEmail?:string;
   newNotification?:string;
   newSharing?:string;
+
+  /* HANDLING SUBSCRIPTIONS */
+  $nameSub?:Subscription;
+  $locationSub?:Subscription;
+  $emailSub?:Subscription;
+  $notificationSub?:Subscription;
+  $sharingSub?:Subscription;
+
+  ngOnDestroy(): void {
+    this.$emailSub?.unsubscribe();
+    this.$locationSub?.unsubscribe();
+    this.$nameSub?.unsubscribe();
+    this.$notificationSub?.unsubscribe();
+    this.$sharingSub?.unsubscribe();
+  }
 
   ngOnInit(): void {
   }
@@ -32,7 +47,7 @@ export class EditInfoComponent implements OnInit {
       data: { text:"Name",property: this.newName }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    this.$nameSub = dialogRef.afterClosed().subscribe(result => {
 
       if(result) {
         console.log("New Name is: " + result);
@@ -47,7 +62,7 @@ export class EditInfoComponent implements OnInit {
       data: { text:"Location",property: this.newLocation }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    this.$locationSub = dialogRef.afterClosed().subscribe(result => {
 
       if(result) {
         console.log("New Location is: " + result);
@@ -62,7 +77,7 @@ export class EditInfoComponent implements OnInit {
       data: { text:"Email",property: this.newEmail }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    this.$emailSub = dialogRef.afterClosed().subscribe(result => {
       if(result) {
         console.log("New Email is: " + result);
         this.crowboxService.updateUserEmail(result);
@@ -77,7 +92,7 @@ export class EditInfoComponent implements OnInit {
       data: { text:"Notification Settings",property: this.newNotification }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    this.$notificationSub = dialogRef.afterClosed().subscribe(result => {
       if(result) {
         console.log("New Notification Setting is: " + result);
         this.crowboxService.updateNotifcationSettings(result);
@@ -91,7 +106,7 @@ export class EditInfoComponent implements OnInit {
       data: { text:"Sharing Preference",property: this.newSharing }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    this.$sharingSub = dialogRef.afterClosed().subscribe(result => {
       if(result) {
         console.log("New Sharing Preference is: " + result);
         this.crowboxService.updateSharingPreferences(result);

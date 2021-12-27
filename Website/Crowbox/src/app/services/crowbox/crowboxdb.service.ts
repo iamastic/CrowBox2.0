@@ -103,7 +103,7 @@ export class CrowboxdbService {
   }
 
 
-  /* these functions simply return the reference. 
+  /* These functions simply return the reference. 
   The reference will be used to further obtain the 
   individual pieces of data from the various nodes */
   getUser(): AngularFireObject<any> {
@@ -117,6 +117,20 @@ export class CrowboxdbService {
   getCoinDepositedData():AngularFireList<any> {
     return this.coinsDepositedReference;
   }
+
+  /* USER RELATED */
+  updateProfilePictureURL(url:string){
+    this.userReference.update({profilePicture:url});
+  }
+
+  updateTotalCrowsOnPerchValueFromAllBoxes(value:number) {
+    this.userReference.update({total_crows_landed_on_perch:value})
+  }
+
+  updateTotalCoinsDepositedFromAllBoxes(value:number) {
+    this.userReference.update({total_coins_deposited:value})
+  }
+
 
   /* CROWBOX OBJECT RELATED */
   getUserCrowbox() : AngularFireObject<any> {
@@ -198,15 +212,24 @@ export class CrowboxdbService {
     return this.locationReference;
   }
 
+ 
+  /* TROUBLESHOOT RELATED */
+  getStatusData():AngularFireObject<any>{
+    return this.statusReference;
+  }
+
+  updatePreviousWifiTime(time:String) {
+    this.statusReference.update({prevWifiTime:time});
+  }
+
+  updateWifiStatus(status:String) {
+    this.statusReference.update({wifi:status});
+  }
+
   /* SITE RELATED */
 
   getAllSiteData(): AngularFireList<any>{
     return this.siteReference;
-  }
-
-  /* TROUBLESHOOT RELATED */
-  getStatusData():AngularFireObject<any>{
-    return this.statusReference;
   }
 
   /* OFFLINE RELATED */
@@ -223,5 +246,7 @@ export class CrowboxdbService {
     let offlineReference = this.db.object(path);
     offlineReference.update({value:coins});
   }
+
+
 
 }

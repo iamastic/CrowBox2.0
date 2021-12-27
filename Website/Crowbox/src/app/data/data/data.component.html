@@ -1,73 +1,120 @@
-<app-header></app-header>
+<!-- DATA RELATED -->
+<div id = "charts" fxLayout="column" fxLayoutAlign="space-evenly center" fxLayoutGap="3%">
 
-<div id = "publicButton">
-    <mat-button-toggle-group>
-        <mat-button-toggle (click)="showPersonal()">
-            CROWS LANDED ON PERCH
-        </mat-button-toggle>
-
-        <mat-button-toggle (click)="showPublic()">
-            COINS DEPOSITED
-        </mat-button-toggle>
-    </mat-button-toggle-group>
-
-</div>
-
-<!-- PERSONAL DATA SECTION -->
-<div *ngIf="showCoinsDeposited === false" id = "charts" >
-    <canvas baseChart
-                    [datasets]="crowOnPerchChartData"
-                    [labels]="crowOnPerchChartLabels"
-                    [options]="crowOnPerchChartOptions"
-                    [legend]="crowOnPerchChartLegend"
-                    [chartType]="crowOnPerchChartType"
-                    [colors]="crowOnPerchChartColor"
-                    >
-    </canvas>             
-</div>
-
-<!-- PUBLIC DATA SECTION -->
-<div *ngIf="showCoinsDeposited === true" id = "charts">
+    <!-- CROWS LANDED OR COINS DEPOSITED BUTTON -->
+    <div *ngIf=(!showUserId)>
+        <mat-button-toggle-group >
+            <mat-button-toggle (click)="showPersonal()" class="buttonText">
+                CROWS LANDED ON PERCH
+            </mat-button-toggle>
     
-        <canvas baseChart
+            <mat-button-toggle (click)="showPublic()" class="buttonText">
+                COINS DEPOSITED
+            </mat-button-toggle>
+        </mat-button-toggle-group>
+    </div>
+
+        <!-- NO CROWBOX MESSAGE BOX -->
+    <div *ngIf=(showUserId)>
+        <mat-card style="left: 0vh; right:0vh; margin: auto; display: flex;">
+            <mat-card-content style="color: black;">
+                You currently do not have a crowbox set up. Please upload the code to your crowbox with your Email and Password.  
+                <br>
+                Alternatively, use the offline mode below and upload your data file. 
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <!-- CHARTS -->
+
+    <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="column" fxLayoutAlign="center center" fxLayoutGap="1%" style="width: 100%;">
+
+        <div fxLayout="column" fxLayout.xs="row" fxLayout.sm="row" fxLayoutAlign="center center" fxLayoutGap="10%" *ngIf="showCoinsDeposited === false">
+            <button mat-raised-button (click)="switchCrowToBarChart()">
+                <mat-icon>bar_chart</mat-icon>
+            </button>
+            
+            <button mat-raised-button (click)="switchCrowToLineChart()">
+                <mat-icon>show_chart</mat-icon>
+            </button>
+          
+            <button mat-raised-button (click)="switchCrowToHorizontalBarChart()">
+                <mat-icon style="transform: rotate(90deg)">bar_chart</mat-icon>
+            </button>
+        </div>
+
+        <div fxLayout="column" fxLayout.xs="row" fxLayout.sm="row" fxLayoutAlign="center center" fxLayoutGap="10%" *ngIf="showCoinsDeposited === true">
+            <button mat-raised-button (click)="switchCoinToBarChart()">
+                <mat-icon>bar_chart</mat-icon>
+            </button>
+            
+            <button mat-raised-button (click)=" switchCoinToLineChart()">
+                <mat-icon>show_chart</mat-icon>
+            </button>
+          
+            <button mat-raised-button (click)="switchCoinToHorizontalBarChart()">
+                <mat-icon style="transform: rotate(90deg)">bar_chart</mat-icon>
+            </button>
+
+        </div>
+
+
+    <div style="width: 90%; background-color: #ededed; border-radius: 3%;" *ngIf=(!showUserId) fxFlex="100">
+            <!-- CROWS ON PERCH DATA SECTION -->
+        <div *ngIf="showCoinsDeposited === false">
+            <canvas baseChart
+               [datasets]="crowOnPerchChartData"
+               [labels]="crowOnPerchChartLabels"
+               [options]="crowOnPerchChartOptions"
+               [legend]="crowOnPerchChartLegend"
+               [chartType]="crowOnPerchChartType"
+               [colors]="crowOnPerchChartColor"
+            >
+            </canvas>             
+        </div>
+
+        <!-- COINS DEPOSITED DATA SECTION -->
+        <div *ngIf="showCoinsDeposited === true" >
+            <canvas baseChart
                 [datasets]="coinsDepositedChartData"
                 [labels]="coinsDepositedChartLabels"
                 [options]="coinsDepositedChartOptions"
                 [legend]="coinsDepositedChartLegend"
                 [chartType]="coinsDepositedChartType"
                 [colors]="coinChartColor"
-                >
-        </canvas>
+            >
+            </canvas>
+        </div>
+    </div>
+
+
+    </div>
+
+
+    <!-- OFFLINE MODE FILE UPLOAD FROM https://blog.angular-university.io/angular-file-upload/-->
+
+    <div id = "offlineFile" *ngIf="uploaded !== true" >
+        <input type="file" class="file-input"
+           (change)="uploadFile($event)" #fileUpload >
+
+           <div>
+               <p style="font-weight: bolder;">Offline Section</p>
+            </div>
+    
+        <div class="file-upload" class="buttonText">
+            {{fileName || "No file uploaded yet"}}
+    
+            <button mat-mini-fab color="black" class="upload-btn"
+                (click)="fileUpload.click()">
+                <mat-icon style="color: aqua;">attach_file</mat-icon>
+            </button>
+        </div>
+    
+        <div>
+            <button mat-raised-button (click)="readFile()" *ngIf="fileName" class="buttonText">Upload</button>
+        </div>
+    </div>
 </div>
 
-<div>
-    <app-information [crowsOnPerch]="crownsOnPerchValues" [coinsDeposited]="coinsDepositedValues"></app-information>
-</div>
 
-
-<div id="userId" *ngIf=(showUserId)>
-    <mat-card>
-        <p>
-            You currently do not have a crowbox set up. Please upload the code to your crowbox with your Email and Password
-        </p>
-    </mat-card>
  
-</div>
-
-<div id = "offlineFile">
-    <input type="file" class="file-input"
-       (change)="uploadFile($event)" #fileUpload>
-
-    <div class="file-upload">
-        {{fileName || "No file uploaded yet."}}
-
-        <button mat-mini-fab color="primary" class="upload-btn"
-            (click)="fileUpload.click()">
-            <mat-icon>attach_file</mat-icon>
-        </button>
-    </div>
-
-    <div>
-        <button (click)="readFile()">Upload</button>
-    </div>
-</div>

@@ -1,1 +1,16 @@
-<app-worldview></app-worldview>
+<!-- CUSTOM HEADER SHOWING ONLY "HOME and WORLD" -->
+<div *ngIf = "showHeader === false" class="header">
+    <app-subheader></app-subheader>
+</div>
+
+<!-- ORIGINAL HEADER -->
+<div *ngIf = "showHeader === true" class="header">
+    <app-header ></app-header>
+</div> 
+
+<div id="introMessage" fxHide.xs="true" fxHide.sm="true" fxHide.md="true">
+    <app-intromessage></app-intromessage>
+</div>
+
+<app-worldview ></app-worldview>
+

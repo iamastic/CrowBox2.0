@@ -1,21 +1,22 @@
-<div class="login">
-    <mat-card>
+<div fxLayout="row" fxLayoutAlign="center center" style="height: 100%;">
+    <mat-card fxLayout="column" fxLayoutAlign="center none">
         <mat-card-title>
             Login
         </mat-card-title>
-        
-            <mat-form-field appearance="fill">
-                <mat-label>Enter your Email</mat-label>
-                <input matInput placeholder="john@example.com" 
-                [formControl]="userEmail" required>
-                <mat-error *ngIf="userEmail.invalid">{{getErrorMessage()}}</mat-error>
-            </mat-form-field>
 
-                
+        <mat-form-field appearance="fill">
+            <mat-label>Enter your Email</mat-label>
+            <input matInput placeholder="john@example.com" 
+            [formControl]="userEmail" required>
+            <mat-error *ngIf="userEmail.invalid">{{getErrorMessage()}}</mat-error>
+        </mat-form-field>
+
+  
         <mat-form-field appearance="fill">
 
             <mat-label>Enter a Password</mat-label>
 
+            <!-- FROM: https://material.angular.io/components/form-field/overview -->
             <input matInput [type]="hide ? 'password' : 'text'"
             [formControl]="userPassword" required>
             <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
@@ -27,5 +28,5 @@
         <button mat-raised-button (click)="login()">Login</button>
 
     </mat-card>
-    
+
 </div>

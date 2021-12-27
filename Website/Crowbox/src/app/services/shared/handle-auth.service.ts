@@ -1,12 +1,12 @@
+/* CODE GUIDED BY AND ADAPTED FROM: https://remotestack.io/angular-firebase-authentication-example-tutorial/ */
+
 import { Injectable, NgZone } from '@angular/core';
 
 //firebase
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import firebase from 'firebase/app';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { textChangeRangeIsUnchanged } from 'typescript';
 
 export interface User {
   uid: string;

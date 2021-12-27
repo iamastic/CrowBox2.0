@@ -1,5 +1,7 @@
-import { Component, OnChanges, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit, OnDestroy } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/storage';
+import { Observable, Subscription } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 import { CrowboxdbService } from 'src/app/services/crowbox/crowboxdb.service';
 import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
 
@@ -10,65 +12,79 @@ import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
   templateUrl: './picture.component.html',
   styleUrls: ['./picture.component.css']
 })
-export class PictureComponent implements OnInit, OnChanges {
+export class PictureComponent implements OnInit, OnDestroy {
 
+  downloadURL?: Observable<string>;
   userName?:string;
   userId?:string;
-  profileUrl?:any;
+  profileUrl?:String;
   filePath?:string;
+
+
+  /* HANDLE SUBSCRIPTIONS */
+  $handleAuthUserSub?:Subscription;
+  $userSub?:Subscription;
+  $downloadURLSub?:Subscription;
+  $taskSub?:Subscription;
+  $profilePicture?:Subscription;
 
   constructor(private handleAuth:HandleAuthService, private storage: AngularFireStorage, private crowboxService:CrowboxdbService) { }
 
+  ngOnDestroy(): void {
+    this.$handleAuthUserSub?.unsubscribe();
+    this.$userSub?.unsubscribe();
+    this.$downloadURLSub?.unsubscribe();
+    this.$taskSub?.unsubscribe();
+    this.$profilePicture?.unsubscribe();
+  }
+
   ngOnInit(): void {
-/*     
-    this.handleAuth.getAuthUser$()
-    .subscribe(result => {
-      if (result) {
-        this.userId = result.uid;
-        //this.getProfilePicture();
-      }
-    }) */
-    
     //Subscribe to the user auth state observable and wait 
     //to get the UID to proceed
-    this.handleAuth.currentUser$
+    this.$handleAuthUserSub = this.handleAuth.currentUser$
     .subscribe(user => {
       //this.userName = user.displayName;
       this.userId = user.uid;
-      console.log("AUTH STATE is: ")
-      console.log(this.handleAuth.printAuthState());
+      // console.log("AUTH STATE is: ")
+      // console.log(this.handleAuth.printAuthState());
 
       //subscribe to the reference object of the user and get their name
-      this.crowboxService.getUser()
+      this.$userSub = this.crowboxService.getUser()
       .snapshotChanges()
       .subscribe(result => {
         this.userName = result.payload.val().name;
+        
+        // Obtain the profile picture's url 
+        this.profileUrl = result.payload.val().profilePicture; 
+        console.log(this.profileUrl);
       });
-
-      if(this.userId) {
-        this.getProfilePicture();
-      }
     });
-
-
-
   }
 
-  ngOnChanges() {
-  }
 
   uploadFile(event:any) {
     const file = event.target.files[0];
-/*     this.filePath = `${this.userId}/displayPicture`; */
-    this.filePath = "/image1";
+    this.filePath = `/Users/${this.userId}/profilePicture`;
+    const fileRef = this.storage.ref(this.filePath);
     const task = this.storage.upload(this.filePath, file);
-  }
 
-  getProfilePicture() {
-/*     const ref = this.storage.ref(`${this.userId}/displayPicture.jpg`); */
 
-    const ref = this.storage.ref("image1.jpg");
-    this.profileUrl = ref.getDownloadURL();
+    console.log("Upload Percentage: " + task.percentageChanges().subscribe(result => {console.log(result)}));
+
+    this.$taskSub = task.snapshotChanges().pipe(
+      finalize(() => {
+        //Get the download url of the photo that has been stored
+        //in the storage
+        this.downloadURL = fileRef.getDownloadURL();
+        
+        //Store this url in the user's database
+        this.$downloadURLSub = this.downloadURL.subscribe(result => {
+          console.log("Printing downloadURL");
+          console.log(result);
+          this.crowboxService.updateProfilePictureURL(result);
+        })
+      }))
+    .subscribe();
   }
 
 }

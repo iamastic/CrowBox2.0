@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
 
 import {FormControl, Validators} from '@angular/forms';
 import { PublicService } from 'src/app/services/public/public.service';
 import { first, map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, Subscriber, Subscription } from 'rxjs';
 
 
 @Component({
@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css']
 })
-export class SignupComponent implements OnInit {
+export class SignupComponent implements OnInit, OnDestroy {
 
   userEmail = new FormControl('', [Validators.required, Validators.email]);
 
@@ -28,7 +28,14 @@ export class SignupComponent implements OnInit {
 
   hide = true;
 
+  /* OTHER SUBSCRIPTIONS */
+  $countriesList?:Subscription;
+
   constructor(private handleAuth:HandleAuthService, private publicService:PublicService) { }
+
+  ngOnDestroy(): void {
+      this.$countriesList?.unsubscribe();
+  }
 
   ngOnInit(): void {
     this.getCountriesList();
@@ -44,7 +51,7 @@ export class SignupComponent implements OnInit {
         )))
     );
 
-    this.countries$
+    this.$countriesList = this.countries$
     .pipe(first())
     .subscribe(result => {
       this.listOfCountries = result;

@@ -1,4 +1,5 @@
-import { AfterContentInit, Component, OnInit, Input, OnChanges } from '@angular/core';
+import { OnDestroy, Component, OnInit, Input, OnChanges, Output, EventEmitter } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { CrowboxdbService } from 'src/app/services/crowbox/crowboxdb.service';
 import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
 
@@ -7,7 +8,7 @@ import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
   templateUrl: './information.component.html',
   styleUrls: ['./information.component.css']
 })
-export class InformationComponent implements OnInit, OnChanges {
+export class InformationComponent implements OnInit, OnChanges, OnDestroy {
 
   //receive the values array for both: Crows on perch and Coins Deposited
   @Input() crowsOnPerch!:number[];
@@ -38,14 +39,36 @@ export class InformationComponent implements OnInit, OnChanges {
   //Status of crowbox 
   status?:any;
   isError = false;
-  showStatusBox = false;
+  showStatusBox = true;
+
+  //Send the boolean value of showing the box to the private component
+  @Output() showStatusBoxEmit = new EventEmitter<any>();
+  sendShowStatusBoxValueToParent() {
+    this.showStatusBoxEmit.emit(this.showStatusBox);
+  }
+
+
+
+  /* OTHER SUBSCRIPTIONS */
+  $handleUserAuthSub?:Subscription;
+  $traingStageSub?:Subscription;
+  $informationSub?:Subscription;
+  $troubleShootSub?:Subscription;
 
   constructor(private handleAuth:HandleAuthService, private crowboxService:CrowboxdbService) { }
+
+  ngOnDestroy(): void {
+    this.$handleUserAuthSub?.unsubscribe();
+    this.$traingStageSub?.unsubscribe();
+    this.$informationSub?.unsubscribe();
+    this.$troubleShootSub?.unsubscribe();
+
+  }
 
   ngOnInit(): void {
     //Subscribe to the user auth state observable and wait 
     //to get the UID to proceed
-    this.handleAuth.currentUser$
+    this.$handleUserAuthSub = this.handleAuth.currentUser$
     .subscribe(user => {
       this.userSet = true;
       this.getTrainingStage();
@@ -69,6 +92,7 @@ export class InformationComponent implements OnInit, OnChanges {
     }
 
     this.crowboxService.updateCrowboxCrowsOnPerch(this.totalCrowsLandedOnPerch);
+    this.crowboxService.updateTotalCrowsOnPerchValueFromAllBoxes(this.totalCrowsLandedOnPerch);
   }
 
   /* ADD UP ALL THE VALUES IN THE COINS DEPOSITED ARRAY */
@@ -79,13 +103,15 @@ export class InformationComponent implements OnInit, OnChanges {
     }
 
     this.crowboxService.updateCrowboxTotalCoinsDeposited(this.totalCoinsDeposited);
+    this.crowboxService.updateTotalCoinsDepositedFromAllBoxes(this.totalCoinsDeposited);
+
   }
   
   /* ---------------------------------------------------- */
 
   /* GET TRAINING STAGE */
   getTrainingStage() {
-    this.crowboxService
+    this.$traingStageSub = this.crowboxService
     .getUserCrowbox()
     .snapshotChanges()
     .subscribe(result => {
@@ -122,7 +148,7 @@ export class InformationComponent implements OnInit, OnChanges {
   /* THERE IS AN ISSUE HERE 
   NICKNAME IS NOT WITHIN GETUSER()*/
   getAllInformationData() {
-    this.crowboxService.getUser()
+    this.$informationSub = this.crowboxService.getUser()
     .snapshotChanges()
     .subscribe(result => {
       this.informationBox = {
@@ -142,7 +168,7 @@ export class InformationComponent implements OnInit, OnChanges {
 
   /* FOR TROUBLESHOOTING PURPOSES */
   getTroubleshootInfo() {
-    this.crowboxService
+    this.$troubleShootSub = this.crowboxService
     .getStatusData()
     .snapshotChanges()
     .subscribe(result => {
@@ -158,13 +184,4 @@ export class InformationComponent implements OnInit, OnChanges {
         })
     });
   }
-
-  changeBoxStatus() {
-    if(this.showStatusBox == true) {
-      this.showStatusBox = false;
-    } else {
-      this.showStatusBox = true;
-    }
-  }
-
 }

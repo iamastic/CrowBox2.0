@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, ElementRef, HostListener, Host } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, ViewChild, ElementRef, HostListener, OnDestroy } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { PublicService } from 'src/app/services/public/public.service';
 import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
@@ -11,7 +11,8 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
   templateUrl: './worldview.component.html',
   styleUrls: ['./worldview.component.css']
 })
-export class WorldviewComponent implements OnInit {
+export class WorldviewComponent implements OnInit, OnDestroy {
+  
   showHeader!:boolean;
 
   countries$?:Observable<any>;
@@ -42,6 +43,9 @@ export class WorldviewComponent implements OnInit {
   raycaster!: THREE.Raycaster;
   mouse! : THREE.Vector2;
 
+  /* HANDLE SUBSCRIPTIONS */
+  $countriesSub?:Subscription;
+
     
   private get aspectRatio(): number {
     return this.windowWidth / this.windowHeight;
@@ -60,7 +64,7 @@ export class WorldviewComponent implements OnInit {
     this.windowHeight = window.innerHeight;
 
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(50, this.windowWidth/this.windowHeight, 0.1, 1000);
+    this.camera = new THREE.PerspectiveCamera(45, this.windowWidth/this.windowHeight, 0.1, 1000);
 
     this.raycaster = new THREE.Raycaster();
     this.mouse = new THREE.Vector2();
@@ -71,6 +75,10 @@ export class WorldviewComponent implements OnInit {
     this.top = "0px";
     this.left = "0px";
 
+  }
+
+  ngOnDestroy(): void {
+      this.$countriesSub?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -90,11 +98,11 @@ export class WorldviewComponent implements OnInit {
         )))
     );
 
-    this.countries$.pipe(first())
+    this.$countriesSub = this.countries$.pipe(first())
     .subscribe(result => {
-      console.log(result);
+      // console.log(result);
       this.listOfCountries = result;
-      console.log(this.listOfCountries);
+      // console.log(this.listOfCountries);
       this.initGlobe();
     });
 
@@ -232,7 +240,7 @@ export class WorldviewComponent implements OnInit {
     let y = Math.cos(globeLatRads) * Math.sin(globeLongRads) * radius;
     let z = Math.sin(globeLatRads) * radius;
 
-    console.log(x,y,z);
+    // console.log(x,y,z);
     
     //credit: https://stackoverflow.com/questions/51800598/threejs-make-meshes-perpendicular-to-the-sphere-face-its-sitting-on
     //for cylinder barchart of COINS DEPOSITED
@@ -275,7 +283,7 @@ setAllPoints() {
 
   for (let i = 0; i < this.listOfCountries.length; i++) {
 
-    console.log(this.listOfCountries[i].key, this.listOfCountries[i].latitude, this.listOfCountries[i].longitude, this.listOfCountries[i].coins_deposited);
+    // console.log(this.listOfCountries[i].key, this.listOfCountries[i].latitude, this.listOfCountries[i].longitude, this.listOfCountries[i].coins_deposited);
 
 
     this.addCoordinatePoint(this.listOfCountries[i].key, this.listOfCountries[i].latitude, this.listOfCountries[i].longitude, this.listOfCountries[i].coins_deposited, this.listOfCountries[i].crows_landed_on_perch);       
@@ -287,21 +295,25 @@ setAllPoints() {
 onMouseClick(event : any) {
   event.preventDefault();
 
+  console.log("Mouse clicked!");
+
   this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+  console.log(this.renderer.getPixelRatio()); 
 
   this.raycaster.setFromCamera(this.mouse, this.camera);
 
   const intersects = this.raycaster.intersectObjects(this.globe.children);
 
   if (intersects.length == 0) {
+    console.log("Nothing intersected :(");
     this.displayType = "none";
     this.countryName = null;
   }
 
   for (let i = 0; i < intersects.length; i++) {
-    console.log(intersects[0]);
-
+    console.log("Something was intersected!");
     //show the textbox
     this.displayType = "flex";
     //position the textbox

@@ -1,0 +1,21 @@
+.wrapper {
+/*     border: yellow;
+    border-style: double; */
+
+    position: relative;
+    top:5%;
+}
+
+.wrapper2 {
+/*     border: #cd6413;
+    border-style: double; */
+}
+
+
+.mat-divider.mat-divider-vertical {
+    border-right-color:#25356a;
+    border-right-width: 2px;
+
+    height: 600px;
+
+} 

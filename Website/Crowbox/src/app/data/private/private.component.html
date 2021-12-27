@@ -1,0 +1,33 @@
+<app-header ></app-header>
+
+
+<div id="troubleshoot" *ngIf="showStatusBox===true">
+    <app-troubleshoot (showStatusBoxEmit)="receiveCloseTroubleshootButton($event)"></app-troubleshoot>
+</div>
+
+<div class="wrapper" fxLayout="row" fxLayout.xs="column" fxLayout.sm="column" fxLayoutAlign="center center" [ngStyle]="{
+    '-webkit-filter': showStatusBox === true ? 'blur(5px)' : 'blur(0px)',
+    '-moz-filter': showStatusBox === true ? 'blur(5px)' : 'blur(0px)',
+    '-o-filter': showStatusBox === true ? 'blur(5px)' : 'blur(0px)',
+    '-ms-filter': showStatusBox === true ? 'blur(5px)' : 'blur(0px)',
+    'filter': showStatusBox === true ? 'blur(5px)' : 'blur(0px)'
+}">
+
+    <!-- THE CHARTS -->
+    <div fxFlex="60">
+        <app-data (crowsOnPerchOutput)="receiveCrowsOnPerchOutput($event)" 
+        (coinsDepositedOutput)="receiveCoinsDepositedOutput($event)"></app-data>
+    </div>
+
+    <div fxFlex="5" fxHide.xs fxHide.sm>
+        <mat-divider vertical="true"> </mat-divider>
+    </div>
+
+    <!-- THE INFORMATION BOX -->
+    <div fxFlex="27" fxFlex.xs="27" fxFlex.sm="27" fxFlexOrder.xs="1" fxFlexOrder.sm="1" >
+        <app-information [crowsOnPerch]="crownsOnPerchValues" [coinsDeposited]="coinsDepositedValues"  (showStatusBoxEmit)="receiveOpenTroubleshootButton($event)"></app-information>
+    </div>
+
+
+</div>
+

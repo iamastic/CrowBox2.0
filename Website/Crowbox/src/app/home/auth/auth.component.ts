@@ -37,9 +37,7 @@ export class AuthComponent implements OnInit {
   }
 
   login() {
-    //user the auth service to login or signup the user
-   /*  this.handleAuth.login(); */
-   this.router.navigate(['login']);
+    this.router.navigate(['login']);
   }
 
   logout() {
