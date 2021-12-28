@@ -460,7 +460,7 @@ void CCrowboxCore::Loop()
 
     //Check the Troubleshoot setup every 30 minutes 
     //CHANGE TO 30 MINS!! 1800000
-    if((millis() - troubleshootTime) >= 10000) {
+    if((millis() - troubleshootTime) >= 600000) {
       Serial.println("10 seconds over, checking box status in troubleshoot");
       troubleshootTime = millis();
       TroubleShoot();
@@ -571,7 +571,9 @@ cros_time_t CCrowboxCore::HowLongHasBirdBeenGone()
 //----------------------------------------------------------
 bool CCrowboxCore::EnqueueCoin()              
 {
-    //Serial.println("Entered Enqueue Coin");
+    Serial.println("Entered Enqueue Coin");
+    Serial.println("Enqueue Coins: ");
+    Serial.println(m_numEnqueuedDeposits);
 
    /*  if( GetUptimeSeconds() - m_uptimeLastCoinDetected < 1.0f )
     {
@@ -591,9 +593,11 @@ bool CCrowboxCore::EnqueueCoin()
     } */
 
     if ((millis() - m_uptimeLastCoinDetected) < 1000) {
+      Serial.println("No Coin inside Enqueue Coins");
       return false;
     }
-    //Serial.println("Increasing the coin deposit");
+    
+    Serial.println("Increasing the coin deposit");
 
     m_numEnqueuedDeposits++;    
     
@@ -990,6 +994,8 @@ void CCrowboxCore::RunPhaseThreeProtocol()
   if( m_numEnqueuedDeposits > 0 && !IsRewardBasketOpen() )
   {
     Serial.println("Coin has been deteced");
+    Serial.println("Enque Coins:");
+    Serial.println(m_numEnqueuedDeposits);
 
     RemoveEnqueuedCoin();// Un-count this deposit since we're paying it off now.
 
