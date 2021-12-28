@@ -47,6 +47,13 @@ export class InformationComponent implements OnInit, OnChanges, OnDestroy {
     this.showStatusBoxEmit.emit(this.showStatusBox);
   }
 
+  // For Troubleshooting
+  coinsRemaining = "EMPTY";
+  foodLevel = "EMPTY";
+  water = "EMPTY";
+  servo = "EMPTY";
+  wifi = "EMPTY";
+
 
 
   /* OTHER SUBSCRIPTIONS */
@@ -175,13 +182,37 @@ export class InformationComponent implements OnInit, OnChanges, OnDestroy {
         this.isError = false;
         this.status = "WORKING";
 
-        Object.values(result.payload.val()).forEach(element => {
+/*         Object.values(result.payload.val()).forEach(element => {
           if(element !== "WORKING") {
             this.isError = true;
             this.status = "ERROR";
             //ADD THE REST HERE
           } 
-        })
+        });
+ */
+        this.coinsRemaining = result.payload.val().coins;
+        this.foodLevel = result.payload.val().food;
+        this.water = result.payload.val().humidity;
+        this.wifi = result.payload.val().wifi;
+        this.servo = result.payload.val().servo;
+
+/*         if(this.coinsRemaining!=="WORKING"){
+          if(this.foodLevel!=="WORKING") {
+            if(this.water!=="WORKING"){
+              if(this.wifi!=="WORKING"){
+                if(this.servo!=="WORKING"){
+                  this.isError = true;
+                  this.status = "ERROR";
+                }
+              }
+            }
+          }
+        } */
+
+        if((this.coinsRemaining!=="WORKING") || (this.foodLevel!=="WORKING") || (this.water!=="WORKING") || (this.wifi!=="WORKING") || (this.servo!=="WORKING")) {
+          this.isError = true;
+          this.status = "ERROR";
+        }
     });
   }
 }
