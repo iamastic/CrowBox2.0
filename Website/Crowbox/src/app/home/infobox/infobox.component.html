@@ -1,9 +1,47 @@
 
-<carousel interval="1500000" activeSlide="0" fxLayout="column">
+<carousel interval="1500000" activeSlide="0" fxLayout="column" class="carouselStyle">
     <slide>
         <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5%" fxLayout.xs="column" fxLayout.sm="column">
-            <div fxFlex="30">
-                During Stage 1, the box acts like a bird feeder. The lid to the food is opened up and the box serves no other function than to acclimatise the birds to the box's look, feel and sounds.
+            <div style="border: orange; border-style: solid ; width: 50%;">
+                <mat-card style="width: 100%;">
+                    <mat-card-title>
+                        Training Stage 1
+                    </mat-card-title>
+                    <mat-card-content>
+                        During the first training stage, all functions of the CrowBox are disabled. Crows may interact with the box however they see fit. 
+
+                        <div fxLayout="column" fxLayoutAlign="center start" style="border: blue; border-style: double;">
+
+                            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="2%" style="border: yellow; border-style: double; width: 100%;">
+                                <div style="border: green; border-style: dotted;">
+                                    <fa-icon [icon]="faLockOpen"></fa-icon> 
+                                </div>
+                                <div style="border: black; border-style: dashed; width: 100%;">
+                                    The lid to the food is opened up.
+                                </div>
+                            </div>
+
+                            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="3%" style="border: yellow; border-style: double; width: 100%;">
+                                <div style="border: green; border-style: dotted;">
+                                    <fa-icon [icon]="faUtensils"></fa-icon> 
+                                </div>
+                                <div style="border: black; border-style: dashed; width: 100%;">
+                                    The box acts like a bird feeder.
+                                </div>
+                            </div>
+
+                            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="2%" style="border: yellow; border-style: double; width: 100%;">
+                                <div style="border: green; border-style: dotted;">
+                                    <fa-icon [icon]="faHome"></fa-icon>
+                                </div>
+                                <div  style="border: black; border-style: dashed; width: 100%;">
+                                    The goal is to acclimatise the birds to the box's look, feel and sounds.
+                                </div>
+                            </div>
+
+                        </div>
+                    </mat-card-content>
+                </mat-card>
             </div>
 
             <div>
@@ -14,16 +52,115 @@
 
     <slide>
         <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5%" fxLayout.xs="column" fxLayout.sm="column">
-            <div>
-                <img src="https://via.placeholder.com/400" alt="Image Food Lid Shut with something on top?">
+            <div style="border: orange; border-style: solid ; width: 50%;">
+                <mat-card style="width: 100%;">
+                    <mat-card-title>
+                        Training Stage 2
+                    </mat-card-title>
+                    <mat-card-content>
+                        In the Second Training stage, the aim is to encourage crows to land on top of the CrowBox. The roof of the box sits on a couple of switches which once pressed, open the Food Lid. This is the first step in training the crows to follow human instructions.
+
+                        <div fxLayout="column" fxLayoutAlign="center start" style="border: blue; border-style: double;">
+
+                            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="2%" style="border: yellow; border-style: double; width: 100%;">
+                                <div style="border: green; border-style: dotted;">
+                                    <fa-icon [icon]="faLockOpen"></fa-icon> 
+                                </div>
+                                <div style="border: black; border-style: dashed; width: 100%;">
+                                    The lid to the food is closed. 
+                                </div>
+                            </div>
+
+                            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="3%" style="border: yellow; border-style: double; width: 100%;">
+                                <div style="border: green; border-style: dotted;">
+                                    <fa-icon [icon]="faUtensils"></fa-icon> 
+                                </div>
+                                <div style="border: black; border-style: dashed; width: 100%;">
+                                    Crows will press a switch by landing on the roof. 
+                                </div>
+                            </div>
+
+                            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="2%" style="border: yellow; border-style: double; width: 100%;">
+                                <div style="border: green; border-style: dotted;">
+                                    <fa-icon [icon]="faHome"></fa-icon>
+                                </div>
+                                <div  style="border: black; border-style: dashed; width: 100%;">
+                                    Pressing the switch results in the Food Lid sliding open for the crows to feed on. 
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
             </div>
 
-            <div fxFlex="30">
-                In Stage 2, the food lid is shut. When a crow lands on the top of the box, it clicks a button which opens the food lid. This basic reward system is to encourage the crows to land on the box as often as possible.
+            <div>
+                <img src="https://via.placeholder.com/400" alt="Image of Food Lid Open">
+            </div>
+        </div>
+    </slide>
+
+    <!-- USE THIS FORMAT!!! -->
+    <slide>
+        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5%" fxLayout.xs="column" fxLayout.sm="column">
+            <div fxHide.xs="true" fxHide.sm="true">
+                <img src="https://via.placeholder.com/300" alt="Image Food Lid Shut with something on top?">
+            </div>
+
+            <div fxFlex="40" style="border: gold; border-style: double;">
+                <mat-card>
+                    <mat-card-title>
+                        Training Stage 2
+                    </mat-card-title>
+                    <mat-card-content>
+  
+                        In the Second Training stage, the aim is to encourage crows to land on top of the CrowBox. The roof of the box sits on a couple of switches which once pressed, open the Food Lid. This is the first step in training the crows to follow human instructions.
+                   
+
+                        <div fxLayout="column" fxLayoutAlign="center start">
+
+                            <div>
+                                <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="15%">
+                                    <div>
+                                        <fa-icon [icon]="faHome"></fa-icon>
+                                    </div>
+                                    <div>
+                                        Hello
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="15%">
+                                    <div>
+                                        <fa-icon [icon]="faHome"></fa-icon>
+                                    </div>
+                                    <div>
+                                        Hello2
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="15%">
+                                    <div>
+                                        <fa-icon [icon]="faHome"></fa-icon>
+                                    </div>
+                                    <div>
+                                        Hello3
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+                
             </div>
         </div>
     </slide>
         
+
+    
     <slide>
         <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5%" fxLayout.xs="column" fxLayout.sm="column">
             <div fxFlex="30">
@@ -48,7 +185,4 @@
         </div>
     </slide>
 </carousel>
-
-
-
 

@@ -1,11 +1,21 @@
 .wrapper {
 /*     border: yellow;
     border-style: double; */
-
     position: relative;
-    /* top:5%; */
-
     height: 270%;
+}
+
+.howitworks {
+    background-color: #B0D784;
+}
+
+.subtitle{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size:xx-large;
+    font-weight: bolder;
+
+ /*    border: #cd6413;
+    border-style: dashed; */
 }
 
 /* FOR THE TWO HEADERS */
@@ -80,6 +90,7 @@ a {
 .mat-card-title {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
 
 
 br {
