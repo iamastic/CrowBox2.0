@@ -1,6 +1,6 @@
+<!-- LOGGED OUT HEADER -->
 <div *ngIf = "showHeader===false">    
     <app-subheader></app-subheader>
-
 </div>
 
 <!-- ORIGINAL HEADER -->
@@ -23,11 +23,15 @@
     </div>
 
 
-    <div fxFlex="50" fxLayout="column" fxLayoutAlign="center center">
-        <div>
+    <div fxFlex="50" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="2%">
+        <div class=subtitle>
             Getting Started
         </div>
-        <app-getting-started></app-getting-started>
+        <app-getting-started style="width: 90%;" fxFlex="90"></app-getting-started>
+    </div>
+
+    <div fxFlex="4"  fxLayout="column" fxLayoutAlign="center center" class="howitworks">
+        <app-auth></app-auth>
     </div>
      
  </div>
