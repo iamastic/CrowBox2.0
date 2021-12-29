@@ -2,13 +2,13 @@
 <carousel interval="1500000" activeSlide="0" fxLayout="column" class="carouselStyle">
     <slide>
         <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5%" fxLayout.xs="column" fxLayout.sm="column">
-            <div style="border: orange; border-style: solid ; width: 50%;">
+            <div style="border: orange; border-style: solid ;" fxFlex="50">
                 <mat-card style="width: 100%;">
                     <mat-card-title>
                         Training Stage 1
                     </mat-card-title>
                     <mat-card-content>
-                        During the first training stage, all functions of the CrowBox are disabled. Crows may interact with the box however they see fit. 
+                        During the first training stage, all functions of the CrowBox are disabled. The box is left out in the wild for the crows to interact with however they see fit. 
 
                         <div fxLayout="column" fxLayoutAlign="center start" style="border: blue; border-style: double;">
 
@@ -44,15 +44,21 @@
                 </mat-card>
             </div>
 
-            <div>
-                <img src="https://via.placeholder.com/400" alt="Image of Food Lid Open">
+            <div fxHide.xs="true" fxHide.sm="true">
+                <img class="howToImage" src="https://via.placeholder.com/400" alt="Image of Food Lid Open">
             </div>
         </div>
     </slide>
 
+
     <slide>
         <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5%" fxLayout.xs="column" fxLayout.sm="column">
-            <div style="border: orange; border-style: solid ; width: 50%;">
+
+            <div fxHide.xs="true" fxHide.sm="true">
+                <img class="howToImage" src="https://via.placeholder.com/400" alt="Image of Food Lid Open">
+            </div>
+            
+            <div style="border: orange; border-style: solid ;" fxFlex="50">
                 <mat-card style="width: 100%;">
                     <mat-card-title>
                         Training Stage 2
@@ -62,18 +68,18 @@
 
                         <div fxLayout="column" fxLayoutAlign="center start" style="border: blue; border-style: double;">
 
-                            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="2%" style="border: yellow; border-style: double; width: 100%;">
+                            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="2.5%" style="border: yellow; border-style: double; width: 100%;">
                                 <div style="border: green; border-style: dotted;">
-                                    <fa-icon [icon]="faLockOpen"></fa-icon> 
+                                    <fa-icon [icon]="faLock"></fa-icon> 
                                 </div>
                                 <div style="border: black; border-style: dashed; width: 100%;">
                                     The lid to the food is closed. 
                                 </div>
                             </div>
 
-                            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="3%" style="border: yellow; border-style: double; width: 100%;">
+                            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="2%" style="border: yellow; border-style: double; width: 100%;">
                                 <div style="border: green; border-style: dotted;">
-                                    <fa-icon [icon]="faUtensils"></fa-icon> 
+                                    <fa-icon [icon]="faToggleOn"></fa-icon> 
                                 </div>
                                 <div style="border: black; border-style: dashed; width: 100%;">
                                     Crows will press a switch by landing on the roof. 
@@ -82,105 +88,116 @@
 
                             <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="2%" style="border: yellow; border-style: double; width: 100%;">
                                 <div style="border: green; border-style: dotted;">
-                                    <fa-icon [icon]="faHome"></fa-icon>
+                                    <fa-icon [icon]="faLockOpen"></fa-icon>
                                 </div>
                                 <div  style="border: black; border-style: dashed; width: 100%;">
                                     Pressing the switch results in the Food Lid sliding open for the crows to feed on. 
                                 </div>
                             </div>
+
                         </div>
                     </mat-card-content>
                 </mat-card>
             </div>
-
-            <div>
-                <img src="https://via.placeholder.com/400" alt="Image of Food Lid Open">
-            </div>
         </div>
     </slide>
 
-    <!-- USE THIS FORMAT!!! -->
     <slide>
         <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5%" fxLayout.xs="column" fxLayout.sm="column">
-            <div fxHide.xs="true" fxHide.sm="true">
-                <img src="https://via.placeholder.com/300" alt="Image Food Lid Shut with something on top?">
-            </div>
-
-            <div fxFlex="40" style="border: gold; border-style: double;">
-                <mat-card>
+            <div style="border: orange; border-style: solid ;" fxFlex="50">
+                <mat-card style="width: 100%;">
                     <mat-card-title>
-                        Training Stage 2
+                        Training Stage 3
                     </mat-card-title>
                     <mat-card-content>
-  
-                        In the Second Training stage, the aim is to encourage crows to land on top of the CrowBox. The roof of the box sits on a couple of switches which once pressed, open the Food Lid. This is the first step in training the crows to follow human instructions.
-                   
+                        During the Third Training Stage, the crows will have access to a set of coins which they must figure out how to deposit into the box. Upon successfully depositing a coin down the access point, the food lid will open and they will once again be rewarded.
 
-                        <div fxLayout="column" fxLayoutAlign="center start">
+                        <div fxLayout="column" fxLayoutAlign="center start" style="border: blue; border-style: double;">
 
-                            <div>
-                                <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="15%">
-                                    <div>
-                                        <fa-icon [icon]="faHome"></fa-icon>
-                                    </div>
-                                    <div>
-                                        Hello
-                                    </div>
+                            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="2%" style="border: yellow; border-style: double; width: 100%;">
+                                <div style="border: green; border-style: dotted;">
+                                    <fa-icon [icon]="faCoins"></fa-icon> 
+                                </div>
+                                <div style="border: black; border-style: dashed; width: 100%;">
+                                    Coins are provided through the coin dispenser.
                                 </div>
                             </div>
 
-                            <div>
-                                <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="15%">
-                                    <div>
-                                        <fa-icon [icon]="faHome"></fa-icon>
-                                    </div>
-                                    <div>
-                                        Hello2
-                                    </div>
+                            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="2%" style="border: yellow; border-style: double; width: 100%;">
+                                <div style="border: green; border-style: dotted;">
+                                    <fa-icon [icon]="faDonate"></fa-icon> 
+                                </div>
+                                <div style="border: black; border-style: dashed; width: 100%;">
+                                    Crows are expected to knock the coins down the chute. 
                                 </div>
                             </div>
 
-                            <div>
-                                <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="15%">
-                                    <div>
-                                        <fa-icon [icon]="faHome"></fa-icon>
-                                    </div>
-                                    <div>
-                                        Hello3
-                                    </div>
+                            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="2%" style="border: yellow; border-style: double; width: 100%;">
+                                <div style="border: green; border-style: dotted;">
+                                    <fa-icon [icon]="faGift"></fa-icon>
+                                </div>
+                                <div  style="border: black; border-style: dashed; width: 100%;">
+                                    The goal is to train crows to deposit coins for a reward. 
                                 </div>
                             </div>
-                            
                         </div>
                     </mat-card-content>
                 </mat-card>
-                
+            </div>
+
+            <div fxHide.xs="true" fxHide.sm="true">
+                <img class="howToImage" src="https://via.placeholder.com/400" alt="Image of Food Lid Open">
             </div>
         </div>
     </slide>
-        
-
     
     <slide>
         <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5%" fxLayout.xs="column" fxLayout.sm="column">
-            <div fxFlex="30">
-                In Stage 3, the crows will have access to a set of coins which they must figure out how to deposit into the box. Upon successfully depositing a coin down the access point, the food lid will open and they will once again be rewarded.
+
+            <div fxHide.xs="true" fxHide.sm="true">
+                <img class="howToImage" src="https://via.placeholder.com/400" alt="Image of Food Lid Open">
             </div>
             
-            <div>
-                <img src="https://via.placeholder.com/400" alt="Image with coins on the lid">
-            </div>
-        </div>
-    </slide>
+            <div style="border: orange; border-style: solid ;" fxFlex="50">
+                <mat-card style="width: 100%;">
+                    <mat-card-title>
+                        Training Stage 4
+                    </mat-card-title>
+                    <mat-card-content>
+                        The Fourth and Final Stage functions similar to Stage 3, except the coins will not be provided to the crows as they will be expected to find and bring their own from the environment.
 
-    <slide>
-        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5%" fxLayout.xs="column" fxLayout.sm="column">
-            <div>
-                <img src="https://via.placeholder.com/400" alt="Image of the box as it is">
-            </div>
+                        <div fxLayout="column" fxLayoutAlign="center start" style="border: blue; border-style: double;">
 
-            <div fxFlex="30">
-                The 4th and Final Stage functions similar to Stage 3, except the coins will not be provided to the crows as they will be expected to find and bring their own from the environment.
+                            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="2.5%" style="border: yellow; border-style: double; width: 100%;">
+                                <div style="border: green; border-style: dotted;">
+                                    <fa-icon [icon]="faLock"></fa-icon> 
+                                </div>
+                                <div style="border: black; border-style: dashed; width: 100%;">
+                                    The lid to the food is closed. 
+                                </div>
+                            </div>
+
+                            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="2%" style="border: yellow; border-style: double; width: 100%;">
+                                <div style="border: green; border-style: dotted;">
+                                    <fa-icon [icon]="faTimesCircle"></fa-icon> 
+                                </div>
+                                <div style="border: black; border-style: dashed; width: 100%;">
+                                    No coins will be provided to the crows.  
+                                </div>
+                            </div>
+
+                            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="2%" style="border: yellow; border-style: double; width: 100%;">
+                                <div style="border: green; border-style: dotted;">
+                                    <fa-icon [icon]="faSearchDollar"></fa-icon>
+                                </div>
+                                <div  style="border: black; border-style: dashed; width: 100%;">
+                                    Crows are expected to find and deposit the coins by themselves. 
+                                </div>
+                            </div>
+
+                        </div>
+                    </mat-card-content>
+                </mat-card>
             </div>
         </div>
     </slide>

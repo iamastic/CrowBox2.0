@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { faUtensils, faCrow, faLockOpen, faHome, faLock } from '@fortawesome/free-solid-svg-icons';
+import { faUtensils, faCrow, faLockOpen, faHome, faLock, faToggleOn, faCoins, faGift, faDonate, faTimesCircle, faSearchDollar} from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -15,6 +15,12 @@ export class InfoboxComponent implements OnInit {
   faLockOpen=faLockOpen;
   faHome=faHome;
   faLock=faLock;
+  faToggleOn=faToggleOn;
+  faCoins=faCoins;
+  faGift=faGift;
+  faDonate=faDonate;
+  faTimesCircle=faTimesCircle;
+  faSearchDollar=faSearchDollar;
 
   constructor() { }
 
