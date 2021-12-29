@@ -1,4 +1,8 @@
 .mat-toolbar{
+
+    position: fixed;
+    z-index: 100;
+
     background-color: #ededed; 
     height: 6vh; 
     width:100%;
