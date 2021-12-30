@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { CrowboxdbService } from 'src/app/services/crowbox/crowboxdb.service';
 import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
@@ -6,7 +6,8 @@ import { HandleAuthService } from 'src/app/services/shared/handle-auth.service';
 @Component({
   selector: 'app-troubleshoot',
   templateUrl: './troubleshoot.component.html',
-  styleUrls: ['./troubleshoot.component.css']
+  styleUrls: ['./troubleshoot.component.css'],
+  // encapsulation: ViewEncapsulation.None,
 })
 export class TroubleshootComponent implements OnInit, OnDestroy {
 

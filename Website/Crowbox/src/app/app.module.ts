@@ -51,6 +51,8 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { MatSelectModule} from '@angular/material/select';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatTooltipModule} from '@angular/material/tooltip';
+
 
 
 
@@ -125,6 +127,7 @@ import { IntromessageComponent } from './public/intromessage/intromessage.compon
     MatButtonToggleModule,
     MatSelectModule,
     MatToolbarModule,
+    MatTooltipModule,
     FlexLayoutModule,
     CarouselModule.forRoot(),
 
