@@ -279,6 +279,7 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
     .snapshotChanges()
     .pipe(first())
     .subscribe(result => {
+      console.log("Checking WiFi Connection");
       let previoustTime = result.payload.val().prevWifiTime;
       let currentTime = result.payload.val().currentWifiTime;
       let oldStatus = result.payload.val().wifi;
@@ -299,6 +300,8 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
           if(oldStatus !== "WORKING") {
             this.crowboxService.updateWifiStatus("WORKING");
             this.crowboxService.updatePreviousWifiTime(currentTime);
+          } else {
+              this.crowboxService.updatePreviousWifiTime(currentTime);
           }
       }
 
@@ -308,7 +311,7 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
   ngOnInit(): void {
 
     this.$wifiSub = this.wifiCheckTimer$.subscribe(r => {
-      // console.log(r);
+      console.log(r);
       this.checkIfWifiConnection();
       
     })
