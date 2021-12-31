@@ -139,6 +139,10 @@ public:
     int previousHumidityValue;
     FirebaseData humidity; 
 
+    // Servo Current 
+    int servoCurrentValue;
+
+
     /* FOR OFFLINE MODE */
     File sdCardDataFile;
     unsigned long offlineDay;
@@ -238,6 +242,7 @@ protected:
     void CheckCoinsLevel();
     void CheckHumidityLevel();
     void SendWifiTime();
+    void CheckServoCurrent();
 
 private:
     cros_time_t m_uptimeWhenBirdLanded;
