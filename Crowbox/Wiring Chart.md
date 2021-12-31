@@ -32,3 +32,19 @@
 |     Perch Switch 2    |     G-20 & G21              |                          |
 
 ## Training Button
+
+
+|     Element    |     First Connection    |          Second Connection         |
+|:--------------:|:-----------------------:|:----------------------------------:|
+|     Switch     |     Columns E – F       |     Rows 16 – 18                   |
+|     GND        |     E-18                |     Closest Blue (-) Power Line    |
+|     Output     |     I-16                |     ESP32 – GPIO 4                 |
+
+
+
+
+
+
+
+
+
