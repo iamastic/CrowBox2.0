@@ -56,3 +56,35 @@
 |     Green Wire    |     ESP32 – GPIO 27            |
 |     Red Wire      |     Any Blue (-) Power Line    |
 |     Black Wire    |     Any Red (+) Power Line     |
+
+
+## Infrared Food Sensor
+
+|     Element    |     First Connection    |     Second Connection              |
+|----------------|-------------------------|------------------------------------|
+|     Output     |     ESP32 – GPIO 21     |                                    |
+|     VCC        |     C-14                |                                    |
+|     GND        |     C-15                |                                    |
+|     GND        |     A-15                |     Closest Blue (-) Power Line    |
+|     VCC        |     A-14                |     Closest Red (+) Power Line     |
+
+## Infrared Coin Sensor
+
+|     Element    |     First Connection    |     Second Connection              |
+|----------------|-------------------------|------------------------------------|
+|     Output     |     ESP32 – GPIO 22     |                                    |
+|     VCC        |     C-13                |                                    |
+|     GND        |     C-12                |                                    |
+|     GND        |     A-12                |     Closest Blue (-) Power Line    |
+|     VCC        |     A-13                |     Closest Red (+) Power Line     |
+
+## SD Card Module
+
+|     SD Card     |     ESP32      |
+|-----------------|----------------|
+|     GND         |     GND        |
+|     VCC         |     3.3V       |
+|     MISO        |     GPIO 19    |
+|     MOSI        |     GPIO 23    |
+|     SCK         |     GPIO 18    |
+|     CS          |     GPIO 5     |
