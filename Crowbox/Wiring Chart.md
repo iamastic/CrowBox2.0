@@ -49,4 +49,10 @@
 |     Second Coin Sensor Wire    |     ESP32 – GPIO 17            |                          |
 
 
+## DHT11
 
+|     Element       |     Connections                |
+|-------------------|--------------------------------|
+|     Green Wire    |     ESP32 – GPIO 27            |
+|     Red Wire      |     Any Blue (-) Power Line    |
+|     Black Wire    |     Any Red (+) Power Line     |
