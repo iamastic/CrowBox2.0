@@ -41,10 +41,12 @@
 |     Output     |     I-16                |     ESP32 – GPIO 4                 |
 
 
+## Coin Sensor
 
-
-
-
+|     Element                    |     First Connection           |     Second Connection    |
+|--------------------------------|--------------------------------|--------------------------|
+|     First Coin Sensor Wire     |     Any Blue (-) Power Line    |                          |
+|     Second Coin Sensor Wire    |     ESP32 – GPIO 17            |                          |
 
 
 
