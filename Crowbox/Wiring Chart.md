@@ -21,3 +21,14 @@
 |     Servo – Red              |     A-26                    |                          |
 |     Servo – Brown            |     A-25                    |                          |
 |     Servo – Orange           |     ESP32 – GPIO 15         |                          |
+
+## Perch Switches
+
+|     Element           |     First Connection        |     Second Connection    |
+|-----------------------|-----------------------------|--------------------------|
+|     GND               |     Blue (-) Power Line     |     I-21                 |
+|     Output            |     I-20                    |     ESP32 – GPIO 16      |
+|     Perch Switch 1    |     F-20 & F-21             |                          |
+|     Perch Switch 2    |     G-20 & G21              |                          |
+
+## Training Button
