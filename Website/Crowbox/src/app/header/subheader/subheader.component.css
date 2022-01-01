@@ -1,19 +1,17 @@
 .mat-toolbar{
+    position: fixed;
+    top: 0vh;
+    z-index: 100;
+
     background-color: #ededed; 
     height: 6vh; 
     width:100%;
 }
 
 .flex-item {
-    /* border: #25356a;
-    border-style: double; */
 }
 
 .headerTitle {
-    /* display: flex; */
-    /* padding:1%; */
-    /* align-items: center; */
-    
 }
 
 .mat-icon {

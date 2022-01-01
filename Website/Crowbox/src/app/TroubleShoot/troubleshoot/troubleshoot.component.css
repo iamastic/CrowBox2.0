@@ -7,6 +7,21 @@
 
 }
 
+::ng-deep .mat-tooltip {
+    background: #b71c1c;
+    text-align: center;
+    font-size: large;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.mat-icon{
+    color: #ededed; 
+}
+
+.mat-raised-button{
+    background-color: #b71c1c;
+    
+}
 
 .fontStyle {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -20,6 +35,7 @@
 }
 
 .mat-card-title{
+    padding-bottom: 3%;
     text-align: center;
     color: #cd6413;
     font-weight: 650;

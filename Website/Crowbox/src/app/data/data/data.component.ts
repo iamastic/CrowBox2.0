@@ -39,6 +39,9 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
     this.coinsDepositedOutput.emit(this.coinsDepositedValues);
   }
 
+  isBoxSetUp?:String = "NO";
+  $isBoxSetUpSub?:Subscription;
+
   /* OFFLINE RELATED */
   file:any;
   fileName:any;
@@ -265,6 +268,7 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
     this.$userDataSub?.unsubscribe();
     this.$childCrowOnPerch?.unsubscribe();
     this.$childCoinsDeposited?.unsubscribe();
+    this.$isBoxSetUpSub?.unsubscribe();
   }
 
   checkIfWifiConnection() {
@@ -279,6 +283,7 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
     .snapshotChanges()
     .pipe(first())
     .subscribe(result => {
+      console.log("Checking WiFi Connection");
       let previoustTime = result.payload.val().prevWifiTime;
       let currentTime = result.payload.val().currentWifiTime;
       let oldStatus = result.payload.val().wifi;
@@ -299,6 +304,8 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
           if(oldStatus !== "WORKING") {
             this.crowboxService.updateWifiStatus("WORKING");
             this.crowboxService.updatePreviousWifiTime(currentTime);
+          } else {
+              this.crowboxService.updatePreviousWifiTime(currentTime);
           }
       }
 
@@ -308,7 +315,7 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
   ngOnInit(): void {
 
     this.$wifiSub = this.wifiCheckTimer$.subscribe(r => {
-      // console.log(r);
+      console.log(r);
       this.checkIfWifiConnection();
       
     })
@@ -327,14 +334,21 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
           console.log("Current User Id is " );
           console.log(this.currentUserId);
       
+          this.checkIfBoxIsSetUp();
           this.checkIfUserExists();
           this.initialiseCharts();
+          
         });
+
+    
   }
 
   ngAfterContentInit() {
+
     //set the charts to be YOUR DATA instead of PUBLIC DATA
     this.showPersonal();
+    
+    
   }
 
   initialiseCharts() {
@@ -342,12 +356,12 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
     this.getCoinDepositedDataChildren();
 
     //if the array is empty, let the user know that they need to setup a crowbox
-    if((this.coinsDepositedDate.length == 0) && (this.crowsOnPerchDate.length == 0)) {
+    /* if((this.coinsDepositedDate.length == 0) && (this.crowsOnPerchDate.length == 0)) {
       console.log("COINS and CROWS array are currently empty");
       this.showUserId = true;
     } else {
       console.log("COINS and CROWS array have now been filled");
-    }
+    } */
   }
 
   /* Check if the user already has a profile in the 
@@ -364,6 +378,7 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
           if(action.key){
             console.log("User is in the database");
             console.log(action.key);
+            
           } else { 
             console.log("In data component, no such user found");
             console.log("Creating user");
@@ -387,11 +402,34 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
             this.crowboxService.updateUserName(this.handleAuth.userName);
 
             this.crowboxService.updateProfilePictureURL("https://via.placeholder.com/100");
+
+            this.crowboxService.setBoxExistence();
           }
         });
   }
 
   /* ---------------------------------------------------- */
+
+
+  checkIfBoxIsSetUp(){
+    console.log("Checking if Box is set up");
+
+    this.$isBoxSetUpSub = this.crowboxService
+    .getUser()
+    .snapshotChanges()
+    .subscribe(result => {
+      this.isBoxSetUp = result.payload.val().box;
+
+      
+      console.log(this.isBoxSetUp);
+
+      if (this.isBoxSetUp == "YES") {
+        this.showUserId = false;
+      } else {
+        this.showUserId = true;
+      }
+    });
+  }
 
   /* PERSONAL DATA */
   getCrowOnPerchDataChildren() {

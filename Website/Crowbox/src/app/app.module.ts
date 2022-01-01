@@ -36,6 +36,8 @@ import { PictureComponent } from './Profile/picture/picture.component';
 //styling module
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
+import { IconsModule } from 'angular-bootstrap-md';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
 //Angular materials and forms
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
@@ -49,6 +51,8 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { MatSelectModule} from '@angular/material/select';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatTooltipModule} from '@angular/material/tooltip';
+
 
 
 
@@ -68,7 +72,6 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { GettingStartedComponent } from './home/getting-started/getting-started.component';
 import { WelcomeComponent } from './home/welcome/welcome.component';
 import { IntromessageComponent } from './public/intromessage/intromessage.component';
-
 
 
 @NgModule({
@@ -124,9 +127,12 @@ import { IntromessageComponent } from './public/intromessage/intromessage.compon
     MatButtonToggleModule,
     MatSelectModule,
     MatToolbarModule,
+    MatTooltipModule,
     FlexLayoutModule,
     CarouselModule.forRoot(),
 
+    IconsModule,
+    FontAwesomeModule,
   ],
   providers: [HandleAuthService,DatePipe,AngularFireStorage],
   bootstrap: [AppComponent]

@@ -1,0 +1,29 @@
+.carouselStyle {
+    /* width: 100%; */
+
+    /* border: #25356a;
+    border-style: dashed; */
+}
+
+.howToImage {
+    border-radius: 10%;
+}
+
+
+
+.mat-card {
+    background-color: #ededed; 
+}
+
+.mat-card-title{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #cd6413;
+    font-size: x-large;
+}
+
+.mat-card-content{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #25356a;
+    font-size: large;
+    line-height: 30px;
+}

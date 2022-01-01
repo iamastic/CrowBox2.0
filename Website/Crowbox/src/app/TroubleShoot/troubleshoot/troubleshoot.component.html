@@ -1,17 +1,38 @@
 
-<mat-card class="wrapper" fxLayout="row wrap" fxLayoutAlign="space-around center" fxLayout.xs="column" fxLayout.sm="column" style="background-color: #494949
-;">
+<mat-card class="wrapper" fxLayout="row wrap" fxLayoutAlign="space-around center" fxLayout.xs="column" fxLayout.sm="column" style="background-color: #494949;">
     <div id = "food" fxFlex="30">
         <mat-card>
             <mat-card-title>food level</mat-card-title>
-            <mat-card-content>{{foodLevel}}</mat-card-content>
+            <mat-card-content fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="3%">
+                <div>
+                    {{foodLevel}}
+                </div>
+
+                <div  *ngIf="foodLevel!=='WORKING'">
+                    <button mat-raised-button matTooltip="You need to refill the Food Container, we think you may be running low!" aria-label="Button that displays a tooltip when focused or hovered over" matTooltipPosition="right"  matTooltipClass="warningtooltip">
+                        <mat-icon>notification_important</mat-icon>
+                    </button>
+                </div>
+                
+            </mat-card-content>
         </mat-card>
     </div>
     
     <div id = "coin" fxFlex="30">
-        <mat-card>
+        <mat-card >
             <mat-card-title>coin dispenser</mat-card-title>
-            <mat-card-content>{{coinsRemaining}}</mat-card-content>
+            <mat-card-content  fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="3%">
+
+                <div>
+                    {{coinsRemaining}} 
+                </div>
+                <div *ngIf="coinsRemaining!=='WORKING'">
+                    <button mat-raised-button matTooltip="You need to refill the Coin Dispenser, we think you may be running low!" aria-label="Button that displays a tooltip when focused or hovered over" matTooltipPosition="right"  matTooltipClass="warningtooltip">
+                        <mat-icon>notification_important</mat-icon>
+                    </button>
+                </div>
+
+            </mat-card-content>
         </mat-card>
     </div>
     
@@ -19,7 +40,16 @@
     <div id = "lid" fxFlex="30">
         <mat-card>
             <mat-card-title>sliding lid</mat-card-title>
-            <mat-card-content>{{servo}}</mat-card-content>
+            <mat-card-content  fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="3%">
+                <div>
+                    {{servo}}
+                </div>
+                <div *ngIf="servo!=='WORKING'">
+                    <button mat-raised-button matTooltip="The Sliding Lid appears to not be functioning properly. Please check if the Servo is jammed or something is preventing the lid from closing." aria-label="Button that displays a tooltip when focused or hovered over" matTooltipPosition="right"  matTooltipClass="warningtooltip">
+                        <mat-icon>notification_important</mat-icon>
+                    </button>
+                </div>
+            </mat-card-content>
         </mat-card>
     </div>
     
@@ -27,7 +57,16 @@
     <div id = "water" fxFlex="30">
         <mat-card>
             <mat-card-title>water/humidity</mat-card-title>
-            <mat-card-content>{{water}}</mat-card-content>
+            <mat-card-content  fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="3%">
+                <div>
+                    {{water}}
+                </div>
+                <div *ngIf="water!=='WORKING'">
+                    <button mat-raised-button matTooltip="Oh no! Water may have seeped into your box. Please check the inside of your box to ensure the electronics are safe." matTooltipPosition="right"  matTooltipClass="warningtooltip">
+                        <mat-icon>notification_important</mat-icon>
+                    </button>
+                </div>
+            </mat-card-content>
         </mat-card>
     </div>
     
@@ -35,7 +74,16 @@
     <div id = "wifi" fxFlex="30">
         <mat-card>
             <mat-card-title>wifi</mat-card-title>
-            <mat-card-content>{{wifi}}</mat-card-content>
+            <mat-card-content  fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="3%">
+                <div>
+                    {{wifi}}
+                </div>
+                <div *ngIf="wifi!=='WORKING'">
+                    <button mat-raised-button matTooltip="Please ensure your device is connected to the internet as it appears to be disconnected." matTooltipPosition="right"  matTooltipClass="warningtooltip">
+                        <mat-icon>notification_important</mat-icon>
+                    </button>
+                </div>
+            </mat-card-content>
         </mat-card>
     </div>
 </mat-card>

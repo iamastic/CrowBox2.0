@@ -119,6 +119,11 @@ export class CrowboxdbService {
   }
 
   /* USER RELATED */
+
+  setBoxExistence(){
+    this.userReference.update({box:"NO"});
+  }
+
   updateProfilePictureURL(url:string){
     this.userReference.update({profilePicture:url});
   }
