@@ -12,6 +12,12 @@
     color: #b71c1c;
 }
 
+
+a:hover{
+    background-color: #E0E0E0;
+    border-radius: 5%;
+}
+
 .mat-icon {
     vertical-align: text-bottom;
     /* color: #25356a; */
