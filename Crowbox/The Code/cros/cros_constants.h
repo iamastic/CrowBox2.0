@@ -121,7 +121,9 @@
 #define INPUT_PIN_COIN          3
 #define INPUT_PIN_PHASE_SELECT  4 */
 
-/* MY WORK */
+
+/* Integrated and Adapted by Hamza Qureshi */
+//==========================================================
 #define OUTPUT_PIN_LED          2
 #define OUTPUT_PIN_SERVO        15      
 #define INPUT_PIN_PERCH         16
@@ -137,12 +139,16 @@
 //FOR SENSORS
 #define HUMIDITY_THRESHOLD      70
 
+// FOR SERVO FAIL SAFE
+#define INPUT_SERVO_CURRENT     34
+#define SERVO_CURRENT_THRESHOLD 500
+
 //FOR OFFLINE MODE
-// #undef OFFLINE_MODE
-#define OFFLINE_MODE
+#undef OFFLINE_MODE
+// #define OFFLINE_MODE
 
-
- /* END MY WORK */
+//==========================================================
+/* End Integration and Adaptation */
 
 //======================================
 // Constants for servo behavior

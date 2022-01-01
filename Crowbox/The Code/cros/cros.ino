@@ -26,7 +26,6 @@
 // after a successful compile
 //======================================
 CCrowboxCore g_crOSCore;
-//FirebaseData fireTrainingStage;
 
 //======================================
 // Called by the Arduino system one time,
@@ -36,12 +35,7 @@ CCrowboxCore g_crOSCore;
 //======================================
 void setup() 
 {
-    //MY WORK
     Serial.begin(115200);
-    
-
-    //END MY WORK
-
     // Run-Once
     g_crOSCore.Setup(); 
 }
