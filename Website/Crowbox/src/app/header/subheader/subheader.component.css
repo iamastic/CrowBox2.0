@@ -8,10 +8,14 @@
     width:100%;
 }
 
-.flex-item {
+.active{
+    color: #b71c1c;
 }
 
-.headerTitle {
+
+a:hover{
+    background-color: #E0E0E0;
+    border-radius: 5%;
 }
 
 .mat-icon {

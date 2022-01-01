@@ -10,22 +10,19 @@
 }
 
 
-.flex-item {
-    /* border: #25356a;
-    border-style: double; */
+a:hover{
+    background-color: #E0E0E0;
+    border-radius: 5%;
 }
 
-.headerTitle {
-    /* display: flex; */
-    /* padding:1%; */
-    /* align-items: center; */
-    
+.active{
+    color: #b71c1c;
 }
 
 
 .mat-icon {
     vertical-align: text-bottom;
-    color: #25356a;
+    /* color: #25356a; */
     position: relative;
 }
 
