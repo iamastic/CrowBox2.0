@@ -179,6 +179,8 @@ export class InformationComponent implements OnInit, OnChanges, OnDestroy {
     .getStatusData()
     .snapshotChanges()
     .subscribe(result => {
+      if (result.payload.val()) {
+        console.log("THERE IS STATUS IN DATABASE");
         this.isError = false;
         this.status = "WORKING";
 
@@ -192,6 +194,11 @@ export class InformationComponent implements OnInit, OnChanges, OnDestroy {
           this.isError = true;
           this.status = "ERROR";
         }
+      } else {
+        console.log("THERE IS NO STATUS IN DATABASE");
+        this.status="NO CONNECTION";
+      }
+        
     });
   }
 }
