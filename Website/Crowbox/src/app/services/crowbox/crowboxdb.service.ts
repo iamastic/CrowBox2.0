@@ -120,8 +120,8 @@ export class CrowboxdbService {
 
   /* USER RELATED */
 
-  setBoxExistence(){
-    this.userReference.update({box:"NO"});
+  setBoxExistence(isExists:string){
+    this.userReference.update({box:isExists});
   }
 
   updateProfilePictureURL(url:string){
