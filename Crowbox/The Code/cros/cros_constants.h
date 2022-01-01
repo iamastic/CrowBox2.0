@@ -121,7 +121,9 @@
 #define INPUT_PIN_COIN          3
 #define INPUT_PIN_PHASE_SELECT  4 */
 
-/* MY WORK */
+
+/* Integrated and Adapted by Hamza Qureshi */
+//==========================================================
 #define OUTPUT_PIN_LED          2
 #define OUTPUT_PIN_SERVO        15      
 #define INPUT_PIN_PERCH         16
@@ -145,8 +147,8 @@
 #undef OFFLINE_MODE
 // #define OFFLINE_MODE
 
-
- /* END MY WORK */
+//==========================================================
+/* End Integration and Adaptation */
 
 //======================================
 // Constants for servo behavior

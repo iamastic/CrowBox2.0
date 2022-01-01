@@ -13,6 +13,8 @@
 #include <EEPROM.h>
 #include "cros_core.h"
 
+/* Integrated by Hamza Qureshi */
+//==========================================================
 // Provide the token generation process info.
 #include "addons/TokenHelper.h"
 // Provide the RTDB payload printing info and other helper functions.
@@ -24,6 +26,8 @@ NTPClient timeClient(ntpUDP);
 
 // define the DHT object
 dht11 DHT;
+//==========================================================
+/* End Integration */
 
 //==========================================================
 // Interrupt function called when the coin sensor is struck
@@ -120,8 +124,8 @@ void CCrowboxCore::Setup()
   DebugPrint("Setup() method CALLED...\n");
 
   // set the User's Email and Password
-  USER_EMAIL = "imhaq7@gmail.com";
-  USER_PASSWORD = "password";
+  // USER_EMAIL = "imhaq7@gmail.com";
+  // USER_PASSWORD = "password";
 
   //----------------------------------------------------------
   // This is if the OFFLINE_MODE has not been defined.
@@ -132,6 +136,8 @@ void CCrowboxCore::Setup()
 #ifndef OFFLINE_MODE
   Serial.println("Setup: In ONLINE MODE");
 
+  /* Integrated by Hamza Qureshi */
+  //==========================================================
   // Connect to WiFi
   delay(1000);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
@@ -211,6 +217,9 @@ void CCrowboxCore::Setup()
   Serial.print("User UID: ");
   Serial.println(USER_ID);
 
+  SetupCrowBox();
+  SendBoxNickname();
+
   // set the user's current location to
   userLocation = "null";
 
@@ -226,6 +235,8 @@ void CCrowboxCore::Setup()
 
   // initiate the main variables from firebase
   LoadCurrentTrainingPhaseFromFirebase();
+  //==========================================================
+  /* End Integration */
 
   switch (m_currentTrainingPhase)
   {
@@ -247,7 +258,8 @@ void CCrowboxCore::Setup()
     break;
   }
 
-  /* MOVED FROM BELOW TO UP HERE */
+  /* Integrated by Hamza Qureshi */
+  //==========================================================
   // Set up the Food Level Sensor
   pinMode(INPUT_FOOD_SENSOR, INPUT);
   // Initialise the "detected" variable for the food level
@@ -264,6 +276,8 @@ void CCrowboxCore::Setup()
   trainingPhaseTime = millis();
   // set the current time for the troubleshoot period
   troubleshootTime = millis();
+//==========================================================
+/* End Integration */
 #endif // OFFLINE_MODE
 
   //----------------------------------------------------------
@@ -344,6 +358,8 @@ void CCrowboxCore::Setup()
     break;
   }
 
+  /* Integrated by Hamza Qureshi */
+  //==========================================================
   // Initialise the SD card
   pinMode(OUTPUT_PIN_SD_CARD, OUTPUT);
 
@@ -357,6 +373,8 @@ void CCrowboxCore::Setup()
     Serial.println("SD card initialization failed");
     return;
   }
+  //==========================================================
+  /* End Integration */
 
 #endif // OFFLINE_MODE
 
@@ -456,6 +474,8 @@ void CCrowboxCore::Loop()
     break;
   }
 
+/* Integrated by Hamza Qureshi */
+//==========================================================
 #ifndef OFFLINE_MODE
   // Ensure the date and time client updates
   while (!timeClient.update())
@@ -487,6 +507,8 @@ void CCrowboxCore::Loop()
   // Check the offline training phase switch
   CheckOfflineTrainingPhaseSwitch();
 #endif // OFFLINE_MODE
+       //==========================================================
+       /* End Integration */
 
   // Now we do some time arithmetic to figure out how long this loop took to
   // execute. If it's less than IDEAL_LOOP_MS, then we make the system
@@ -586,8 +608,8 @@ cros_time_t CCrowboxCore::HowLongHasBirdBeenGone()
 //----------------------------------------------------------
 bool CCrowboxCore::EnqueueCoin()
 {
-  Serial.println("Entered Enqueue Coin");
-  Serial.println("Enqueue Coins: ");
+  // Serial.println("Entered Enqueue Coin");
+  // Serial.println("Enqueue Coins: ");
   Serial.println(m_numEnqueuedDeposits);
 
   /*  if( GetUptimeSeconds() - m_uptimeLastCoinDetected < 1.0f )
@@ -607,13 +629,17 @@ bool CCrowboxCore::EnqueueCoin()
        return false;
    } */
 
+  /* Integrated by Hamza Qureshi */
+  //==========================================================
   if ((millis() - m_uptimeLastCoinDetected) < 1000)
   {
-    Serial.println("No Coin inside Enqueue Coins");
+    // Serial.println("No Coin inside Enqueue Coins");
     return false;
   }
+  //==========================================================
+  /* End Integration */
 
-  Serial.println("Increasing the coin deposit");
+  // Serial.println("Increasing the coin deposit");
 
   m_numEnqueuedDeposits++;
 
@@ -771,10 +797,14 @@ void CCrowboxCore::CloseRewardBasket()
 
     while (servoPosition > SERVO_POS_CLOSED)
     {
-
       // Check the Servo Current and implement
       // a fail safe here
+
+      /* Integrated by Hamza Qureshi */
+      //==========================================================
       CheckServoCurrent();
+      //==========================================================
+      /* End Integration */
 
       servoPosition -= servoStepSize;
       m_basketServo.write(servoPosition);
@@ -787,6 +817,19 @@ void CCrowboxCore::CloseRewardBasket()
   m_basketServo.write(SERVO_POS_CLOSED);
   delay(400);
   m_basketState = BASKET_STATE_CLOSED;
+
+  // If the lid has finally closed, we can set the
+  // troubleshoot system to WORKING
+  // HasFoodLidClosed(servoPosition);
+
+/* Integrated by Hamza Qureshi */
+//==========================================================
+#ifndef OFFLINE_MODE
+  Firebase.RTDB.setString(&servofbdo, "Users/" + USER_ID + "/Crowbox/Status/servo", "WORKING");
+  servofbdo.clear();
+#endif // OFFLINE_MODE
+       //==========================================================
+       /* End Integration */
 
   // Any time the sliding basket lid reaches the 'fully open' or 'fully closed'
   // state, we detach the servo from the signal pin. This is an attempt to remedy
@@ -936,6 +979,8 @@ void CCrowboxCore::RunPhaseTwoProtocol()
       Serial.println("Memory Remaining At Start of Phase 2: ");
       Serial.println(xPortGetFreeHeapSize());
 
+/* Integrated by Hamza Qureshi */
+//==========================================================
 /* ONLINE MODE */
 #ifndef OFFLINE_MODE
       Serial.println("Training Stage 2 perch pressed - ONLINE MODE!");
@@ -986,6 +1031,9 @@ void CCrowboxCore::RunPhaseTwoProtocol()
 
       Serial.println("Memory Remaining At End of Phase 2: ");
       Serial.println(xPortGetFreeHeapSize());
+
+      //==========================================================
+      /* End Integration */
     }
   }
 }
@@ -1020,6 +1068,8 @@ void CCrowboxCore::RunPhaseThreeProtocol()
     // Set it up to close.
     ScheduleBasketCloseWithDelay(BASKET_REMAIN_OPEN_DURATION);
 
+/* Integrated by Hamza Qureshi */
+//==========================================================
 /* ONLINE MODE */
 #ifndef OFFLINE_MODE
     Serial.println("Training Stage 3 Coin deposited - ONLINE MODE!");
@@ -1072,6 +1122,9 @@ void CCrowboxCore::RunPhaseThreeProtocol()
     Serial.println("Memory Remaining At End of Phase 3: ");
     Serial.println(xPortGetFreeHeapSize());
   }
+
+  //==========================================================
+  /* End Integration */
 }
 
 //----------------------------------------------------------
@@ -1107,6 +1160,9 @@ void CCrowboxCore::RunPhaseFourProtocol()
 // so we need to check to see if it's pulled to ground. If
 // yes, the physical switch is pressed.
 //----------------------------------------------------------
+
+/* Integrated by Hamza Qureshi */
+//==========================================================
 void CCrowboxCore::CheckOnlineTrainingPhaseSwitch()
 {
   /* if( digitalRead( INPUT_PIN_PHASE_SELECT ) != LOW )
@@ -1170,6 +1226,8 @@ void CCrowboxCore::CheckOnlineTrainingPhaseSwitch()
     Serial.println("New training stage is outside valid range");
   }
 }
+//==========================================================
+/* End Integration */
 
 void CCrowboxCore::CheckOfflineTrainingPhaseSwitch()
 {
@@ -1213,12 +1271,14 @@ void CCrowboxCore::AdvanceCurrentTrainingPhase()
 // to the EEPROM were written by CrOS. If not, we'll need to
 // nuke the EEPROM and write the header.
 //----------------------------------------------------------
+
+/* Adapted by Hamza Qureshi */
+//==========================================================
 bool CCrowboxCore::ValidateEEPROMData()
 {
   EEPROM.begin(512);
   const char *pHeaderCharacter = CROS_EEPROM_HEADER_STRING;
 
-  /* MY ADDITION */
   for (int addr = 0; addr < 4; ++addr)
   {
     if (*pHeaderCharacter != EEPROM.read(addr))
@@ -1232,12 +1292,13 @@ bool CCrowboxCore::ValidateEEPROMData()
     // On to the next character
     pHeaderCharacter++;
   }
-  /* END MY ADDITION */
 
   // Data header is in order
   DebugPrint("EEPROM Header Validated\n");
   return true;
 }
+//==========================================================
+/* End Adaptation */
 
 //----------------------------------------------------------
 // When an Arduino board is brand new, or when it has been
@@ -1245,6 +1306,9 @@ bool CCrowboxCore::ValidateEEPROMData()
 // to write our data header and a temporary training phase
 // (phase one) to the EEPROM to 'make it ours'
 //----------------------------------------------------------
+
+/* Adapted by Hamza Qureshi */
+//==========================================================
 void CCrowboxCore::CreateEEPROMData()
 {
   DebugPrint("Creating EEPROM data...\n");
@@ -1268,23 +1332,26 @@ void CCrowboxCore::CreateEEPROMData()
 
   DebugPrint("...Done!\n");
 }
+//==========================================================
+/* End Adaptation */
 
 //----------------------------------------------------------
 // Get the training phase we wrote to EEPROM the last time
 // it changed.
 //----------------------------------------------------------
+
+/* Adapted by Hamza Qureshi */
+//==========================================================
 void CCrowboxCore::LoadCurrentTrainingPhaseFromEEPROM()
 {
-  /* MY ADDITION */
   EEPROM.begin(512);
-  /* END MY ADDITION */
 
   m_currentTrainingPhase = EEPROM.read(CROS_EEPROM_ADDRESS_TRAINING_PHASE);
 
-  /* MY ADDITION */
   Serial.println("Current training phase is:" + m_currentTrainingPhase);
-  /* END MY ADDITION */
 }
+//==========================================================
+/* End Adaptation */
 
 //----------------------------------------------------------
 // Save the current training phase in the EEPROM so that it
@@ -1295,6 +1362,9 @@ void CCrowboxCore::LoadCurrentTrainingPhaseFromEEPROM()
 // different than what's already there, which saves us from
 // wasting write cycles on the eeprom.
 //----------------------------------------------------------
+
+/* Adapted by Hamza Qureshi */
+//==========================================================
 void CCrowboxCore::WriteCurrentTrainingPhaseToEEPROM()
 {
   EEPROM.begin(512);
@@ -1303,7 +1373,12 @@ void CCrowboxCore::WriteCurrentTrainingPhaseToEEPROM()
   EEPROM.commit();
   DebugPrint(" EEPROM Updated!\n");
 }
+//==========================================================
+/* End Adaptation */
 
+/* Integrated by Hamza Qureshi */
+/* With help from: https://roboticsbackend.com/arduino-store-int-into-eeprom/ */
+//==========================================================
 void CCrowboxCore::StoreCrowsOnPerchInEEPROM()
 {
   EEPROM.begin(512);
@@ -1371,7 +1446,11 @@ void CCrowboxCore::WriteCurrentOfflineDayToEEPROM()
   EEPROM.commit();
   Serial.println("Successfully Written Offline Day to EEPROM");
 }
+//==========================================================
+/* End Integration */
 
+/* Integrated by Hamza Qureshi */
+//==========================================================
 void CCrowboxCore::CheckIfItIsNextDay()
 {
   if (millis() - offlineTime > OFFLINE_TIME)
@@ -1411,6 +1490,8 @@ void CCrowboxCore::WriteDataToSDCard(String type, int value)
   {
     Serial.println("Error in opening data file when writing");
   }
+  //==========================================================
+  /* End Integration */
 
   // Print out what is in the SD card to see
   // This is just a test, delete after
@@ -1433,6 +1514,8 @@ void CCrowboxCore::WriteDataToSDCard(String type, int value)
   }
 }
 
+/* Integrated by Hamza Qureshi */
+//==========================================================
 void CCrowboxCore::WriteCurrentTrainingPhaseToFirebase()
 {
   Serial.println("Writing Training Phase to Firebase");
@@ -1696,6 +1779,8 @@ void CCrowboxCore::GetCurrentTime()
   ntpTime = formattedDate.substring(splitT + 1, formattedDate.length() - 1);
   Serial.println(ntpTime);
 }
+//==========================================================
+/* End Integration */
 
 //----------------------------------------------------------
 // The report the training phase, the LED blinks one time to
@@ -1748,8 +1833,10 @@ void CCrowboxCore::StopRecordingVideo()
   // a serial communication message.
 }
 
-/* SENSOR TROUBLESHOOT HANDLING */
+/* Integrated by Hamza Qureshi */
+//==========================================================
 
+/* SENSOR TROUBLESHOOT HANDLING */
 // This function is a wrapper function for
 // all other troubleshoot related functions
 void CCrowboxCore::TroubleShoot()
@@ -1904,17 +1991,53 @@ void CCrowboxCore::CheckServoCurrent()
   Serial.println("Servo Current Value:");
   Serial.println(servoCurrentValue);
 
-  if (servoCurrentValue >= SERVO_CURRENT_THRESHOLD) {
-    // Report to Firebase RTDB if ONLINE Mode is activated
-    #ifndef OFFLINE_MODE
+  if (servoCurrentValue >= SERVO_CURRENT_THRESHOLD)
+  {
 
-    #endif // OFFLINE_MODE
+// Report to Firebase RTDB if ONLINE Mode is activated
+#ifndef OFFLINE_MODE
+    Firebase.RTDB.setString(&servofbdo, "Users/" + USER_ID + "/Crowbox/Status/servo", "JAMMED");
+    servofbdo.clear();
+#endif // OFFLINE_MODE
 
     Serial.println("Servo Current over Threshold");
 
-    // Open the Food Lid
+    // Open the Food Lid to allow anything stuck to escape
     OpenRewardBasket();
-    // And restart all programs
     exit(0);
   }
 }
+
+// This function simply lets the Website know
+// that a CrowBox has been setup and connected to
+// the user's account
+void CCrowboxCore::SetupCrowBox()
+{
+  Serial.println("Setting up CrowBox");
+  Firebase.RTDB.setString(&accountSetup, "Users/" + USER_ID + "/box", "YES");
+  accountSetup.clear();
+}
+
+void CCrowboxCore::HasFoodLidClosed(int servoPosition)
+{
+#ifndef OFFLINE_MODE
+  if (servoPosition == SERVO_POS_CLOSED)
+  {
+    Firebase.RTDB.setString(&servofbdo, "Users/" + USER_ID + "/Crowbox/Status/servo", "WORKING");
+    servofbdo.clear();
+  }
+#endif // OFFLINE_MODE
+}
+
+void CCrowboxCore::SendBoxNickname()
+{
+#ifndef OFFLINE_MODE
+
+  Firebase.RTDB.setString(&nicknamefbdo, "Users/" + USER_ID + "/Crowbox/nickname", NICKNAME);
+  nicknamefbdo.clear();
+
+#endif // OFFLINE_MODE
+}
+
+//==========================================================
+/* End Integration */
