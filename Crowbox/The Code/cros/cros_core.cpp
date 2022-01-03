@@ -494,8 +494,8 @@ void CCrowboxCore::Loop()
   }
 
   // Check the Troubleshoot setup every 30 minutes
-  // CHANGE TO 30 MINS!! 1800000
-  if ((millis() - troubleshootTime) >= 600000)
+  // CHANGE TO 30 MINS!! 1800000 600000 180000
+  if ((millis() - troubleshootTime) >= 180000)
   {
     Serial.println("10 seconds over, checking box status in troubleshoot");
     troubleshootTime = millis();
