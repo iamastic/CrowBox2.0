@@ -222,7 +222,7 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
   /* ---------------------------------------------------- */
 
   /* HANDLING WIFI TROUBLESHOOT */
-  wifiCheckTimer$ = interval(10000);
+  wifiCheckTimer$ = interval(1200000);
   $wifiSub?:Subscription;
 
   /* OTHER SUBSCRIPTIONS - To handle unsubscribing */
@@ -356,12 +356,12 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
     this.getCoinDepositedDataChildren();
 
     //if the array is empty, let the user know that they need to setup a crowbox
-    /* if((this.coinsDepositedDate.length == 0) && (this.crowsOnPerchDate.length == 0)) {
+    if((this.coinsDepositedDate.length == 0) && (this.crowsOnPerchDate.length == 0)) {
       console.log("COINS and CROWS array are currently empty");
-      this.showUserId = true;
     } else {
+      // this.crowboxService.setBoxExistence("YES");
       console.log("COINS and CROWS array have now been filled");
-    } */
+    }
   }
 
   /* Check if the user already has a profile in the 
@@ -394,7 +394,7 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
             this.crowboxService.updateTotalCoinsDeposited(0);
             this.crowboxService.updateTotalCrowsLandedOnPerch(0);
             this.crowboxService.setUserEmail();
-            this.crowboxService.updateCrowboxNickname("null");
+            this.crowboxService.updateCrowboxNickname("CrowBox");
             this.crowboxService.updateUserLocation(this.handleAuth.userLocation);
             if(this.currentDate) {
               this.crowboxService.updateDateJoined(this.currentDate);        
@@ -403,7 +403,7 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
 
             this.crowboxService.updateProfilePictureURL("https://via.placeholder.com/100");
 
-            this.crowboxService.setBoxExistence();
+            this.crowboxService.setBoxExistence("NO");
           }
         });
   }
@@ -590,6 +590,7 @@ export class DataComponent implements OnInit, AfterContentInit, OnDestroy {
       })
 
       this.uploaded = true;
+      this.crowboxService.setBoxExistence("YES");
     };
   }
 

@@ -28,9 +28,9 @@
 /* Users are required to fill these FIVE fields */
 #define WIFI_SSID "Vodafone-72DA74"
 #define WIFI_PASSWORD "t6vaHAN6bpy5z4qb"
-#define USER_EMAIL "imhaq7@gmail.com"
+#define USER_EMAIL "john@doe.com"
 #define USER_PASSWORD "password"
-#define NICKNAME "portugalBox"
+#define NICKNAME "Backyard Box"
 
 // the project name address from firebase id
 // the database url

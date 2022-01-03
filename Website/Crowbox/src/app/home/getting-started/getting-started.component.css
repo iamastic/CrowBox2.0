@@ -9,3 +9,21 @@
     width: 100%;
     height: 100%;
 }
+
+.mat-card {
+    background-color: #ededed; 
+}
+
+.mat-card-title{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #cd6413;
+    font-size: x-large;
+    text-align: center;
+}
+
+.mat-card-content{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #25356a;
+    font-size: large;
+    line-height: 30px;
+}
